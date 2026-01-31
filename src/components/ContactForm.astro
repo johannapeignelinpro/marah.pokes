@@ -1,0 +1,264 @@
+---
+---
+
+<section id="contact" class="contact">
+  <div class="container-narrow">
+    <h2 class="text-center">Prendre rendez-vous</h2>
+    <p class="contact-intro text-center">
+      Intéressé·e par un tatouage handpoke ? Remplissez ce formulaire pour
+      discuter de votre projet. Je vous répondrai dans les plus brefs délais.
+    </p>
+
+    <form class="contact-form" id="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Nom & Prénom *</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            placeholder="Votre nom complet"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="votre@email.com"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Téléphone</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          placeholder="06 12 34 56 78"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="project">Décrivez votre projet de tatouage *</label>
+        <textarea
+          id="project"
+          name="project"
+          required
+          placeholder="Parlez-moi de votre idée : style souhaité, emplacement, taille approximative, inspiration..."
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="budget">Budget envisagé</label>
+        <select id="budget" name="budget">
+          <option value="">Sélectionnez une fourchette</option>
+          <option value="50-100">50€ - 100€</option>
+          <option value="100-200">100€ - 200€</option>
+          <option value="200-300">200€ - 300€</option>
+          <option value="300+">300€ et plus</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="availability">Vos disponibilités</label>
+        <textarea
+          id="availability"
+          name="availability"
+          placeholder="Indiquez vos disponibilités (jours, créneaux horaires...)"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          Envoyer la demande
+        </button>
+      </div>
+
+      <p class="form-note">
+        * Champs obligatoires<br />
+        <!-- TODO: Configurer le service d'envoi d'email (Formspree, Resend, etc.) -->
+        <span class="form-warning"
+          >⚠️ Le formulaire n'est pas encore connecté à un service d'envoi
+          d'email. Contactez-moi directement sur Instagram pour le moment.</span
+        >
+      </p>
+    </form>
+
+    <!-- Informations de contact alternatives -->
+    <div class="contact-alt mt-lg">
+      <h3 class="text-center">Autres moyens de contact</h3>
+      <div class="contact-methods">
+        <div class="contact-method">
+          <strong>Instagram</strong>
+          <a
+            href="https://instagram.com/marah.pokes"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @marah.pokes
+          </a>
+        </div>
+
+        <!-- TODO: Ajouter d'autres réseaux sociaux si nécessaire -->
+        <!--
+        <div class="contact-method">
+          <strong>Facebook</strong>
+          <a href="#" target="_blank" rel="noopener noreferrer">
+            Marah Pokes
+          </a>
+        </div>
+        -->
+      </div>
+
+      <p class="text-center mt-md">
+        <small
+          >Localisation : Rennes, Bretagne<br />
+          Sur rendez-vous uniquement</small
+        >
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    background-color: rgba(255, 248, 240, 0.7);
+  }
+
+  .contact-intro {
+    max-width: 600px;
+    margin: 0 auto var(--spacing-lg);
+    color: var(--text-secondary);
+  }
+
+  .contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: var(--spacing-md);
+    border: 1px solid var(--color-sable-light);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
+  }
+
+  .form-actions {
+    margin-top: var(--spacing-md);
+    text-align: center;
+  }
+
+  .form-actions .btn {
+    min-width: 200px;
+  }
+
+  .form-note {
+    margin-top: var(--spacing-md);
+    font-size: 0.85rem;
+    color: var(--text-light);
+    text-align: center;
+  }
+
+  .form-warning {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--color-sable);
+    font-style: italic;
+  }
+
+  .contact-alt {
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-sable-light);
+  }
+
+  .contact-methods {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+    flex-wrap: wrap;
+  }
+
+  .contact-method {
+    text-align: center;
+  }
+
+  .contact-method strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--color-sable);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.9rem;
+  }
+
+  .contact-method a {
+    font-size: 1.1rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-form {
+      padding: var(--spacing-sm);
+    }
+  }
+</style>
+
+<script>
+  // TODO: Implémenter la logique d'envoi du formulaire
+  // Options :
+  // 1. Service tiers : Formspree (https://formspre.io)
+  // 2. Service tiers : Resend (https://resend.com)
+  // 3. Netlify Forms (si hébergé sur Netlify)
+  // 4. API Route Astro + service d'email
+
+  const form = document.getElementById(
+    'contact-form'
+  ) as HTMLFormElement | null;
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Placeholder - À remplacer par la vraie logique d'envoi
+      alert(
+        "Le formulaire n'est pas encore configuré. Veuillez me contacter sur Instagram @marah.pokes"
+      );
+
+      // Exemple avec Formspree (décommentez et ajoutez votre endpoint) :
+      /*
+      const formData = new FormData(form);
+      try {
+        const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          alert('Merci ! Votre message a bien été envoyé.');
+          form.reset();
+        } else {
+          alert('Une erreur est survenue. Veuillez réessayer.');
+        }
+      } catch (error) {
+        alert('Une erreur est survenue. Veuillez réessayer.');
+      }
+      */
+    });
+  }
+</script>

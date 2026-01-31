@@ -1,0 +1,263 @@
+---
+// Page de test des polices pour les H1
+---
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test de Polices - Marah.Pokes</title>
+
+  <!-- Import des polices à tester depuis Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Cinzel+Decorative:wght@400;700&family=Playfair+Display:wght@400;700&family=Abril+Fatface&family=Cormorant+Garamond:wght@400;700&family=Marcellus&family=Yeseva+One&family=Italiana&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Reset de base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #fff8f0;
+      background-image: url('/assets/Template_Fond__1_.jpg');
+      background-repeat: repeat;
+      font-family: 'Amiri', serif;
+      color: #2c2c2c;
+      padding: 3rem 1rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: rgba(255, 248, 240, 0.95);
+      padding: 2rem;
+      border: 2px solid #ba9a76;
+    }
+
+    .page-title {
+      font-family: 'Amiri', serif;
+      font-size: 1.5rem;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #ba9a76;
+      margin-bottom: 3rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #ba9a76;
+    }
+
+    .font-section {
+      margin-bottom: 4rem;
+      padding: 2rem;
+      background: white;
+      border: 1px solid #d4b899;
+    }
+
+    .font-name {
+      font-family: 'Amiri', serif;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #a08665;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #d4b899;
+    }
+
+    .sample-h1 {
+      font-weight: 400;
+      font-style: normal;
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      line-height: 1.2;
+      color: #ba9a76;
+      margin-bottom: 1.5rem;
+    }
+
+    .sample-text {
+      font-family: 'Amiri', serif;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #5a5a5a;
+      margin-bottom: 1rem;
+    }
+
+    .rating {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px dashed #d4b899;
+    }
+
+    .rating-item {
+      font-size: 0.85rem;
+      color: #8a8a8a;
+    }
+
+    .rating-label {
+      font-weight: 700;
+      color: #ba9a76;
+    }
+
+    /* Définition de chaque police */
+    .font-rozha h1 { font-family: 'Rozha One', serif; }
+    .font-cinzel h1 { font-family: 'Cinzel Decorative', serif; }
+    .font-playfair h1 { font-family: 'Playfair Display', serif; }
+    .font-abril h1 { font-family: 'Abril Fatface', serif; }
+    .font-cormorant h1 { font-family: 'Cormorant Garamond', serif; }
+    .font-marcellus h1 { font-family: 'Marcellus', serif; }
+    .font-yeseva h1 { font-family: 'Yeseva One', serif; }
+    .font-italiana h1 { font-family: 'Italiana', serif; }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 0.875rem 2rem;
+      font-family: 'Amiri', serif;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 2px solid #ba9a76;
+      color: #ba9a76;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+      background-color: #ba9a76;
+      color: #fff8f0;
+    }
+
+    @media screen and (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .font-section {
+        padding: 1rem;
+      }
+
+      .rating {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2 class="page-title">Test de Polices Gratuites pour H1</h2>
+
+    <!-- 1. Rozha One (actuelle) -->
+    <div class="font-section font-rozha">
+      <div class="font-name">Rozha One (Actuellement utilisée)</div>
+      <h1 class="sample-h1">Marah.Pokes</h1>
+      <h1 class="sample-h1">Tatouage Handpoke</h1>
+      <p class="sample-text">Police serif élégante avec des empattements distinctifs. Inspirée des polices anciennes persanes.</p>
+      <div class="rating">
+        <div class="rating-item"><span class="rating-label">Style :</span> Élégant, traditionnel</div>
+        <div class="rating-item"><span class="rating-label">Lisibilité :</span> Excellente</div>
+        <div class="rating-item"><span class="rating-label">Caractère :</span> Raffiné</div>
+      </div>
+    </div>
+
+    <!-- 2. Cinzel Decorative -->
+    <div class="font-section font-cinzel">
+      <div class="font-name">Cinzel Decorative</div>
+      <h1 class="sample-h1">Marah.Pokes</h1>
+      <h1 class="sample-h1">Tatouage Handpoke</h1>
+      <p class="sample-text">Inspirée de l'épigraphie romaine antique. Caractère majestueux et décoratif parfait pour les titres.</p>
+      <div class="rating">
+        <div class="rating-item"><span class="rating-label">Style :</span> Classique, Art Déco</div>
+        <div class="rating-item"><span class="rating-label">Lisibilité :</span> Très bonne</div>
+        <div class="rating-item"><span class="rating-label">Caractère :</span> Sophistiqué, vintage</div>
+      </div>
+    </div>
+
+    <!-- 3. Playfair Display -->
+    <div class="font-section font-playfair">
+      <div class="font-name">Playfair Display</div>
+      <h1 class="sample-h1">Marah.Pokes</h1>
+      <h1 class="sample-h1">Tatouage Handpoke</h1>
+      <p class="sample-text">Police serif moderne avec un contraste élevé. Très utilisée pour les sites artistiques et créatifs.</p>
+      <div class="rating">
+        <div class="rating-item"><span class="rating-label">Style :</span> Moderne, élégant</div>
+        <div class="rating-item"><span class="rating-label">Lisibilité :</span> Excellente</div>
+        <div class="rating-item"><span class="rating-label">Caractère :</span> Raffiné, contemporain</div>
+      </div>
+    </div>
+
+    <!-- 4. Abril Fatface -->
+    <div class="font-section font-abril">
+      <div class="font-name">Abril Fatface</div>
+      <h1 class="sample-h1">Marah.Pokes</h1>
+      <h1 class="sample-h1">Tatouage Handpoke</h1>
+      <p class="sample-text">Police serif avec forte personnalité. Contraste marqué et présence visuelle forte, idéale pour les titres impactants.</p>
+      <div class="rating">
+        <div class="rating-item"><span class="rating-label">Style :</span> Audacieux, vintage</div>
+        <div class="rating-item"><span class="rating-label">Lisibilité :</span> Bonne</div>
+        <div class="rating-item"><span class="rating-label">Caractère :</span> Fort, expressif</div>
+      </div>
+    </div>
+
+    <!-- 5. Cormorant Garamond -->
+    <div class="font-section font-cormorant">
+      <div class="font-name">Cormorant Garamond</div>
+      <h1 class="sample-h1">Marah.Pokes</h1>
+      <h1 class="sample-h1">Tatouage Handpoke</h1>
+      <p class="sample-text">Police serif classique inspirée de Garamond. Élégante et intemporelle, avec de belles courbes.</p>
+      <div class="rating">
+        <div class="rating-item"><span class="rating-label">Style :</span> Classique, délicat</div>
+        <div class="rating-item"><span class="rating-label">Lisibilité :</span> Très bonne</div>
+        <div class="rating-item"><span class="rating-label">Caractère :</span> Gracieux, traditionnel</div>
+      </div>
+    </div>
+
+    <!-- 6. Marcellus -->
+    <div class="font-section font-marcellus">
+      <div class="font-name">Marcellus</div>
+      <h1 class="sample-h1">Marah.Pokes</h1>
+      <h1 class="sample-h1">Tatouage Handpoke</h1>
+      <p class="sample-text">Police serif classique avec empattements subtils. Équilibre entre tradition et modernité.</p>
+      <div class="rating">
+        <div class="rating-item"><span class="rating-label">Style :</span> Équilibré, classique</div>
+        <div class="rating-item"><span class="rating-label">Lisibilité :</span> Excellente</div>
+        <div class="rating-item"><span class="rating-label">Caractère :</span> Sobre, élégant</div>
+      </div>
+    </div>
+
+    <!-- 7. Yeseva One -->
+    <div class="font-section font-yeseva">
+      <div class="font-name">Yeseva One</div>
+      <h1 class="sample-h1">Marah.Pokes</h1>
+      <h1 class="sample-h1">Tatouage Handpoke</h1>
+      <p class="sample-text">Police serif décorative avec un style vintage prononcé. Parfaite pour un look artistique et bohème.</p>
+      <div class="rating">
+        <div class="rating-item"><span class="rating-label">Style :</span> Vintage, bohème</div>
+        <div class="rating-item"><span class="rating-label">Lisibilité :</span> Bonne</div>
+        <div class="rating-item"><span class="rating-label">Caractère :</span> Artistique, chaleureux</div>
+      </div>
+    </div>
+
+    <!-- 8. Italiana -->
+    <div class="font-section font-italiana">
+      <div class="font-name">Italiana</div>
+      <h1 class="sample-h1">Marah.Pokes</h1>
+      <h1 class="sample-h1">Tatouage Handpoke</h1>
+      <p class="sample-text">Police serif fine et élégante avec un style italien classique. Légère et raffinée.</p>
+      <div class="rating">
+        <div class="rating-item"><span class="rating-label">Style :</span> Fin, élégant</div>
+        <div class="rating-item"><span class="rating-label">Lisibilité :</span> Très bonne</div>
+        <div class="rating-item"><span class="rating-label">Caractère :</span> Délicat, chic</div>
+      </div>
+    </div>
+
+    <a href="/" class="back-link">← Retour à la page principale</a>
+  </div>
+</body>
+</html>

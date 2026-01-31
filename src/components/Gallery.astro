@@ -1,0 +1,142 @@
+---
+// TODO: Importer les vraies images depuis /public/assets/gallery/
+// Pour l'instant, on utilise des placeholders
+
+const galleryImages = [
+  // TODO: Remplacer par les vraies photos de tatouages
+  // Format attendu :
+  // { src: '/assets/gallery/tattoo-1.jpg', alt: 'Description du tatouage 1' },
+  // { src: '/assets/gallery/tattoo-2.jpg', alt: 'Description du tatouage 2' },
+  // etc.
+];
+---
+
+<section id="galerie" class="gallery">
+  <div class="container">
+    <h2 class="text-center">Galerie</h2>
+    <p class="gallery-intro text-center">
+      Découvrez une sélection de créations handpoke : tatouages ornementaux,
+      floraux et organiques réalisés à Rennes.
+    </p>
+
+    {
+      galleryImages.length > 0 ? (
+        <div class="gallery-grid">
+          {galleryImages.map((image) => (
+            <div class="gallery-item">
+              <img
+                src={image.src}
+                alt={image.alt}
+                loading="lazy"
+                width="400"
+                height="400"
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="gallery-placeholder">
+          <p class="text-center">
+            <!-- Message temporaire avant l'ajout des photos -->
+            📸 La galerie sera bientôt remplie avec les créations de Marah.
+            <br />
+            <br />
+            En attendant, retrouvez tous les tatouages sur{' '}
+            <a
+              href="https://instagram.com/marah.pokes"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Instagram @marah.pokes
+            </a>
+          </p>
+
+          {/* Grille de placeholders pour visualiser la mise en page */}
+          <div class="gallery-grid mt-md">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div class="gallery-item placeholder-item">
+                <div class="placeholder-content">
+                  <span>Photo {index + 1}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p class="placeholder-note text-center mt-md">
+            💡 Pour ajouter vos photos : placez-les dans{' '}
+            <code>/public/assets/gallery/</code> et mettez à jour le fichier{' '}
+            <code>Gallery.astro</code>
+          </p>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .gallery {
+    background-color: transparent;
+  }
+
+  .gallery-intro {
+    max-width: 600px;
+    margin: 0 auto var(--spacing-lg);
+    color: var(--text-secondary);
+  }
+
+  .gallery-placeholder {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .placeholder-item {
+    background-color: rgba(186, 154, 118, 0.15);
+    border: 2px dashed var(--color-sable-light);
+  }
+
+  .placeholder-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-sable);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .placeholder-note {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-style: italic;
+  }
+
+  .placeholder-note code {
+    background-color: rgba(186, 154, 118, 0.2);
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.85em;
+  }
+
+  /* Styles pour les vraies images (quand elles seront ajoutées) */
+  .gallery-grid {
+    margin-top: var(--spacing-md);
+  }
+
+  .gallery-item img {
+    cursor: pointer;
+  }
+
+  /* Animation au hover */
+  .gallery-item:hover {
+    box-shadow: 0 8px 20px rgba(186, 154, 118, 0.3);
+  }
+
+  @media screen and (max-width: 768px) {
+    .gallery-intro {
+      font-size: 0.9rem;
+    }
+  }
+</style>

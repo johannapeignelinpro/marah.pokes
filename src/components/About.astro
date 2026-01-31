@@ -1,0 +1,185 @@
+---
+---
+
+<section id="a-propos" class="about">
+  <div class="container-narrow">
+    <h2 class="text-center">Le Handpoke, c'est quoi ?</h2>
+
+    <div class="about-content">
+      <p>
+        Le handpoke est une méthode de tatouage réalisée à la main, point après
+        point. Le principe est le même qu'un tatouage à la machine : une
+        aiguille dépose l'encre dans la peau pour créer une marque permanente.
+      </p>
+
+      <p>
+        Ici, la différence réside dans le geste : <strong>plus lent, plus
+        précis, plus intentionné</strong>. Sans bourdonnement ni vibration,
+        seulement l'aiguille, l'encre et ma main.
+      </p>
+
+      <p>Cette pratique offre souvent :</p>
+
+      <ul class="about-benefits">
+        <li>Une sensation plus douce et plus supportable</li>
+        <li>Un rendu fin et délicat</li>
+        <li>Une cicatrisation plus rapide</li>
+        <li>
+          Un moment plus calme, plus centré, où le corps est bien moins
+          bousculé
+        </li>
+      </ul>
+    </div>
+
+    <!-- Section Artiste - À personnaliser -->
+    <div class="artist-section mt-lg">
+      <h3 class="text-center">L'Artiste</h3>
+      <div class="artist-content">
+        <!-- TODO: Ajouter une photo de l'artiste -->
+        <!-- <img src="/assets/artiste.jpg" alt="Marah, tatoueuse handpoke" class="artist-photo" /> -->
+
+        <div class="artist-text">
+          <p>
+            <!-- TODO: Ajouter la bio de l'artiste -->
+            Je suis Marah, tatoueuse handpoke basée à Rennes. Passionnée par
+            les motifs ornementaux et organiques, je crée des tatouages qui
+            mêlent symboles et formes naturelles dans un geste ancestral et
+            intentionné.
+          </p>
+
+          <p>
+            <!-- TODO: Compléter avec son parcours, sa vision, etc. -->
+            Mon travail explore les lignes délicates, les compositions florales
+            et les symboles porteurs de sens. Chaque tatouage est une création
+            unique, pensée en collaboration avec la personne qui le porte.
+          </p>
+
+          <!-- Lien vers Instagram -->
+          <p class="mt-md">
+            <a
+              href="https://instagram.com/marah.pokes"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="instagram-link"
+            >
+              <!-- TODO: Remplacer par le vrai lien Instagram -->
+              @marah.pokes sur Instagram
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Spécialités -->
+    <div class="specialties mt-lg">
+      <h3 class="text-center">Spécialités</h3>
+      <div class="specialties-grid">
+        <div class="specialty-item">
+          <h4>Ornemental</h4>
+          <p>Motifs décoratifs et compositions harmonieuses</p>
+        </div>
+        <div class="specialty-item">
+          <h4>Floral & Organique</h4>
+          <p>Inspirations végétales et formes naturelles</p>
+        </div>
+        <div class="specialty-item">
+          <h4>Lignes délicates</h4>
+          <p>Tracés fins et précis pour des rendus subtils</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    background-color: rgba(255, 248, 240, 0.7);
+  }
+
+  .about-content {
+    margin-top: var(--spacing-md);
+  }
+
+  .about-benefits {
+    list-style: none;
+    margin-top: var(--spacing-sm);
+    padding-left: 0;
+  }
+
+  .about-benefits li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .about-benefits li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--color-sable);
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
+  .artist-section {
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-sable-light);
+  }
+
+  .artist-content {
+    margin-top: var(--spacing-md);
+  }
+
+  .artist-photo {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto var(--spacing-md);
+    display: block;
+    border: 2px solid var(--color-sable);
+  }
+
+  .instagram-link {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .specialties {
+    padding-top: var(--spacing-lg);
+  }
+
+  .specialties-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+  }
+
+  .specialty-item {
+    text-align: center;
+    padding: var(--spacing-md);
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--color-sable-light);
+  }
+
+  .specialty-item h4 {
+    font-family: 'Amiri', serif;
+    font-size: 1.1rem;
+    color: var(--color-sable);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .specialty-item p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  @media screen and (max-width: 768px) {
+    .specialties-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

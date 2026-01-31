@@ -1,0 +1,111 @@
+---
+import '../styles/global.css';
+import { siteConfig, schemaOrg } from '../config/seo';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Gallery from '../components/Gallery.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Footer from '../components/Footer.astro';
+
+// Meta tags pour le SEO
+const pageTitle = siteConfig.title;
+const pageDescription = siteConfig.description;
+const keywords = siteConfig.keywords.join(', ');
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content={siteConfig.name} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteConfig.url} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={siteConfig.ogImage} />
+    <meta property="og:locale" content="fr_FR" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={siteConfig.ogImage} />
+
+    <!-- Géolocalisation -->
+    <meta
+      name="geo.region"
+      content={`FR-${siteConfig.location.postalCode.slice(0, 2)}`}
+    />
+    <meta name="geo.placename" content={siteConfig.location.city} />
+    <meta
+      name="geo.position"
+      content={`${siteConfig.location.latitude};${siteConfig.location.longitude}`}
+    />
+    <meta
+      name="ICBM"
+      content={`${siteConfig.location.latitude}, ${siteConfig.location.longitude}`}
+    />
+
+    <!-- Schema.org JSON-LD pour le SEO local -->
+    <script type="application/ld+json" set:html={JSON.stringify(schemaOrg)} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- TODO: Ajouter Apple Touch Icon si nécessaire -->
+    <!-- <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"> -->
+
+    <!-- Preconnect aux services externes pour améliorer les performances -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={siteConfig.url} />
+  </head>
+
+  <body>
+    <!-- Navigation (optionnelle - peut être ajoutée plus tard) -->
+    <!-- <nav>...</nav> -->
+
+    <!-- Contenu principal -->
+    <main>
+      <Hero />
+      <About />
+      <Gallery />
+      <ContactForm />
+    </main>
+
+    <!-- Footer -->
+    <Footer />
+
+    <!-- Script pour le smooth scroll (amélioration de l'UX) -->
+    <script>
+      // Gestion du smooth scroll pour les liens d'ancrage
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener('click', function (e) {
+          const href = this.getAttribute('href');
+          if (href && href !== '#') {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+              target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+              });
+            }
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

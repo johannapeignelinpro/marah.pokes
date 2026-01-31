@@ -1,0 +1,64 @@
+---
+import { siteConfig } from '../config/seo';
+---
+
+<section id="hero" class="hero">
+  <div class="container text-center">
+    <h1>{siteConfig.name}</h1>
+    <p class="hero-subtitle uppercase">{siteConfig.slogan}</p>
+    <p class="hero-location">Rennes, Bretagne</p>
+
+    <div class="hero-cta">
+      <a href="#contact" class="btn btn-primary">Prendre rendez-vous</a>
+      <a href="#galerie" class="btn">Voir la galerie</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--spacing-xl) 0;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    color: var(--color-sable);
+    max-width: 700px;
+    margin: 0 auto var(--spacing-md);
+    line-height: 1.6;
+  }
+
+  .hero-location {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media screen and (max-width: 768px) {
+    .hero {
+      min-height: 60vh;
+    }
+
+    .hero-cta {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-cta .btn {
+      width: 100%;
+      max-width: 280px;
+    }
+  }
+</style>

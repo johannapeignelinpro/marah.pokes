@@ -1,0 +1,359 @@
+/* ============================================
+   DESIGN SYSTEM - MARAH.POKES
+   Tatouage Handpoke à Rennes
+   ============================================ */
+
+/* ============================================
+   IMPORTS DE POLICES
+   ============================================ */
+
+/* Rosella Deco - Pour les H1 */
+@import url('https://fonts.googleapis.com/css2?family=Rozha+One&display=swap');
+
+/* Amiri - Pour les textes et H2/H3 */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+/* Note: Rozha One est utilisé comme alternative à Rosella Deco
+   qui n'est pas disponible sur Google Fonts.
+   Si vous avez le fichier Rosella Deco, ajoutez-le avec @font-face */
+
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+/* ============================================
+   VARIABLES CSS - PALETTE DE COULEURS
+   ============================================ */
+
+:root {
+  /* Couleurs principales */
+  --color-sable: #ba9a76;
+  --color-beige: #fff8f0;
+
+  /* Couleurs dérivées */
+  --color-sable-dark: #a08665;
+  --color-sable-light: #d4b899;
+
+  /* Couleurs de texte */
+  --text-primary: #2c2c2c;
+  --text-secondary: #5a5a5a;
+  --text-light: #8a8a8a;
+
+  /* Espacements */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 4rem;
+  --spacing-xl: 6rem;
+
+  /* Conteneur max-width */
+  --container-width: 1200px;
+  --container-narrow: 800px;
+}
+
+
+/* ============================================
+   STYLES DE BASE
+   ============================================ */
+
+body {
+  background-color: var(--color-beige);
+  background-image: url('/assets/Template_Fond__1_.jpg');
+  background-repeat: repeat;
+  background-size: auto;
+  font-family: 'Amiri', serif;
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+
+/* ============================================
+   TYPOGRAPHIE - TITRES
+   ============================================ */
+
+h1 {
+  font-family: 'Rozha One', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  line-height: 1.2;
+  color: var(--color-sable);
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-family: 'Amiri', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-sable);
+  margin-bottom: 1.5rem;
+}
+
+h3 {
+  font-family: 'Amiri', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-sable);
+  margin-bottom: 1.25rem;
+}
+
+
+/* ============================================
+   TYPOGRAPHIE - TEXTES
+   ============================================ */
+
+p,
+body,
+.text-body {
+  font-family: 'Amiri', serif;
+  font-weight: 400;
+  font-size: clamp(0.95rem, 2vw, 1rem);
+  line-height: 1.8;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+/* Texte en gras */
+strong,
+b {
+  font-weight: 700;
+}
+
+/* Texte en italique */
+em,
+i {
+  font-style: italic;
+}
+
+a {
+  color: var(--color-sable);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--color-sable-dark);
+  text-decoration: underline;
+}
+
+
+/* ============================================
+   CONTENEURS & SECTIONS
+   ============================================ */
+
+.container {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+.container-narrow {
+  max-width: var(--container-narrow);
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+section {
+  padding: var(--spacing-xl) 0;
+}
+
+@media screen and (max-width: 768px) {
+  section {
+    padding: var(--spacing-lg) 0;
+  }
+}
+
+
+/* ============================================
+   CLASSES UTILITAIRES
+   ============================================ */
+
+/* Couleurs de fond */
+.bg-sable {
+  background-color: var(--color-sable);
+}
+
+.bg-beige {
+  background-color: var(--color-beige);
+}
+
+/* Couleurs de texte */
+.text-sable {
+  color: var(--color-sable);
+}
+
+.text-beige {
+  color: var(--color-beige);
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Texte en capitales */
+.uppercase {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Espacements */
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+
+
+/* ============================================
+   COMPOSANTS - BOUTONS
+   ============================================ */
+
+.btn {
+  display: inline-block;
+  padding: 0.875rem 2rem;
+  font-family: 'Amiri', serif;
+  font-size: 1rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid var(--color-sable);
+  background-color: transparent;
+  color: var(--color-sable);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background-color: var(--color-sable);
+  color: var(--color-beige);
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: var(--color-sable);
+  color: var(--color-beige);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-sable-dark);
+  border-color: var(--color-sable-dark);
+}
+
+
+/* ============================================
+   COMPOSANTS - FORMULAIRES
+   ============================================ */
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+label {
+  display: block;
+  font-family: 'Amiri', serif;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-sable);
+  margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea,
+select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-family: 'Amiri', serif;
+  font-size: 1rem;
+  color: var(--text-primary);
+  background-color: rgba(255, 248, 240, 0.8);
+  border: 1px solid var(--color-sable-light);
+  transition: border-color 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-sable);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+
+/* ============================================
+   COMPOSANTS - GALERIE
+   ============================================ */
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  background-color: rgba(186, 154, 118, 0.1);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+
+/* ============================================
+   RESPONSIVE - AJUSTEMENTS MOBILES
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+  .container,
+  .container-narrow {
+    padding: 0 var(--spacing-sm);
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-sm);
+  }
+}

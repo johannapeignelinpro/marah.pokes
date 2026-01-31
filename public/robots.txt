@@ -1,0 +1,8 @@
+# robots.txt pour Marah.Pokes
+# Autorise l'indexation complète du site
+
+User-agent: *
+Allow: /
+
+# Sitemap (à mettre à jour avec l'URL réelle lors du déploiement)
+Sitemap: https://marah-pokes.fr/sitemap-index.xml

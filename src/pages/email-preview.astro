@@ -1,0 +1,255 @@
+---
+import { generateEmailTemplate, generateEmailSubject } from '../utils/emailTemplate';
+
+// Données d'exemple pour la prévisualisation
+const sampleData = {
+  name: 'Marie Dupont',
+  email: 'marie.dupont@example.com',
+  phone: '06 12 34 56 78',
+  instagram: 'marie.tattoo',
+  projectType: 'Free hand',
+  flashNumber: '',
+  project: `Je souhaite un tatouage inspiré du style minimaliste et floral.
+J'adore particulièrement votre travail sur les pivoines et les feuilles d'olivier.
+
+Emplacement : avant-bras gauche
+Taille : environ 10-12 cm
+Style artiste apprécié : Votre style, très doux et organique`,
+  budget: '100-200',
+  availability: `Disponible les mercredis et jeudis après-midi.
+Flexible sur les dates, je peux me rendre disponible.`,
+  hasFiles: true,
+  fileCount: 3,
+  warnings: [
+    '⚠️ Des liens ont été détectés dans votre description (1). Ils seront neutralisés pour votre sécurité.'
+  ]
+};
+
+const emailContent = generateEmailTemplate(sampleData);
+const emailSubject = generateEmailSubject(sampleData);
+---
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prévisualisation Email - Marah.Pokes</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #fff8f0 0%, #f5e6d3 100%);
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      color: #ba9a76;
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      color: #5a5a5a;
+      font-size: 1rem;
+    }
+
+    .email-preview {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .email-header {
+      background: linear-gradient(135deg, #ba9a76 0%, #a08665 100%);
+      color: white;
+      padding: 1.5rem;
+    }
+
+    .email-subject {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .email-meta {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .email-body {
+      padding: 2rem;
+    }
+
+    .email-content {
+      font-family: 'Courier New', Courier, monospace;
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 4px;
+      border-left: 4px solid #ba9a76;
+      white-space: pre-wrap;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: #2c2c2c;
+      overflow-x: auto;
+    }
+
+    .actions {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.875rem 2rem;
+      margin: 0 0.5rem;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 2px solid #ba9a76;
+      background-color: transparent;
+      color: #ba9a76;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+
+    .btn:hover {
+      background-color: #ba9a76;
+      color: white;
+    }
+
+    .btn-primary {
+      background-color: #ba9a76;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #a08665;
+      border-color: #a08665;
+    }
+
+    .info-box {
+      background: #fff8f0;
+      border-left: 3px solid #ba9a76;
+      padding: 1rem 1.25rem;
+      margin: 2rem 0;
+      border-radius: 4px;
+    }
+
+    .info-box h3 {
+      color: #ba9a76;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-box p {
+      color: #5a5a5a;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .info-box ul {
+      margin-left: 1.5rem;
+      margin-top: 0.5rem;
+      color: #5a5a5a;
+      font-size: 0.9rem;
+    }
+
+    .info-box li {
+      margin-bottom: 0.25rem;
+    }
+
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      .email-body {
+        padding: 1rem;
+      }
+
+      .email-content {
+        padding: 1rem;
+        font-size: 0.8rem;
+      }
+
+      .btn {
+        display: block;
+        margin: 0.5rem 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📧 Prévisualisation de l'Email</h1>
+      <p>Voici à quoi ressemblera l'email que vous recevrez pour chaque demande</p>
+    </div>
+
+    <div class="email-preview">
+      <div class="email-header">
+        <div class="email-subject">
+          <strong>Sujet :</strong> {emailSubject}
+        </div>
+        <div class="email-meta">
+          <strong>De :</strong> Formulaire Marah.Pokes &lt;noreply@marah-pokes.com&gt;<br>
+          <strong>À :</strong> votre-email@example.com
+        </div>
+      </div>
+
+      <div class="email-body">
+        <div class="email-content">{emailContent}</div>
+
+        <div class="info-box">
+          <h3>🔒 Sécurité activée</h3>
+          <p>Chaque email est protégé par :</p>
+          <ul>
+            <li>✅ Sanitisation de tous les champs (protection XSS)</li>
+            <li>✅ Neutralisation automatique des liens suspects</li>
+            <li>✅ Validation stricte des emails et téléphones</li>
+            <li>✅ Protection anti-spam (honeypot + rate limiting)</li>
+            <li>✅ Validation des fichiers images (type, taille, contenu)</li>
+          </ul>
+        </div>
+
+        <div class="info-box">
+          <h3>ℹ️ Fonctionnalités</h3>
+          <ul>
+            <li>Format texte brut élégant (compatible tous clients email)</li>
+            <li>Date et heure de la demande</li>
+            <li>Toutes les informations du client organisées</li>
+            <li>Avertissements de sécurité si liens détectés</li>
+            <li>Compteur de photos jointes</li>
+            <li>Facile à lire et à répondre</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a href="/" class="btn">← Retour au site</a>
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimer l'aperçu</button>
+    </div>
+  </div>
+</body>
+</html>

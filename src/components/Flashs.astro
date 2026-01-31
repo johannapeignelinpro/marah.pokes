@@ -1,0 +1,136 @@
+---
+// Section Flashs - 4 flashs disponibles en 1 colonne
+const flashImages = [
+  { src: '/assets/gallery/flashs/Flash 1.jpg', alt: 'Flash 1 - Tatouage disponible par Marah' },
+  { src: '/assets/gallery/flashs/Flash 2.jpg', alt: 'Flash 2 - Tatouage disponible par Marah' },
+  { src: '/assets/gallery/flashs/Flash 3.jpg', alt: 'Flash 3 - Tatouage disponible par Marah' },
+  { src: '/assets/gallery/flashs/Flash 4.jpg', alt: 'Flash 4 - Tatouage disponible par Marah' },
+];
+---
+
+<section id="flashs" class="flashs">
+  <div class="container-full">
+    <h2 class="text-center">Flashs</h2>
+    <p class="flashs-intro text-center">
+      Flashs handpoke disponibles à Rennes. Consultez <a href="https://instagram.com/marah.pokes" target="_blank" rel="noopener noreferrer">@marah.pokes</a> sur Instagram pour découvrir toutes les plaquettes de flashs. Retenez le numéro du flash souhaité et renseignez-le dans le formulaire de contact. Marah propose également du free hand inspiré de son univers ornemental et organique.
+    </p>
+
+    <div class="flashs-grid">
+      {
+        flashImages.map((image) => (
+          <div class="flash-item">
+            <img
+              src={image.src}
+              alt={image.alt}
+              loading="lazy"
+              class="flash-image"
+            />
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="flashs-note text-center mt-lg">
+      Pour réserver un flash, rendez-vous dans la section{' '}
+      <a href="#contact">Contact</a> ou sur{' '}
+      <a
+        href="https://instagram.com/marah.pokes"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Instagram @marah.pokes
+      </a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .flashs {
+    background-color: transparent;
+    padding: var(--spacing-xl) 0;
+  }
+
+  .flashs-intro {
+    max-width: 700px;
+    margin: 0 auto var(--spacing-lg);
+    color: var(--text-secondary);
+    font-size: 1rem;
+  }
+
+  .flashs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: var(--spacing-lg);
+  }
+
+  .flash-item {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .flash-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+
+  .flash-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(186, 154, 118, 0.3);
+  }
+
+  .flash-item:hover .flash-image {
+    transform: scale(1.02);
+  }
+
+  .flashs-note {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .flashs-note a {
+    color: var(--color-sable);
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .flashs-note a:hover {
+    color: var(--color-sable-dark);
+  }
+
+  /* Tablette */
+  @media screen and (max-width: 1024px) {
+    .flashs-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+  }
+
+  /* Mobile */
+  @media screen and (max-width: 768px) {
+    .flashs {
+      padding: var(--spacing-lg) 0;
+    }
+
+    .flashs-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .flashs-intro {
+      font-size: 0.9rem;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .flashs-note {
+      font-size: 0.85rem;
+    }
+  }
+</style>

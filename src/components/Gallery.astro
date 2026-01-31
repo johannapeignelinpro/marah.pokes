@@ -1,142 +1,150 @@
 ---
-// TODO: Importer les vraies images depuis /public/assets/gallery/
-// Pour l'instant, on utilise des placeholders
-
+// Galerie de tatouages - 8 premières images du dossier dessins
 const galleryImages = [
-  // TODO: Remplacer par les vraies photos de tatouages
-  // Format attendu :
-  // { src: '/assets/gallery/tattoo-1.jpg', alt: 'Description du tatouage 1' },
-  // { src: '/assets/gallery/tattoo-2.jpg', alt: 'Description du tatouage 2' },
-  // etc.
+  { src: '/assets/gallery/dessins/20251201_170125.jpg', alt: 'Tatouage handpoke par Marah' },
+  { src: '/assets/gallery/dessins/20251211_182304.jpg', alt: 'Tatouage handpoke par Marah' },
+  { src: '/assets/gallery/dessins/20251223_001807_exported_1665.jpg', alt: 'Tatouage handpoke par Marah' },
+  { src: '/assets/gallery/dessins/20260108_220636.jpg', alt: 'Tatouage handpoke par Marah' },
+  { src: '/assets/gallery/dessins/20260110_165406.jpg', alt: 'Tatouage handpoke par Marah' },
+  { src: '/assets/gallery/dessins/20260113_175654.jpg', alt: 'Tatouage handpoke par Marah' },
+  { src: '/assets/gallery/dessins/20260117_161749.jpg', alt: 'Tatouage handpoke par Marah' },
+  { src: '/assets/gallery/dessins/20260121_152725.jpg', alt: 'Tatouage handpoke par Marah' },
 ];
 ---
 
 <section id="galerie" class="gallery">
-  <div class="container">
+  <div class="container-full">
     <h2 class="text-center">Galerie</h2>
     <p class="gallery-intro text-center">
-      Découvrez une sélection de créations handpoke : tatouages ornementaux,
-      floraux et organiques réalisés à Rennes.
+      Découvrez une sélection de mes réalisations handpoke. Chaque tatouage est unique et réalisé avec soin.
     </p>
 
-    {
-      galleryImages.length > 0 ? (
-        <div class="gallery-grid">
-          {galleryImages.map((image) => (
-            <div class="gallery-item">
-              <img
-                src={image.src}
-                alt={image.alt}
-                loading="lazy"
-                width="400"
-                height="400"
-              />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div class="gallery-placeholder">
-          <p class="text-center">
-            <!-- Message temporaire avant l'ajout des photos -->
-            📸 La galerie sera bientôt remplie avec les créations de Marah.
-            <br />
-            <br />
-            En attendant, retrouvez tous les tatouages sur{' '}
-            <a
-              href="https://instagram.com/marah.pokes"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Instagram @marah.pokes
-            </a>
-          </p>
-
-          {/* Grille de placeholders pour visualiser la mise en page */}
-          <div class="gallery-grid mt-md">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <div class="gallery-item placeholder-item">
-                <div class="placeholder-content">
-                  <span>Photo {index + 1}</span>
-                </div>
-              </div>
-            ))}
+    <div class="gallery-grid">
+      {
+        galleryImages.map((image) => (
+          <div class="gallery-item">
+            <img
+              src={image.src}
+              alt={image.alt}
+              loading="lazy"
+              class="gallery-image"
+            />
           </div>
+        ))
+      }
+    </div>
 
-          <p class="placeholder-note text-center mt-md">
-            💡 Pour ajouter vos photos : placez-les dans{' '}
-            <code>/public/assets/gallery/</code> et mettez à jour le fichier{' '}
-            <code>Gallery.astro</code>
-          </p>
-        </div>
-      )
-    }
+    <p class="gallery-note text-center mt-lg">
+      Pour discuter d'un projet ou voir plus de réalisations, rendez-vous dans la section{' '}
+      <a href="#contact">Contact</a> ou sur{' '}
+      <a
+        href="https://instagram.com/marah.pokes"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Instagram @marah.pokes
+      </a>
+    </p>
   </div>
 </section>
 
 <style>
   .gallery {
     background-color: transparent;
+    padding: var(--spacing-xl) 0;
+  }
+
+  .container-full {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 var(--spacing-md);
   }
 
   .gallery-intro {
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto var(--spacing-lg);
     color: var(--text-secondary);
+    font-size: 1rem;
   }
 
-  .gallery-placeholder {
-    max-width: 800px;
-    margin: 0 auto;
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: var(--spacing-lg);
   }
 
-  .placeholder-item {
-    background-color: rgba(186, 154, 118, 0.15);
-    border: 2px dashed var(--color-sable-light);
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    border-radius: 4px;
+    transition: all 0.3s ease;
   }
 
-  .placeholder-content {
+  .gallery-image {
     width: 100%;
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-sable);
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .placeholder-note {
-    font-size: 0.85rem;
-    color: var(--text-light);
-    font-style: italic;
-  }
-
-  .placeholder-note code {
-    background-color: rgba(186, 154, 118, 0.2);
-    padding: 0.2rem 0.5rem;
-    border-radius: 3px;
-    font-family: monospace;
-    font-size: 0.85em;
-  }
-
-  /* Styles pour les vraies images (quand elles seront ajoutées) */
-  .gallery-grid {
-    margin-top: var(--spacing-md);
-  }
-
-  .gallery-item img {
+    object-fit: cover;
+    transition: transform 0.3s ease;
     cursor: pointer;
   }
 
-  /* Animation au hover */
   .gallery-item:hover {
+    transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(186, 154, 118, 0.3);
   }
 
+  .gallery-item:hover .gallery-image {
+    transform: scale(1.05);
+  }
+
+  .gallery-note {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .gallery-note a {
+    color: var(--color-sable);
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .gallery-note a:hover {
+    color: var(--color-sable-dark);
+  }
+
+  /* Tablette */
+  @media screen and (max-width: 1024px) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+  }
+
+  /* Mobile */
   @media screen and (max-width: 768px) {
+    .gallery {
+      padding: var(--spacing-lg) 0;
+    }
+
+    .container-full {
+      padding: 0 var(--spacing-sm);
+    }
+
+    .gallery-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
     .gallery-intro {
       font-size: 0.9rem;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .gallery-note {
+      font-size: 0.85rem;
     }
   }
 </style>

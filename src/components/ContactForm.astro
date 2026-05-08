@@ -1,8 +1,8 @@
 ---
 ---
 
-<section id="contact" class="contact">
-  <div class="container-narrow">
+<section id="contact" class="contact ">
+  <div class="container-narrow pa-md">
     <h2 class="text-center">Prendre rendez-vous</h2>
     <p class="contact-intro text-center">
       Intéressé·e par un tatouage handpoke ? Remplissez ce formulaire pour
@@ -76,14 +76,6 @@
         </div>
       </div>
 
-      <!-- Information importante -->
-      <div class="info-box">
-        <p>
-          ℹ️ <strong>Information importante :</strong> Je ne réalise pas de projets personnalisés pour le moment.
-          Vous pouvez choisir parmi mes flashs disponibles ou me proposer un free hand inspiré de mon univers.
-        </p>
-      </div>
-
       <!-- Type de projet -->
       <div class="form-group">
         <label>Type de projet *</label>
@@ -106,95 +98,195 @@
               id="type-freehand"
               required
             />
-            <span class="radio-label">Free hand (dans mon style)</span>
+            <span class="radio-label">Projet Perso</span>
           </label>
         </div>
       </div>
 
-      <!-- Champ pour numéro de flash (conditionnel) -->
-      <div class="form-group" id="flash-number-group" style="display: none;">
-        <label for="flash-number">Numéro du flash *</label>
-        <input
-          type="text"
-          id="flash-number"
-          name="flash-number"
-          maxlength="50"
-          placeholder="Ex: Flash #12"
-        />
-        <small class="field-hint">Consultez mes flashs disponibles sur Instagram @marah.pokes</small>
-        <span class="error-message" id="error-flash-number"></span>
-      </div>
+      <!-- ============================== -->
+      <!-- SECTION FLASH (conditionnelle) -->
+      <!-- ============================== -->
+      <div id="section-flash" class="form-section" style="display: none;">
+        <h3 class="form-section-title">Votre flash</h3>
 
-      <!-- Description du projet -->
-      <div class="form-group">
-        <label for="project">Décrivez votre projet de tatouage *</label>
-        <textarea
-          id="project"
-          name="project"
-          required
-          maxlength="2000"
-          placeholder="Pour un free hand : style d'artiste que vous appréciez, emplacement, taille approximative..."
-        ></textarea>
-        <span class="error-message" id="error-project"></span>
-        <div class="warning-message" id="warning-project" style="display: none;"></div>
-      </div>
+        <div class="form-group">
+          <label for="flash-photo">Photo du flash souhaité *</label>
+          <div class="file-upload-area" id="flash-upload-area">
+            <input
+              type="file"
+              id="flash-photo"
+              name="flash-photo"
+              accept="image/*"
+              class="file-input"
+            />
+            <label for="flash-photo" class="file-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span>Cliquez pour choisir la photo du flash</span>
+            </label>
+            <div id="flash-file-list" class="file-list"></div>
+          </div>
+          <span class="error-message" id="error-flash-photo"></span>
+        </div>
 
-      <!-- Upload de photos -->
-      <div class="form-group">
-        <label for="photos">Photos de mon travail qui t'inspire</label>
-        <div class="file-upload-area" id="file-upload-area">
-          <input
-            type="file"
-            id="photos"
-            name="photos"
-            multiple
-            accept="image/*"
-            class="file-input"
-          />
-          <label for="photos" class="file-label">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="17 8 12 3 7 8"></polyline>
-              <line x1="12" y1="3" x2="12" y2="15"></line>
-            </svg>
-            <span>Cliquez pour choisir ou glissez vos photos ici</span>
-          </label>
-          <div id="file-list" class="file-list"></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="flash-body-part">Partie du corps *</label>
+            <input
+              type="text"
+              id="flash-body-part"
+              name="flash-body-part"
+              maxlength="100"
+              placeholder="Ex : poignet, cheville, épaule..."
+            />
+            <span class="error-message" id="error-flash-body-part"></span>
+          </div>
+          <div class="form-group">
+            <label for="flash-size">Taille (cm) *</label>
+            <input
+              type="text"
+              id="flash-size"
+              name="flash-size"
+              maxlength="50"
+              placeholder="Ex : 5 × 5 cm"
+            />
+            <span class="error-message" id="error-flash-size"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="flash-notes">Demandes complémentaires <span class="optional">(optionnel)</span></label>
+          <textarea
+            id="flash-notes"
+            name="flash-notes"
+            maxlength="1000"
+            placeholder="Modifications mineures souhaitées, ajouts, précisions..."
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="flash-availability">Disponibilités *</label>
+          <textarea
+            id="flash-availability"
+            name="flash-availability"
+            placeholder="Indiquez vos disponibilités (jours, créneaux horaires...)"
+            rows="3"
+          ></textarea>
+          <span class="error-message" id="error-flash-availability"></span>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="budget">Budget envisagé</label>
-        <select id="budget" name="budget">
-          <option value="">Sélectionnez une fourchette</option>
-          <option value="50-100">50€ - 100€</option>
-          <option value="100-200">100€ - 200€</option>
-          <option value="200-300">200€ - 300€</option>
-          <option value="300+">300€ et plus</option>
-        </select>
-      </div>
+      <!-- ================================== -->
+      <!-- SECTION PROJET PERSO (conditionnelle) -->
+      <!-- ================================== -->
+      <div id="section-projet-perso" class="form-section" style="display: none;">
+        <h3 class="form-section-title">Votre projet</h3>
 
-      <div class="form-group">
-        <label for="availability">Vos disponibilités</label>
-        <textarea
-          id="availability"
-          name="availability"
-          placeholder="Indiquez vos disponibilités (jours, créneaux horaires...)"
-          rows="3"
-        ></textarea>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="perso-body-part">Partie du corps *</label>
+            <input
+              type="text"
+              id="perso-body-part"
+              name="perso-body-part"
+              maxlength="100"
+              placeholder="Ex : poignet, cheville, épaule..."
+            />
+            <span class="error-message" id="error-perso-body-part"></span>
+          </div>
+          <div class="form-group">
+            <label for="perso-size">Taille (cm) *</label>
+            <input
+              type="text"
+              id="perso-size"
+              name="perso-size"
+              maxlength="50"
+              placeholder="Ex : 5 × 5 cm"
+            />
+            <span class="error-message" id="error-perso-size"></span>
+          </div>
+        </div>
+
+        <!-- Upload de photos inspiration -->
+        <div class="form-group">
+          <label for="photos">Photos de mon travail qui vous inspirent</label>
+          <div class="file-upload-area" id="file-upload-area">
+            <input
+              type="file"
+              id="photos"
+              name="photos"
+              multiple
+              accept="image/*"
+              class="file-input"
+            />
+            <label for="photos" class="file-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span>Cliquez pour choisir ou glissez vos photos ici</span>
+            </label>
+            <div id="file-list" class="file-list"></div>
+          </div>
+        </div>
+
+        <!-- Description du projet -->
+        <div class="form-group">
+          <label for="project">Décrivez votre projet de tatouage *</label>
+          <textarea
+            id="project"
+            name="project"
+            maxlength="2000"
+            placeholder=" Les petits détails font les grandes histoires, n’hésitez pas à être exhaustif.ve si vous le souhaitez. Donnez des infos sur l’emplacement, taille approximative souhaitée..."
+          ></textarea>
+          <span class="error-message" id="error-project"></span>
+          <div class="warning-message" id="warning-project" style="display: none;"></div>
+        </div>
+
+        <!-- Budget -->
+        <div class="form-group">
+          <label for="budget">Budget envisagé</label>
+          <select id="budget" name="budget">
+            <option value="">Sélectionnez une fourchette</option>
+            <option value="100-200">100€ - 200€</option>
+            <option value="200-300">200€ - 300€</option>
+            <option value="300-400">300€ - 400€</option>
+            <option value="libre">Ton prix sera le mien</option>
+          </select>
+        </div>
+
+        <!-- Disponibilités -->
+        <div class="form-group">
+          <label for="availability">Disponibilités</label>
+          <textarea
+            id="availability"
+            name="availability"
+            placeholder="Indiquez vos disponibilités (jours, créneaux horaires...)"
+            rows="3"
+          ></textarea>
+        </div>
       </div>
 
       <div class="form-actions">
         <button type="submit" class="btn btn-primary">
           Envoyer la demande
         </button>
-      </div>
-
-      <!-- Message de patience -->
-      <div class="patience-message">
+        <div class="patience-message">
         <p>
-          Je réponds à toutes vos demandes dès que possible.
-          Merci pour votre patience et votre compréhension ✨
+          J’accepte de discuter de tout projet pour l’adapter à mon univers. Si cela ne correspond pas, je vous guiderai vers un ou une autre artiste adapté.e.
+        </p>
+        <br>
+        <p>
+          La sortie d'aiguille est de 80 euros, ensuite, le prix sera variable en fonction de la taille, de l'emplacement et bien sûr, de la difficulté du projet.
+        </p>
+        <br>
+        <p>
+Vos demandes seront traitées dès que possible. Je vous réponds au plus vite afin de discuter des détails de la conception et fixer votre rendez vous. Merci pour votre patience et votre compréhension.
         </p>
       </div>
 
@@ -213,40 +305,7 @@
       </p>
     </form>
 
-    <!-- Informations de contact alternatives -->
-    <div class="contact-alt mt-lg">
-      <h3 class="text-center">Autres moyens de contact</h3>
-      <div class="contact-methods">
-        <div class="contact-method">
-          <strong>Instagram</strong>
-          <a
-            href="https://instagram.com/marah.pokes"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            @marah.pokes
-          </a>
-        </div>
-
-        <!-- TODO: Ajouter d'autres réseaux sociaux si nécessaire -->
-        <!--
-        <div class="contact-method">
-          <strong>Facebook</strong>
-          <a href="#" target="_blank" rel="noopener noreferrer">
-            Marah Pokes
-          </a>
-        </div>
-        -->
-      </div>
-
-      <p class="text-center mt-md mb-md">
-        <small
-          >Localisation : Rennes, Bretagne<br />
-          Sur rendez-vous uniquement</small
-        >
-      </p>
-    </div>
-  </div>
+ 
 </section>
 
 <style>
@@ -521,6 +580,29 @@
     font-style: italic;
   }
 
+  /* Sections Flash / Projet Perso */
+  .form-section {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-sable-light);
+  }
+
+  .form-section-title {
+    font-family: 'Amiri', serif;
+    font-size: 1.1rem;
+    color: var(--color-sable);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .optional {
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-light);
+    font-size: 0.9em;
+  }
+
   .contact-alt {
     padding-top: var(--spacing-lg);
     border-top: 1px solid var(--color-sable-light);
@@ -589,8 +671,8 @@
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
   const flashRadio = document.getElementById('type-flash') as HTMLInputElement | null;
   const freehandRadio = document.getElementById('type-freehand') as HTMLInputElement | null;
-  const flashNumberGroup = document.getElementById('flash-number-group') as HTMLElement | null;
-  const flashNumberInput = document.getElementById('flash-number') as HTMLInputElement | null;
+  const sectionFlash = document.getElementById('section-flash') as HTMLElement | null;
+  const sectionProjetPerso = document.getElementById('section-projet-perso') as HTMLElement | null;
   const projectTextarea = document.getElementById('project') as HTMLTextAreaElement | null;
   const honeypotField = document.getElementById('website') as HTMLInputElement | null;
 
@@ -633,18 +715,14 @@
   // GESTION TYPE DE PROJET
   // =======================
   function updateFormFields() {
-    if (!flashRadio || !freehandRadio || !flashNumberGroup || !flashNumberInput || !projectTextarea) return;
+    if (!flashRadio || !freehandRadio || !sectionFlash || !sectionProjetPerso) return;
 
     if (flashRadio.checked) {
-      flashNumberGroup.style.display = 'block';
-      flashNumberInput.required = true;
-      projectTextarea.placeholder = 'Informations complémentaires (optionnel)...';
+      sectionFlash.style.display = 'block';
+      sectionProjetPerso.style.display = 'none';
     } else if (freehandRadio.checked) {
-      flashNumberGroup.style.display = 'none';
-      flashNumberInput.required = false;
-      flashNumberInput.value = '';
-      clearError('flash-number');
-      projectTextarea.placeholder = 'Pour un free hand : style d\'artiste que vous appréciez, emplacement, taille approximative...';
+      sectionFlash.style.display = 'none';
+      sectionProjetPerso.style.display = 'block';
     }
   }
 
@@ -837,7 +915,6 @@
         phone: (document.getElementById('phone') as HTMLInputElement)?.value,
         instagram: (document.getElementById('instagram') as HTMLInputElement)?.value,
         projectType: flashRadio?.checked ? 'flash' : 'freehand',
-        flashNumber: flashNumberInput?.value,
         project: projectTextarea?.value || '',
         budget: (document.getElementById('budget') as HTMLSelectElement)?.value,
         availability: (document.getElementById('availability') as HTMLTextAreaElement)?.value,

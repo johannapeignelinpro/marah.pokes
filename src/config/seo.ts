@@ -3,9 +3,9 @@
 
 export const siteConfig = {
   name: 'Marah.Pokes',
-  title: 'Marah.Pokes - Tatouage Handpoke à Rennes | Tatouages Ornementaux',
-  description: 'Tatouages ornementaux handpoke à Rennes. Marah.Pokes crée des tatouages délicats mêlant formes organiques et symboles, tracés à la main point par point. Spécialisée en motifs floraux et ornementaux.',
-  slogan: 'Tatouages ornementaux, mêlant formes organiques et symboles, tracés à la main dans un geste ancestral, intuitif et intentionné.',
+  title: 'Marah.Pokes - Tatouage Handpoke à Rennes | Tatouages fines lignes et ombrages en Bretagne',
+  description: 'Marah.pokes, tatoueuse handpoke basée à Rennes en Bretagne. Tatouages ornementaux déposés à la main dans un geste traditionnel, mêlant symboles intuitifs, formes organiques, lignes fines et délicats ombrés.',
+  slogan: 'Marah.pokes, tatoueuse handpoke basée à Rennes en Bretagne. Tatouages ornementaux déposés à la main dans un geste traditionnel, mêlant symboles intuitifs, formes organiques, lignes fines et délicats ombrés.',
 
   // Contact
   instagram: '@marah.pokes', // TODO: Remplacer par le vrai handle Instagram

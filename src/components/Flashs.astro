@@ -12,8 +12,9 @@ const flashImages = [
   <div class="container-full">
     <h2 class="text-center">Flashs</h2>
     <p class="flashs-intro text-center">
-      Flashs handpoke disponibles à Rennes. Consultez <a href="https://instagram.com/marah.pokes" target="_blank" rel="noopener noreferrer">@marah.pokes</a> sur Instagram pour découvrir toutes les plaquettes de flashs. Retenez le numéro du flash souhaité et renseignez-le dans le formulaire de contact. Marah propose également du free hand inspiré de son univers ornemental et organique.
+      Flashs de tatouage handpoke disponibles à Rennes. Consultez <a href="https://instagram.com/marah.pokes" target="_blank" rel="noopener noreferrer">@marah.pokes</a> sur Instagram pour découvrir toutes les plaquettes de flashs.  Envoyez la photo du flash qui vous intéresse via le formulaire ci-dessous. Possibilité de freehand si cela correspond mieux à votre projet.
     </p>
+    <p class="flashs-intro text-center">Informations:  J'accepte de modifier légèrement un flash s'il y a un petit détail qui gêne ou s’il y a l’envie d’ajouter quelque chose. A indiquer dans la section “demandes complémentaires”</p>
 
     <div class="flashs-grid">
       {
@@ -46,7 +47,7 @@ const flashImages = [
 
 <style>
   .flashs {
-    background-color: transparent;
+    background-color: rgba(255, 248, 240, 0.7);
     padding: var(--spacing-xl) 0;
   }
 
@@ -57,6 +58,15 @@ const flashImages = [
     font-size: 1rem;
   }
 
+  .flashs-intro a {
+    color: var(--color-sable);
+    font-weight: 700;
+  }
+
+  .flashs-intro a:hover {
+    color: var(--color-sable-dark);
+  }
+
   .flashs-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -64,10 +74,17 @@ const flashImages = [
     margin-top: var(--spacing-lg);
   }
 
+  .container-full {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 var(--spacing-md);
+  }
+
   .flash-item {
     position: relative;
     overflow: hidden;
     aspect-ratio: 1 / 1;
+    background-color: var(--color-beige);
     border-radius: 4px;
     transition: all 0.3s ease;
   }

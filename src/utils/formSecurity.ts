@@ -299,15 +299,6 @@ export function validateFormData(data: FormData): ValidationResult {
     errors.projectType = 'Type de projet invalide';
   }
 
-  // 7. Numéro de flash (si type flash)
-  if (data.projectType === 'flash') {
-    if (!data.flashNumber || data.flashNumber.trim().length === 0) {
-      errors.flashNumber = 'Numéro de flash requis';
-    } else if (data.flashNumber.length > 50) {
-      errors.flashNumber = 'Numéro de flash trop long';
-    }
-  }
-
   // 8. Description du projet
   const projectValidation = validateTextLength(data.project, 'Description du projet', 10, 2000);
   if (!projectValidation.valid) {

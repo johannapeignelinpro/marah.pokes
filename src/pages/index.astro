@@ -25,6 +25,7 @@ const keywords = siteConfig.keywords.join(', ');
     <meta name="description" content={pageDescription} />
     <meta name="keywords" content={keywords} />
     <meta name="author" content={siteConfig.name} />
+    <meta name="robots" content="index, follow" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -65,9 +66,11 @@ const keywords = siteConfig.keywords.join(', ');
     <!-- TODO: Ajouter Apple Touch Icon si nécessaire -->
     <!-- <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"> -->
 
-    <!-- Preconnect aux services externes pour améliorer les performances -->
+    <!-- Google Fonts - chargement optimisé via <link> (évite le blocage du @import CSS) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rozha+One&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
 
     <!-- Canonical URL -->
     <link rel="canonical" href={siteConfig.url} />
@@ -91,7 +94,7 @@ const keywords = siteConfig.keywords.join(', ');
       <div class="hero-cta-section">
         <div class="container text-center">
           <div class="hero-cta">
-            <a href="#contact" class="btn btn-primary">Prendre un Rendez-vous</a>
+            <a href="#contact" class="btn btn-primary">Réserver un tatouage handpoke</a>
             <a href="#flashs" class="btn">Voir les Flashs disponibles</a>
             <a href="#galerie" class="btn">Voir la Galerie</a>
           </div>

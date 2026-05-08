@@ -7,15 +7,8 @@
    IMPORTS DE POLICES
    ============================================ */
 
-/* Rosella Deco - Pour les H1 */
-@import url('https://fonts.googleapis.com/css2?family=Rozha+One&display=swap');
-
-/* Amiri - Pour les textes et H2/H3 */
-@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-
-/* Note: Rozha One est utilisé comme alternative à Rosella Deco
-   qui n'est pas disponible sur Google Fonts.
-   Si vous avez le fichier Rosella Deco, ajoutez-le avec @font-face */
+/* Polices chargées via <link> dans index.astro pour éviter le blocage du rendu CSS.
+   Rozha One (H1) + Amiri (textes, H2/H3) */
 
 
 /* ============================================
@@ -184,7 +177,7 @@ main {
 
 .hero-cta-section {
   padding: var(--spacing-xl) 0;
-  background-color: transparent;
+  background-color: rgba(255, 248, 240, 0.7);
 }
 
 .hero-cta {
@@ -306,6 +299,7 @@ a:hover {
   max-width: var(--container-narrow);
   margin: 0 auto;
   padding: 0 var(--spacing-md);
+  padding-bottom: 40px;
 }
 
 section {
@@ -482,6 +476,7 @@ textarea {
   .container,
   .container-narrow {
     padding: 0 var(--spacing-sm);
+    padding-bottom: 10px;
   }
 
   .gallery-grid {

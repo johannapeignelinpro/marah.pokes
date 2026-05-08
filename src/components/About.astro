@@ -151,7 +151,7 @@ A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des
   }
 
   .specialty-item p {
-    font-size: 0.95rem;
+    font-size: 1.0625rem;
     color: var(--text-secondary);
     margin: 0;
   }
@@ -159,6 +159,20 @@ A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des
   @media screen and (max-width: 768px) {
     .specialties-grid {
       grid-template-columns: 1fr;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-sm);
+    }
+
+    .artist-section {
+      padding-top: var(--spacing-md);
+    }
+
+    .specialties {
+      padding-top: var(--spacing-md);
+    }
+
+    .artist-content {
+      margin-top: var(--spacing-sm);
     }
   }
 </style>

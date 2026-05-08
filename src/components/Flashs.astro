@@ -55,7 +55,7 @@ const flashImages = [
     max-width: 700px;
     margin: 0 auto var(--spacing-lg);
     color: var(--text-secondary);
-    font-size: 1rem;
+    font-size: 1.0625rem;
   }
 
   .flashs-intro a {
@@ -107,7 +107,7 @@ const flashImages = [
   }
 
   .flashs-note {
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: var(--text-secondary);
     font-style: italic;
   }
@@ -133,21 +133,26 @@ const flashImages = [
   /* Mobile */
   @media screen and (max-width: 768px) {
     .flashs {
-      padding: var(--spacing-lg) 0;
+      padding: var(--spacing-md) 0;
+    }
+
+    .container-full {
+      padding: 0 var(--spacing-sm);
     }
 
     .flashs-grid {
       grid-template-columns: 1fr;
-      gap: 1rem;
+      gap: 0.75rem;
+      margin-top: var(--spacing-sm);
     }
 
     .flashs-intro {
-      font-size: 0.9rem;
-      margin-bottom: var(--spacing-md);
+      font-size: 1rem;
+      margin-bottom: var(--spacing-sm);
     }
 
     .flashs-note {
-      font-size: 0.85rem;
+      font-size: 0.95rem;
     }
   }
 </style>

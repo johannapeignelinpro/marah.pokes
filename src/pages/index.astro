@@ -77,6 +77,11 @@ const keywords = siteConfig.keywords.join(', ');
   </head>
 
   <body>
+    <!-- Header mobile fixe (visible uniquement au scroll sur mobile) -->
+    <div class="mobile-header" id="mobileHeader">
+      <span class="mobile-header-title">Marah.Pokes</span>
+    </div>
+
     <!-- Photo de fond fixe avec titre et sous-titre -->
     <div class="photo-background">
       <div class="photo-overlay-content">
@@ -84,9 +89,6 @@ const keywords = siteConfig.keywords.join(', ');
         <p class="site-subtitle">{siteConfig.slogan}</p>
       </div>
     </div>
-
-    <!-- Navigation (optionnelle - peut être ajoutée plus tard) -->
-    <!-- <nav>...</nav> -->
 
     <!-- Contenu principal qui recouvre la photo au scroll -->
     <main>
@@ -110,9 +112,8 @@ const keywords = siteConfig.keywords.join(', ');
     <!-- Footer -->
     <Footer />
 
-    <!-- Script pour le smooth scroll (amélioration de l'UX) -->
     <script>
-      // Gestion du smooth scroll pour les liens d'ancrage
+      // Smooth scroll pour les liens d'ancrage
       document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
         anchor.addEventListener('click', function (e) {
           const href = this.getAttribute('href');
@@ -128,6 +129,20 @@ const keywords = siteConfig.keywords.join(', ');
           }
         });
       });
+
+      // Header mobile : apparaît quand on scrolle sur la photo
+      const mobileHeader = document.getElementById('mobileHeader');
+      function updateMobileHeader() {
+        if (!mobileHeader || window.innerWidth > 768) return;
+        const threshold = window.innerHeight * 0.35;
+        if (window.scrollY > threshold) {
+          mobileHeader.classList.add('visible');
+        } else {
+          mobileHeader.classList.remove('visible');
+        }
+      }
+      window.addEventListener('scroll', updateMobileHeader, { passive: true });
+      window.addEventListener('resize', updateMobileHeader, { passive: true });
     </script>
   </body>
 </html>

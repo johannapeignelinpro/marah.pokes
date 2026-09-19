@@ -6,16 +6,13 @@ Liste complète des tâches à effectuer pour finaliser le site.
 
 ### 1. Assets & Média
 
-- [ ] **Image de fond** : Copier `Template_Fond__1_.jpg` dans `/public/assets/`
-- [ ] **Photos galerie** : Ajouter au moins 6-12 photos de tatouages dans `/public/assets/gallery/`
-  - Nommer les fichiers : `tattoo-1.jpg`, `tattoo-2.jpg`, etc.
-  - Optimiser les images (compression, résolution adaptée)
-  - Mettre à jour `src/components/Gallery.astro` avec les vraies images et leurs descriptions ALT
-- [ ] **Photo de l'artiste** : Ajouter une photo dans `/public/assets/artiste.jpg`
-  - Décommenter la balise `<img>` dans `src/components/About.astro` ligne 37
-- [ ] **Logo** (si disponible) : Ajouter dans `/public/assets/logo.png`
+- [x] **Image de fond** : en place (`photo-marah-dessin.jpg`)
+- [x] **Photos galerie** : 8 photos réelles en place dans `Gallery.astro`
+- [x] **Photo de l'artiste** : ajoutée dans `src/components/About.astro` (photo éditoriale `marah-tatoueuse-handpoke-seance-rennes`)
+- [x] **Photos éditoriales / ambiance** : 5 photos professionnelles intégrées (Artiste, section Handpoke x2, bandeau transition, section RDV) — voir détail plus bas
+- [ ] **Logo** : fichier présent (`logo-marahchenaina.jpg`) mais pas encore intégré au header/à la navigation
 - [ ] **Image OG** : Créer une image 1200x630px pour les partages sociaux → `/public/assets/og-image.jpg`
-- [ ] **Favicon** : Remplacer les favicons par défaut dans `/public/`
+- [ ] **Favicon** : Toujours la fusée par défaut d'Astro, à remplacer par le vrai logo
 
 ### 2. Contenu
 
@@ -28,20 +25,18 @@ Liste complète des tâches à effectuer pour finaliser le site.
 
 ### 3. Informations de contact
 
-- [ ] **Handle Instagram** : Remplacer `@marah.pokes` par le vrai dans :
-  - `src/config/seo.ts` (ligne 14)
-  - `src/config/seo.ts` (ligne 60 - URL complète)
+- [x] **Handle Instagram** : `@marah.pokes` confirmé exact, rien à changer
 - [ ] **Autres réseaux sociaux** (si applicable) :
   - Facebook : Ajouter dans `src/config/seo.ts` ligne 63
   - TikTok : Ajouter dans `src/config/seo.ts` ligne 64
 
 ### 4. Localisation & Coordonnées
 
-- [ ] **Adresse du studio** : Mettre à jour dans `src/config/seo.ts` ligne 24
-  - Si pas de local fixe, indiquer "Zone de service : Rennes et environs"
-- [ ] **Coordonnées GPS précises** : Ajuster si nécessaire dans `src/config/seo.ts` lignes 27-28
+- [x] **Adresse du studio** : 43 rue de Paris, 35000 Rennes — mise à jour dans `src/config/seo.ts` et affichée dans le footer
+- [x] **Coordonnées GPS précises** : géocodées pour le 43 rue de Paris et mises à jour dans `src/config/seo.ts`
 - [ ] **Horaires** : Préciser les disponibilités dans `src/config/seo.ts` ligne 52
 - [ ] **Tarifs** : Ajuster `priceRange` dans `src/config/seo.ts` ligne 51
+- [x] **Google My Business** : profil "Marah.Pokes" créé (reste à vérifier/compléter photos + avis, voir section 6)
 
 ## 🟡 Priorité MOYENNE - À faire avant le déploiement
 
@@ -56,16 +51,11 @@ Liste complète des tâches à effectuer pour finaliser le site.
 
 ### 6. SEO - Optimisations avancées
 
-- [ ] **Installer le plugin sitemap** :
-  ```bash
-  npm install @astrojs/sitemap
-  ```
-  Puis décommenter les lignes dans `astro.config.mjs`
-- [ ] **Google My Business** (CRUCIAL) :
-  - Créer un profil sur https://business.google.com
-  - Ajouter toutes les infos : adresse, horaires, photos
-  - Vérifier le profil (par carte postale)
-  - Demander des avis aux premiers clients
+- [x] **Installer le plugin sitemap** : installé et activé dans `astro.config.mjs`
+- [x] **Google My Business** : profil "Marah.Pokes" créé sur https://business.google.com
+  - [ ] Ajouter toutes les infos : adresse (43 rue de Paris), horaires, photos
+  - [ ] Vérifier le profil (par carte postale)
+  - [ ] Demander des avis aux premiers clients
 - [ ] **Google Search Console** :
   - Créer un compte
   - Ajouter le site

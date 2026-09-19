@@ -1,4 +1,8 @@
 ---
+import { Image } from 'astro:assets';
+import gesteImage from '../assets/images/editorial/marah-handpoke-geste-tatoueuse-rennes.jpg';
+import materielImage from '../assets/images/editorial/marah-materiel-handpoke-encre-rennes.jpg';
+import artistImage from '../assets/images/editorial/marah-tatoueuse-handpoke-seance-rennes.jpg';
 ---
 
 <section id="a-propos" class="about">
@@ -6,21 +10,49 @@
     <h2 class="text-center">Le Handpoke, c'est quoi ?</h2>
 
     <div class="about-content">
-      <p>
+      <div class="definition-row">
+        <p>
 Le tatouage handpoke est une technique traditionnelle réalisée à la main, point par point. L’aiguille dépose l’encre dans la peau pour créer une marque permanente, avec précision et intention. Contrairement au tatouage à la machine, il n’y a ni vibration, ni bruit : juste l’aiguille, l’encre et la main.
-      </p>
+        </p>
+        <div class="definition-media">
+          <Image
+            src={gesteImage}
+            alt="Geste précis d'une tatoueuse réalisant un handpoke à l'aiguille"
+            widths={[480, 768, 1200, gesteImage.width]}
+            sizes="(max-width: 768px) 100vw, 40vw"
+            loading="lazy"
+          />
+        </div>
+      </div>
 
-      <p>
+      <div class="definition-row definition-row--reverse">
+        <div class="definition-media">
+          <Image
+            src={materielImage}
+            alt="Godets d'encre noire et aiguille de handpoke préparés pour une séance"
+            widths={[480, 768, 1200, materielImage.width]}
+            sizes="(max-width: 768px) 100vw, 40vw"
+            loading="lazy"
+          />
+        </div>
+        <p>
 Cette méthode de tatouage offre un rendu fin et délicat, une sensation plus douce et une cicatrisation souvent plus rapide. C’est un moment plus lent, plus centré, où le corps est bien moins bousculé.
-      </p>
+        </p>
+      </div>
     </div>
 
-    <!-- Section Artiste - À personnaliser -->
+    <!-- Section Artiste -->
     <div class="artist-section mt-lg">
       <h3 class="text-center">L'Artiste</h3>
       <div class="artist-content">
-        <!-- TODO: Ajouter une photo de l'artiste -->
-        <!-- <img src="/assets/artiste.jpg" alt="Marah, tatoueuse handpoke" class="artist-photo" /> -->
+        <Image
+          src={artistImage}
+          alt="Marah, tatoueuse handpoke, concentrée pendant une séance de tatouage"
+          widths={[480, 768, 1200, artistImage.width]}
+          sizes="(max-width: 768px) 90vw, 400px"
+          loading="lazy"
+          class="artist-photo"
+        />
 
         <div class="artist-text">
           <p>
@@ -79,6 +111,38 @@ A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des
     margin-top: var(--spacing-md);
   }
 
+  .definition-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .definition-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .definition-row--reverse {
+    flex-direction: row-reverse;
+  }
+
+  .definition-row p {
+    flex: 1 1 55%;
+    margin-bottom: 0;
+  }
+
+  .definition-media {
+    flex: 0 0 40%;
+  }
+
+  .definition-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+  }
+
   .about-benefits {
     list-style: none;
     margin-top: var(--spacing-sm);
@@ -111,6 +175,7 @@ A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des
 
   .artist-photo {
     width: 100%;
+    height: auto;
     max-width: 400px;
     margin: 0 auto var(--spacing-md);
     display: block;
@@ -157,6 +222,24 @@ A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des
   }
 
   @media screen and (max-width: 768px) {
+    .definition-row,
+    .definition-row--reverse {
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .definition-row p {
+      order: 1;
+    }
+
+    .definition-media {
+      order: 2;
+      flex-basis: auto;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
     .specialties-grid {
       grid-template-columns: 1fr;
       gap: var(--spacing-sm);

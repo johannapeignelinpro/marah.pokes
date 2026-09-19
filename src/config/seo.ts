@@ -8,7 +8,7 @@ export const siteConfig = {
   slogan: 'Marah.pokes, tatoueuse handpoke basée à Rennes en Bretagne. Tatouages ornementaux déposés à la main dans un geste traditionnel, mêlant symboles intuitifs, formes organiques, lignes fines et délicats ombrés.',
 
   // Contact
-  instagram: '@marah.pokes', // TODO: Remplacer par le vrai handle Instagram
+  instagram: '@marah.pokes',
   email: 'contact@marah-pokes.fr', // Email fictif pour le formulaire
 
   // Localisation
@@ -17,11 +17,11 @@ export const siteConfig = {
     region: 'Bretagne',
     postalCode: '35000',
     country: 'France',
-    // TODO: Ajouter l'adresse exacte du studio ou zone de service
-    address: 'Rennes, France',
-    // Coordonnées GPS du centre de Rennes (à ajuster selon le studio)
-    latitude: 48.1173,
-    longitude: -1.6778
+    streetAddress: '43 rue de Paris',
+    address: '43 rue de Paris, 35000 Rennes',
+    // Coordonnées GPS précises du studio (43 rue de Paris, Rennes)
+    latitude: 48.1125336,
+    longitude: -1.6665207
   },
 
   // SEO
@@ -58,7 +58,7 @@ export const siteConfig = {
 
   // Social Media (à compléter)
   social: {
-    instagram: 'https://instagram.com/marah.pokes', // TODO: Remplacer par le vrai lien
+    instagram: 'https://instagram.com/marah.pokes',
     // facebook: '', // TODO: Ajouter si existe
     // tiktok: '', // TODO: Ajouter si existe
   },
@@ -81,6 +81,7 @@ export const schemaOrg = {
   // Adresse
   address: {
     '@type': 'PostalAddress',
+    streetAddress: siteConfig.location.streetAddress,
     addressLocality: siteConfig.location.city,
     addressRegion: siteConfig.location.region,
     postalCode: siteConfig.location.postalCode,

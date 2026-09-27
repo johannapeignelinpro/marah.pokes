@@ -2,13 +2,19 @@
 import { siteConfig } from '../config/seo';
 
 const currentYear = new Date().getFullYear();
+
+// Carte Google Maps (intégration sans clé d'API) et lien d'itinéraire vers l'atelier.
+// La carte n'est chargée qu'au clic : aucun cookie Google n'est déposé sans action du visiteur.
+const { address } = siteConfig.location;
+const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&z=16&output=embed`;
+const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
 ---
 
 <footer class="footer">
   <div class="container">
     <div class="footer-content">
-      <div class="footer-section">
-        <h4>{siteConfig.name}</h4>
+      <div class="footer-section footer-brand">
+        <p class="footer-logo">Marah <span>Chenaïna</span></p>
         <p>Tatouage handpoke à Rennes</p>
         <p class="footer-tagline">{siteConfig.slogan}</p>
       </div>
@@ -46,59 +52,115 @@ const currentYear = new Date().getFullYear();
       </div>
     </div>
 
+    <div class="footer-map">
+      <div class="footer-section footer-map-info">
+        <h4>Trouver l'atelier</h4>
+        <p>{siteConfig.atelierNoir.name}</p>
+        <p>{address}</p>
+        <a href={directionsUrl} target="_blank" rel="noopener noreferrer" class="link-underline">
+          Itinéraire →
+        </a>
+      </div>
+      <div
+        class="footer-map-frame"
+        id="footerMap"
+        data-src={mapEmbedUrl}
+        data-title={`Carte : ${siteConfig.atelierNoir.name}, ${address}`}
+      >
+        <div class="map-consent">
+          <svg class="map-consent-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"></path>
+            <circle cx="12" cy="9.5" r="2.5"></circle>
+          </svg>
+          <button type="button" class="btn map-consent-btn" id="footerMapButton">
+            Afficher la carte
+          </button>
+          <p class="map-consent-note">
+            La carte est fournie par Google Maps, qui peut déposer des cookies.
+          </p>
+        </div>
+      </div>
+    </div>
+
     <div class="footer-bottom">
       <p>
         &copy; {currentYear} {siteConfig.name}. Tous droits réservés.
       </p>
-      <p class="footer-credits">
-        Site créé avec <a
-          href="https://astro.build"
-          target="_blank"
-          rel="noopener noreferrer">Astro</a
-        >
-      </p>
+      <p class="footer-credits">Site créé par Johanna Peignelin Pro</p>
     </div>
   </div>
 </footer>
 
+<script>
+  // Chargement de la carte Google Maps uniquement au clic
+  const mapContainer = document.getElementById('footerMap');
+  const mapButton = document.getElementById('footerMapButton');
+
+  mapButton?.addEventListener('click', () => {
+    if (!mapContainer) return;
+    const iframe = document.createElement('iframe');
+    iframe.src = mapContainer.dataset.src ?? '';
+    iframe.title = mapContainer.dataset.title ?? 'Carte';
+    iframe.referrerPolicy = 'no-referrer-when-downgrade';
+    iframe.allowFullscreen = true;
+    mapContainer.replaceChildren(iframe);
+    mapContainer.classList.add('is-loaded');
+    iframe.focus();
+  });
+</script>
+
 <style>
   .footer {
-    background-color: var(--color-sable);
-    color: var(--color-beige);
-    padding: var(--spacing-lg) 0 var(--spacing-lg);
-    margin-top: 0;
+    background-color: var(--bg-deep);
+    border-top: 1px solid var(--line);
+    padding: var(--spacing-lg) 0 var(--spacing-md);
   }
 
   .footer-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: 1.6fr repeat(3, 1fr);
     gap: var(--spacing-lg);
     margin-bottom: var(--spacing-lg);
   }
 
+  .footer-logo {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 1.7rem !important;
+    color: var(--ink) !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .footer-logo span {
+    color: var(--accent-light);
+  }
+
   .footer-section h4 {
-    font-family: 'Amiri', serif;
-    font-size: 1rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: var(--fs-small);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-beige);
+    letter-spacing: var(--tracking-caps);
+    color: var(--accent-light);
     margin-bottom: var(--spacing-sm);
   }
 
   .footer-section p {
-    font-size: 0.9rem;
+    font-size: 1.0625rem;
     line-height: 1.6;
     margin-bottom: 0.5rem;
-    color: rgba(255, 248, 240, 0.9);
+    color: var(--ink-soft);
   }
 
   .footer-tagline {
-    font-size: 0.85rem;
-    font-style: italic;
-    color: rgba(255, 248, 240, 0.8);
+    font-size: 1rem !important;
+    color: var(--ink-muted) !important;
+    max-width: 26rem;
   }
 
-  .footer-nav {
+  .footer-nav,
+  .social-links {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -106,45 +168,126 @@ const currentYear = new Date().getFullYear();
 
   .footer-nav a,
   .social-links a {
-    color: var(--color-beige);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.3s ease;
+    color: var(--ink-soft);
+    font-size: 1.0625rem;
   }
 
   .footer-nav a:hover,
   .social-links a:hover {
-    color: var(--color-sable-light);
-    text-decoration: underline;
+    color: var(--accent-light);
   }
 
-  .social-links {
+  /* Carte : colonne d'infos + carte assombrie pour s'accorder au thème */
+  .footer-map {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
+    gap: var(--spacing-lg);
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .footer-map-info .link-underline {
+    margin-top: 0.75rem;
+  }
+
+  .footer-map-frame {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    /* Motif discret de quadrillage évoquant un plan */
+    background-color: var(--surface);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+
+  .footer-map-frame.is-loaded {
+    border: 0;
+  }
+
+  .footer-map-frame :global(iframe) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    /* Carte sombre : inversion + rotation de teinte (le repère reste rouge) */
+    filter: invert(0.9) hue-rotate(180deg) saturate(0.6) brightness(0.95);
+  }
+
+  .map-consent {
+    position: absolute;
+    inset: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    text-align: center;
+    background: radial-gradient(circle at center, rgba(42, 35, 30, 0.95) 0%, rgba(42, 35, 30, 0.6) 70%);
+  }
+
+  .map-consent-icon {
+    color: var(--accent-light);
+  }
+
+  .map-consent-note {
+    font-size: var(--fs-small) !important;
+    color: var(--ink-muted) !important;
+    max-width: 22rem;
+    margin: 0 !important;
   }
 
   .footer-bottom {
-    border-top: 1px solid rgba(255, 248, 240, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    border-top: 1px solid var(--line);
     padding-top: var(--spacing-md);
-    text-align: center;
   }
 
   .footer-bottom p {
-    font-size: 0.85rem;
-    margin-bottom: 0.5rem;
-    color: rgba(255, 248, 240, 0.8);
+    font-size: var(--fs-small);
+    letter-spacing: 0.02em;
+    margin: 0;
+    color: var(--ink-muted);
   }
 
   .footer-credits a {
-    color: var(--color-beige);
-    text-decoration: underline;
+    color: var(--ink-soft);
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 900px) {
+    .footer-map {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-sm);
+    }
+
+    .footer-map-frame {
+      height: 260px;
+    }
+
+    .footer-content {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+    }
+
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media screen and (max-width: 520px) {
     .footer-content {
       grid-template-columns: 1fr;
-      gap: var(--spacing-md);
+    }
+
+    .footer-bottom {
+      flex-direction: column;
     }
   }
 </style>

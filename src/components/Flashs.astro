@@ -1,46 +1,55 @@
 ---
 // Section Flashs - plaquettes gérées dans Sanity (flashBoard visibles, triées par ordre)
 import { getFlashBoards } from '../lib/sanity/api';
-import { squareImage } from '../lib/sanity/image';
+import { naturalImage } from '../lib/sanity/image';
 
 const flashBoards = (await getFlashBoards()).map((board) => ({
   ...board,
-  // Résolution élevée pour garder les prix lisibles sur la plaquette
-  ...squareImage(board.image, { widths: [400, 600, 800, 1200, 1600], quality: 85 }),
+  // Proportions d'origine (pas de recadrage carré, pour ne pas couper les prix)
+  // et résolution élevée pour garder les prix lisibles
+  ...naturalImage(board.image, { widths: [400, 600, 800, 1200, 1600], quality: 85 }),
 }));
 ---
 
 <section id="flashs" class="flashs">
-  <div class="container-full">
-    <h2 class="text-center">Flashs</h2>
-    <p class="flashs-intro text-center">
-      Flashs de tatouage handpoke disponibles à Rennes. Consultez <a href="https://instagram.com/marah.pokes" target="_blank" rel="noopener noreferrer">@marah.pokes</a> sur Instagram pour découvrir toutes les plaquettes de flashs.  Envoyez la photo du flash qui vous intéresse via le formulaire ci-dessous. Possibilité de freehand si cela correspond mieux à votre projet.
-    </p>
-    <p class="flashs-intro text-center">Informations:  J'accepte de modifier légèrement un flash s'il y a un petit détail qui gêne ou s’il y a l’envie d’ajouter quelque chose. A indiquer dans la section “demandes complémentaires”</p>
+  <div class="container">
+    <header class="flashs-head">
+      <span class="eyebrow">Disponibles à l'atelier</span>
+      <h2>Flashs</h2>
+      <div class="flashs-intro">
+        <p>
+          Flashs de tatouage handpoke disponibles à Rennes. Consultez <a href="https://instagram.com/marah.pokes" target="_blank" rel="noopener noreferrer">@marah.pokes</a> sur Instagram pour découvrir toutes les plaquettes de flashs.  Envoyez la photo du flash qui vous intéresse via le formulaire ci-dessous. Possibilité de freehand si cela correspond mieux à votre projet.
+        </p>
+        <p>Informations:  J'accepte de modifier légèrement un flash s'il y a un petit détail qui gêne ou s’il y a l’envie d’ajouter quelque chose. A indiquer dans la section “demandes complémentaires”</p>
+      </div>
+    </header>
 
     {flashBoards.length > 0 && (
-      <div class="flashs-grid">
-        {
-          flashBoards.map((board) => (
-            <div class="flash-item">
-              <img
-                src={board.src}
-                srcset={board.srcset}
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                width={board.size}
-                height={board.size}
-                alt={board.alt}
-                loading="lazy"
-                decoding="async"
-                class="flash-image"
-              />
-            </div>
-          ))
-        }
-      </div>
+      <>
+        <p class="swipe-hint" aria-hidden="true">Faites glisser →</p>
+        <div class="flashs-grid">
+          {
+            flashBoards.map((board) => (
+              <div class="flash-item">
+                <img
+                  src={board.src}
+                  srcset={board.srcset}
+                  sizes="(max-width: 768px) 80vw, (max-width: 1024px) 50vw, 25vw"
+                  width={board.width}
+                  height={board.height}
+                  alt={board.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="flash-image"
+                />
+              </div>
+            ))
+          }
+        </div>
+      </>
     )}
 
-    <p class="flashs-note text-center mt-lg">
+    <p class="flashs-note">
       Pour réserver un flash, rendez-vous dans la section{' '}
       <a href="#contact">Contact</a> ou sur{' '}
       <a
@@ -55,80 +64,59 @@ const flashBoards = (await getFlashBoards()).map((board) => ({
 </section>
 
 <style>
-  .flashs {
-    background-color: rgba(255, 248, 240, 0.7);
-    padding: var(--spacing-xl) 0;
+  .flashs-head {
+    max-width: 720px;
+    margin-bottom: var(--spacing-lg);
   }
 
-  .flashs-intro {
-    max-width: 700px;
-    margin: 0 auto var(--spacing-lg);
-    color: var(--text-secondary);
-    font-size: 1.0625rem;
+  .flashs-intro p {
+    color: var(--ink-soft);
   }
 
-  .flashs-intro a {
-    color: var(--color-sable);
-    font-weight: 700;
+  .flashs-intro a,
+  .flashs-note a {
+    color: var(--accent-light);
+    border-bottom: 1px solid currentColor;
   }
 
-  .flashs-intro a:hover {
-    color: var(--color-sable-dark);
+  .flashs-intro a:hover,
+  .flashs-note a:hover {
+    color: var(--ink);
+  }
+
+  .swipe-hint {
+    display: none;
   }
 
   .flashs-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem;
-    margin-top: var(--spacing-lg);
+    align-items: start;
   }
 
-  .container-full {
-    width: 100%;
-    max-width: 100%;
-    padding: 0 var(--spacing-md);
-  }
-
+  /* Plaquette seule, sans cadre : léger arrondi et ombre douce */
   .flash-item {
-    position: relative;
     overflow: hidden;
-    aspect-ratio: 1 / 1;
-    background-color: var(--color-beige);
-    border-radius: 4px;
-    transition: all 0.3s ease;
+    border-radius: 3px;
+    box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+    transition: transform 0.4s ease;
   }
 
   .flash-image {
+    display: block;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
+    height: auto;
     cursor: pointer;
   }
 
   .flash-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(186, 154, 118, 0.3);
-  }
-
-  .flash-item:hover .flash-image {
-    transform: scale(1.02);
+    transform: translateY(-4px);
   }
 
   .flashs-note {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    font-style: italic;
-  }
-
-  .flashs-note a {
-    color: var(--color-sable);
-    font-weight: 700;
-    text-decoration: underline;
-  }
-
-  .flashs-note a:hover {
-    color: var(--color-sable-dark);
+    margin-top: var(--spacing-lg);
+    color: var(--ink-muted);
   }
 
   /* Tablette */
@@ -139,29 +127,43 @@ const flashBoards = (await getFlashBoards()).map((board) => ({
     }
   }
 
-  /* Mobile */
+  /* Mobile : défilement horizontal */
   @media screen and (max-width: 768px) {
-    .flashs {
-      padding: var(--spacing-md) 0;
+    .flashs-head {
+      margin-bottom: var(--spacing-md);
     }
 
-    .container-full {
-      padding: 0 var(--spacing-sm);
+    .swipe-hint {
+      display: block;
+      font-size: var(--fs-small);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-caps);
+      color: var(--accent-light);
+      margin-bottom: 0.75rem;
+      text-align: right;
     }
 
     .flashs-grid {
-      grid-template-columns: 1fr;
-      gap: 0.75rem;
-      margin-top: var(--spacing-sm);
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 1rem;
+      margin: 0 -1.25rem;
+      padding: 0 1.25rem 0.5rem;
+      scrollbar-width: none;
     }
 
-    .flashs-intro {
-      font-size: 1rem;
-      margin-bottom: var(--spacing-sm);
+    .flashs-grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    .flash-item {
+      flex: 0 0 78%;
+      scroll-snap-align: center;
     }
 
     .flashs-note {
-      font-size: 0.95rem;
+      margin-top: var(--spacing-md);
     }
   }
 </style>

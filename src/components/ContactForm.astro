@@ -1,25 +1,30 @@
 ---
 import { Image } from 'astro:assets';
-import studioImage from '../assets/images/editorial/marah-studio-tatouage-rennes.jpg';
+import motifImage from '../assets/images/editorial/marah-handpoke-motif-organique-rennes.jpg';
 ---
 
-<section id="contact" class="contact ">
-  <div class="contact-visual">
-    <Image
-      src={studioImage}
-      alt="Vue d'ensemble du studio de tatouage pendant une séance"
-      widths={[640, 1280, 1920, studioImage.width]}
-      sizes="100vw"
-      loading="lazy"
-    />
-  </div>
+<section id="contact" class="contact">
+  <div class="container contact-layout">
+    <div class="contact-aside">
+      <span class="eyebrow">Rendez-vous</span>
+      <h2>Prendre rendez-vous</h2>
+      <p class="contact-intro">
+        Intéressé·e par un tatouage handpoke ? Remplissez ce formulaire pour
+        discuter de votre projet. Je vous répondrai dans les plus brefs délais.
+      </p>
 
-  <div class="container-narrow pa-md">
-    <h2 class="text-center">Prendre rendez-vous</h2>
-    <p class="contact-intro text-center">
-      Intéressé·e par un tatouage handpoke ? Remplissez ce formulaire pour
-      discuter de votre projet. Je vous répondrai dans les plus brefs délais.
-    </p>
+      <div class="patience-message">
+        <p>
+          J’accepte de discuter de tout projet pour l’adapter à mon univers. Si cela ne correspond pas, je vous guiderai vers un ou une autre artiste adapté.e.
+        </p>
+        <p>
+          La sortie d'aiguille est de 80 euros, ensuite, le prix sera variable en fonction de la taille, de l'emplacement et bien sûr, de la difficulté du projet.
+        </p>
+        <p>
+Vos demandes seront traitées dès que possible. Je vous réponds au plus vite afin de discuter des détails de la conception et fixer votre rendez vous. Merci pour votre patience et votre compréhension.
+        </p>
+      </div>
+    </div>
 
     <form class="contact-form" id="contact-form">
       <!-- Informations personnelles -->
@@ -288,18 +293,6 @@ import studioImage from '../assets/images/editorial/marah-studio-tatouage-rennes
         <button type="submit" class="btn btn-primary">
           Envoyer la demande
         </button>
-        <div class="patience-message">
-        <p>
-          J’accepte de discuter de tout projet pour l’adapter à mon univers. Si cela ne correspond pas, je vous guiderai vers un ou une autre artiste adapté.e.
-        </p>
-        <br>
-        <p>
-          La sortie d'aiguille est de 80 euros, ensuite, le prix sera variable en fonction de la taille, de l'emplacement et bien sûr, de la difficulté du projet.
-        </p>
-        <br>
-        <p>
-Vos demandes seront traitées dès que possible. Je vous réponds au plus vite afin de discuter des détails de la conception et fixer votre rendez vous. Merci pour votre patience et votre compréhension.
-        </p>
       </div>
 
       <!-- Badge de sécurité -->
@@ -317,69 +310,80 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
       </p>
     </form>
 
- 
+    <!-- Photo de clôture : motif végétal en cours de tatouage -->
+    <figure class="frame contact-visual">
+      <div class="frame-inner">
+        <Image
+          src={motifImage}
+          alt="Motif végétal en ligne fine tatoué au handpoke, en cours de réalisation"
+          widths={[640, 1200, motifImage.width]}
+          sizes="(max-width: 1200px) 100vw, 1136px"
+          loading="lazy"
+        />
+      </div>
+    </figure>
+  </div>
 </section>
 
 <style>
-  .contact {
-    background-color: rgba(255, 248, 240, 0.7);
-    padding-bottom: 0 !important;
-  }
-
-  .contact-visual {
-    width: 100%;
-    height: clamp(220px, 32vw, 420px);
-    margin-top: calc(-1 * var(--spacing-xl));
-    margin-bottom: var(--spacing-lg);
-    overflow: hidden;
-  }
-
-  .contact-visual img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 35%;
-    display: block;
+  .contact-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
+    gap: var(--spacing-lg);
+    align-items: start;
   }
 
   .contact-intro {
-    max-width: 600px;
-    margin: 0 auto var(--spacing-lg);
-    color: var(--text-secondary);
+    color: var(--ink-soft);
+    margin-bottom: var(--spacing-md);
+  }
+
+  /* Infos pratiques : liste fine avec tiret rouille */
+  .patience-message {
+    border-top: 1px solid var(--line);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .patience-message p {
+    position: relative;
+    padding: 1rem 0 1rem 1.75rem;
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .patience-message p::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.9rem;
+    width: 0.9rem;
+    height: 1px;
+    background: var(--accent-light);
+  }
+
+  .contact-visual {
+    grid-column: 1 / -1;
+  }
+
+  .contact-visual img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: center 42%;
   }
 
   .contact-form {
-    max-width: 600px;
-    margin: 0 auto;
-    background-color: rgba(255, 255, 255, 0.5);
-    padding: var(--spacing-md);
-    border: 1px solid var(--color-sable-light);
+    background-color: var(--surface);
+    padding: 2.5rem;
+    border: 1px solid var(--line);
   }
 
   .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-sm);
-  }
-
-  /* Info box */
-  .info-box {
-    background-color: rgba(186, 154, 118, 0.1);
-    border-left: 3px solid var(--color-sable);
-    padding: 1rem 1.25rem;
-    margin-bottom: var(--spacing-md);
-    border-radius: 2px;
-  }
-
-  .info-box p {
-    margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: var(--text-primary);
-  }
-
-  .info-box strong {
-    color: var(--color-sable);
+    gap: var(--spacing-md);
   }
 
   /* Radio options pour type de projet */
@@ -387,6 +391,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
     display: flex;
     gap: var(--spacing-sm);
     flex-wrap: wrap;
+    margin-top: 0.25rem;
   }
 
   .radio-option {
@@ -394,56 +399,47 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
     min-width: 200px;
     display: flex;
     align-items: center;
-    padding: 1rem;
-    background-color: rgba(255, 255, 255, 0.7);
-    border: 2px solid var(--color-sable-light);
-    border-radius: 4px;
+    padding: 0.9rem 1rem;
+    margin: 0;
+    border: 1px solid var(--line-input);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
   }
 
   .radio-option:hover {
-    border-color: var(--color-sable);
-    background-color: rgba(186, 154, 118, 0.05);
+    border-color: var(--accent-light);
   }
 
   .radio-option input[type="radio"] {
     margin-right: 0.75rem;
     cursor: pointer;
-    accent-color: var(--color-sable);
-  }
-
-  .radio-option input[type="radio"]:checked + .radio-label {
-    color: var(--color-sable);
-    font-weight: 700;
+    accent-color: var(--accent-light);
   }
 
   .radio-option:has(input[type="radio"]:checked) {
-    border-color: var(--color-sable);
-    background-color: rgba(186, 154, 118, 0.1);
+    border-color: var(--accent-light);
+    background-color: rgba(224, 138, 106, 0.1);
   }
 
   .radio-label {
     cursor: pointer;
-    font-size: 0.95rem;
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink-soft);
   }
 
-  /* Field hint */
-  .field-hint {
-    display: block;
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
-    color: var(--text-light);
-    font-style: italic;
+  .radio-option input[type="radio"]:checked + .radio-label {
+    color: var(--ink);
   }
 
   /* Error message */
   .error-message {
     display: block;
     margin-top: 0.5rem;
-    font-size: 0.85rem;
-    color: #d32f2f;
-    font-weight: 500;
+    font-size: var(--fs-small);
+    color: #f0a08a;
   }
 
   .error-message:empty {
@@ -453,8 +449,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
   .form-group.has-error input,
   .form-group.has-error textarea,
   .form-group.has-error select {
-    border-color: #d32f2f;
-    background-color: rgba(211, 47, 47, 0.05);
+    border-bottom-color: #f0a08a;
   }
 
   /* Warning message */
@@ -462,11 +457,10 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
     display: block;
     margin-top: 0.5rem;
     padding: 0.75rem;
-    background-color: rgba(255, 152, 0, 0.1);
-    border-left: 3px solid #ff9800;
-    font-size: 0.85rem;
-    color: #e65100;
-    border-radius: 2px;
+    background-color: rgba(214, 160, 70, 0.1);
+    border-left: 2px solid #d6a046;
+    font-size: var(--fs-small);
+    color: #ecc68c;
   }
 
   .warning-message:empty {
@@ -480,16 +474,13 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
     justify-content: center;
     gap: 0.5rem;
     margin-top: var(--spacing-md);
-    padding: 0.75rem;
-    background-color: rgba(76, 175, 80, 0.1);
-    border-radius: 4px;
-    font-size: 0.85rem;
-    color: #2e7d32;
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
   }
 
   .security-badge::before {
     content: '🔒';
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   /* File upload area */
@@ -507,27 +498,28 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    padding: 2rem 1rem;
-    background-color: rgba(255, 255, 255, 0.7);
-    border: 2px dashed var(--color-sable-light);
-    border-radius: 4px;
+    padding: 1.75rem 1rem;
+    margin: 0.25rem 0 0;
+    border: 1px dashed var(--line-input);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: border-color 0.3s ease;
     text-align: center;
   }
 
   .file-label:hover {
-    border-color: var(--color-sable);
-    background-color: rgba(186, 154, 118, 0.05);
+    border-color: var(--accent-light);
   }
 
   .file-label svg {
-    color: var(--color-sable);
+    color: var(--accent-light);
   }
 
   .file-label span {
-    font-size: 0.95rem;
-    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink-muted);
   }
 
   .file-list {
@@ -542,13 +534,12 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
     align-items: center;
     justify-content: space-between;
     padding: 0.5rem 0.75rem;
-    background-color: rgba(186, 154, 118, 0.05);
-    border-radius: 4px;
-    font-size: 0.9rem;
+    background-color: var(--bg-deep);
+    font-size: 1rem;
   }
 
   .file-item-name {
-    color: var(--text-secondary);
+    color: var(--ink-soft);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -557,7 +548,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
   .file-item-remove {
     background: none;
     border: none;
-    color: var(--color-sable);
+    color: var(--accent-light);
     cursor: pointer;
     font-size: 1.2rem;
     padding: 0 0.5rem;
@@ -565,115 +556,71 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
   }
 
   .file-item-remove:hover {
-    color: var(--color-sable-dark);
-  }
-
-  /* Message de patience */
-  .patience-message {
-    margin-top: var(--spacing-md);
-    padding: 1.25rem;
-    background: linear-gradient(135deg, rgba(186, 154, 118, 0.08) 0%, rgba(186, 154, 118, 0.15) 100%);
-    border-radius: 4px;
-    text-align: center;
-  }
-
-  .patience-message p {
-    margin: 0;
-    font-size: 0.95rem;
-    color: var(--text-secondary);
-    font-style: italic;
-    line-height: 1.6;
+    color: var(--ink);
   }
 
   .form-actions {
     margin-top: var(--spacing-md);
-    text-align: center;
   }
 
   .form-actions .btn {
-    min-width: 200px;
+    width: 100%;
   }
 
   .form-note {
-    margin-top: var(--spacing-md);
-    font-size: 0.85rem;
-    color: var(--text-light);
+    margin-top: var(--spacing-sm);
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
     text-align: center;
   }
 
   .form-warning {
     display: block;
     margin-top: 0.5rem;
-    color: var(--color-sable);
-    font-style: italic;
+    color: var(--accent-light);
   }
 
   /* Sections Flash / Projet Perso */
   .form-section {
-    margin-top: var(--spacing-md);
+    margin-top: var(--spacing-sm);
     padding-top: var(--spacing-md);
-    border-top: 1px solid var(--color-sable-light);
+    border-top: 1px solid var(--line);
   }
 
   .form-section-title {
-    font-family: 'Amiri', serif;
-    font-size: 1.1rem;
-    color: var(--color-sable);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    font-size: 1.6rem;
     margin-bottom: var(--spacing-md);
   }
 
   .optional {
-    font-weight: 400;
-    font-style: italic;
-    color: var(--text-light);
-    font-size: 0.9em;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.95em;
   }
 
-  .contact-alt {
-    padding-top: var(--spacing-lg);
-    border-top: 1px solid var(--color-sable-light);
+  @media screen and (max-width: 1024px) {
+    .contact-layout {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-md);
+    }
   }
 
-  .contact-methods {
-    display: flex;
-    justify-content: center;
-    gap: var(--spacing-lg);
-    margin-top: var(--spacing-md);
-    flex-wrap: wrap;
-  }
-
-  .contact-method {
-    text-align: center;
-  }
-
-  .contact-method strong {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--color-sable);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: 0.9rem;
-  }
-
-  .contact-method a {
-    font-size: 1.1rem;
+  /* Mobile : format vertical, centré sur le motif */
+  @media screen and (max-width: 768px) {
+    .contact-visual img {
+      aspect-ratio: 4 / 5;
+      object-position: center 50%;
+    }
   }
 
   @media screen and (max-width: 768px) {
-    .contact-visual {
-      height: clamp(180px, 45vw, 260px);
-      margin-top: calc(-1 * var(--spacing-md));
-      margin-bottom: var(--spacing-md);
-    }
-
     .form-row {
       grid-template-columns: 1fr;
+      gap: 0;
     }
 
     .contact-form {
-      padding: var(--spacing-sm);
+      padding: 1.5rem 1.25rem;
     }
 
     .project-type-options {
@@ -833,8 +780,8 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
 
     ['dragenter', 'dragover'].forEach(eventName => {
       fileUploadArea.addEventListener(eventName, () => {
-        fileUploadArea.style.borderColor = 'var(--color-sable)';
-        fileUploadArea.style.backgroundColor = 'rgba(186, 154, 118, 0.1)';
+        fileUploadArea.style.borderColor = 'var(--accent-light)';
+        fileUploadArea.style.backgroundColor = 'rgba(180, 89, 60, 0.08)';
       });
     });
 

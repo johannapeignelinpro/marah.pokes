@@ -8,7 +8,12 @@ import Gallery from '../components/Gallery.astro';
 import Reviews from '../components/Reviews.astro';
 import ContactForm from '../components/ContactForm.astro';
 import Footer from '../components/Footer.astro';
-import aiguilleImage from '../assets/images/editorial/marah-aiguille-handpoke-detail-rennes.jpg';
+import bandeauImage from '../assets/images/editorial/marah-studio-tatouage-rennes.jpg';
+import seanceImage from '../assets/images/editorial/marah-seance-tatouage-handpoke-rennes.jpg';
+import brasImage from '../assets/images/editorial/marah-handpoke-tatouage-bras-rennes.jpg';
+import studioVueImage from '../assets/images/editorial/marah-tatoueuse-studio-handpoke-rennes.jpg';
+
+const { atelierNoir } = siteConfig;
 
 // Meta tags pour le SEO
 const pageTitle = siteConfig.title;
@@ -22,6 +27,7 @@ const keywords = siteConfig.keywords.join(', ');
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#1f1a16" />
 
     <!-- SEO Meta Tags -->
     <title>{pageTitle}</title>
@@ -72,54 +78,147 @@ const keywords = siteConfig.keywords.join(', ');
     <!-- Google Fonts - chargement optimisé via <link> (évite le blocage du @import CSS) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rozha+One&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Pinyon+Script&display=swap"
+    />
 
     <!-- Canonical URL -->
     <link rel="canonical" href={siteConfig.url} />
   </head>
 
   <body>
-    <!-- Header mobile fixe (visible uniquement au scroll sur mobile) -->
-    <div class="mobile-header" id="mobileHeader">
-      <span class="mobile-header-title">Marah.Pokes</span>
-    </div>
-
-    <!-- Photo de fond fixe avec titre et sous-titre -->
-    <div class="photo-background">
-      <div class="photo-overlay-content">
-        <h1 class="site-title">{siteConfig.name}</h1>
-        <p class="site-subtitle">{siteConfig.slogan}</p>
+    <!-- Header fixe -->
+    <header class="site-header" id="siteHeader">
+      <div class="header-inner">
+        <a href="#hero" class="brand" aria-label="Marah Chenaïna, artiste tatoueuse et illustratrice : retour en haut">
+          <span class="brand-name">Marah Chenaïna</span>
+          <span class="brand-role">Artiste Tatoueuse – Illustratrice</span>
+        </a>
+        <nav class="main-nav" aria-label="Navigation principale">
+          <a href="#a-propos">Le handpoke</a>
+          <a href="#artiste">L'artiste</a>
+          <a href="#flashs">Flashs</a>
+          <a href="#galerie">Galerie</a>
+          <a href="#avis">Avis</a>
+        </nav>
+        <a href="#contact" class="header-cta">Rendez-vous</a>
       </div>
-    </div>
+    </header>
 
-    <!-- Contenu principal qui recouvre la photo au scroll -->
     <main>
-      <!-- CTA au début du scroll -->
-      <div class="hero-cta-section">
-        <div class="container text-center">
-          <div class="hero-cta">
-            <a href="#contact" class="btn btn-primary">Réserver un tatouage handpoke</a>
-            <a href="#flashs" class="btn">Voir les Flashs disponibles</a>
-            <a href="#galerie" class="btn">Voir la Galerie</a>
+      <!-- Hero : texte à gauche, photo à droite -->
+      <section class="hero" id="hero">
+        <div class="hero-inner">
+          <div class="hero-text">
+            <p class="hero-kicker">Tatouage Handpoke à {siteConfig.location.city}</p>
+            <h1 class="site-title">Marah <span>Chenaïna</span></h1>
+            <p class="site-subtitle">{siteConfig.slogan}</p>
+            <div class="hero-cta">
+              <a href="#contact" class="btn btn-primary">Réserver un tatouage handpoke</a>
+              <a href="#flashs" class="btn btn-ghost">Voir les Flashs disponibles</a>
+              <a href="#galerie" class="btn btn-ghost">Voir la Galerie</a>
+            </div>
           </div>
+          <figure class="hero-media">
+            <img
+              src="/assets/gallery/photosmarah/photo-marah-dessin.jpg"
+              alt="Marah, tatoueuse handpoke, en train de dessiner dans son atelier à Rennes"
+              width="1920"
+              height="1265"
+              fetchpriority="high"
+              decoding="async"
+            />
+            <figcaption>Marah et ses créations</figcaption>
+          </figure>
         </div>
-      </div>
+      </section>
 
       <About />
 
+      <Flashs />
+
       <!-- Bandeau éditorial de transition -->
       <div class="editorial-band">
-        <Image
-          src={aiguilleImage}
-          alt="Aiguille de handpoke en train de tracer un motif sur la peau"
-          widths={[640, 1280, 1920, aiguilleImage.width]}
-          sizes="100vw"
-          loading="lazy"
-        />
+        <div class="editorial-band-inner">
+          <Image
+            src={bandeauImage}
+            alt="Vue de l'Atelier Noir à Rennes pendant une séance de tatouage handpoke"
+            widths={[640, 1040, 1600, bandeauImage.width]}
+            sizes="(max-width: 768px) 100vw, 1040px"
+            loading="lazy"
+          />
+        </div>
       </div>
 
-      <Flashs />
+      <!-- Dans l'atelier : photos encadrées -->
+      <section class="atelier section-alt" aria-labelledby="atelier-title">
+        <div class="container">
+          <div class="atelier-head">
+            <div>
+              <span class="eyebrow">Dans l'atelier</span>
+              <h2 id="atelier-title">L'{atelierNoir.name}</h2>
+            </div>
+            <div class="atelier-text">
+              <p>
+                Marah est artiste tatoueuse résidente de l'{atelierNoir.name}, au
+                {' '}{siteConfig.location.address}. C'est là qu'elle vous accueille, sur
+                rendez-vous, pour chaque séance de tatouage handpoke.
+              </p>
+              {(atelierNoir.googleUrl || atelierNoir.instagramUrl) && (
+                <div class="atelier-links">
+                  {atelierNoir.googleUrl && (
+                    <a href={atelierNoir.googleUrl} target="_blank" rel="noopener noreferrer" class="link-underline">
+                      L'{atelierNoir.name} sur Google →
+                    </a>
+                  )}
+                  {atelierNoir.instagramUrl && (
+                    <a href={atelierNoir.instagramUrl} target="_blank" rel="noopener noreferrer" class="link-underline">
+                      L'{atelierNoir.name} sur Instagram →
+                    </a>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+          <div class="atelier-grid">
+            <figure class="frame">
+              <div class="frame-inner">
+                <Image
+                  src={seanceImage}
+                  alt="Marah pendant une séance de tatouage handpoke dans son atelier"
+                  widths={[400, 700, 1000]}
+                  sizes="(max-width: 768px) 75vw, 33vw"
+                  loading="lazy"
+                />
+              </div>
+            </figure>
+            <figure class="frame">
+              <div class="frame-inner">
+                <Image
+                  src={brasImage}
+                  alt="Tatouage handpoke en cours de réalisation sur un bras"
+                  widths={[400, 700, 1000]}
+                  sizes="(max-width: 768px) 75vw, 33vw"
+                  loading="lazy"
+                />
+              </div>
+            </figure>
+            <figure class="frame">
+              <div class="frame-inner">
+                <Image
+                  src={studioVueImage}
+                  alt="Vue de l'atelier de tatouage handpoke à Rennes"
+                  widths={[400, 700, 1000]}
+                  sizes="(max-width: 768px) 75vw, 33vw"
+                  loading="lazy"
+                />
+              </div>
+            </figure>
+          </div>
+        </div>
+      </section>
+
       <Gallery />
       <Reviews />
       <ContactForm />
@@ -146,39 +245,364 @@ const keywords = siteConfig.keywords.join(', ');
         });
       });
 
-      // Header mobile : apparaît quand on scrolle sur la photo
-      const mobileHeader = document.getElementById('mobileHeader');
-      function updateMobileHeader() {
-        if (!mobileHeader || window.innerWidth > 768) return;
-        const threshold = window.innerHeight * 0.35;
-        if (window.scrollY > threshold) {
-          mobileHeader.classList.add('visible');
-        } else {
-          mobileHeader.classList.remove('visible');
-        }
+      // Header : fond plus opaque une fois la page scrollée
+      const siteHeader = document.getElementById('siteHeader');
+      function updateHeader() {
+        siteHeader?.classList.toggle('scrolled', window.scrollY > 24);
       }
-      window.addEventListener('scroll', updateMobileHeader, { passive: true });
-      window.addEventListener('resize', updateMobileHeader, { passive: true });
+      updateHeader();
+      window.addEventListener('scroll', updateHeader, { passive: true });
     </script>
 
     <style>
-      .editorial-band {
+      /* ---------- Header ---------- */
+      .site-header {
+        position: fixed;
+        inset: 0 0 auto 0;
+        z-index: 100;
+        height: var(--header-height);
+        background: rgba(31, 26, 22, 0.6);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid transparent;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+      }
+
+      .site-header.scrolled {
+        background: rgba(25, 21, 18, 0.92);
+        border-bottom-color: var(--line);
+      }
+
+      .header-inner {
+        max-width: var(--container-width);
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 var(--spacing-md);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--spacing-md);
+      }
+
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        color: var(--ink);
+        white-space: nowrap;
+        line-height: 1.1;
+      }
+
+      .brand-name {
+        font-family: var(--font-display);
+        font-style: italic;
+        font-weight: 600;
+        font-size: 1.45rem;
+      }
+
+      .brand-role {
+        font-size: var(--fs-small);
+        letter-spacing: 0.04em;
+        color: var(--ink-muted);
+      }
+
+      .brand:hover {
+        color: var(--ink);
+      }
+
+      .main-nav {
+        display: flex;
+        gap: 2.25rem;
+      }
+
+      .main-nav a {
+        font-size: var(--fs-small);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: var(--tracking-caps);
+        color: var(--ink-soft);
+      }
+
+      .main-nav a:hover {
+        color: var(--accent-light);
+      }
+
+      .header-cta {
+        font-size: var(--fs-small);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: var(--tracking-caps);
+        color: var(--ink);
+        border: 1px solid var(--accent-light);
+        padding: 0.6rem 1.2rem;
+        white-space: nowrap;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .header-cta:hover {
+        background: var(--accent);
+        color: var(--ink);
+      }
+
+      /* ---------- Hero ---------- */
+      .hero {
+        padding: calc(var(--header-height) + var(--spacing-lg)) 0 var(--spacing-xl);
+      }
+
+      .hero-inner {
+        max-width: var(--container-width);
+        margin: 0 auto;
+        padding: 0 var(--spacing-md);
+        display: grid;
+        grid-template-columns: 1fr 1.1fr;
+        gap: var(--spacing-lg);
+        align-items: center;
+      }
+
+      .hero-kicker {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        font-size: clamp(1rem, 0.9rem + 0.3vw, 1.125rem);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: var(--tracking-caps);
+        color: var(--accent-light);
+        margin-bottom: 1.1rem;
+      }
+
+      .hero-kicker::before {
+        content: '';
+        width: 2.5rem;
+        height: 1px;
+        background: currentColor;
+      }
+
+      .site-title {
+        margin-bottom: 1.75rem;
+      }
+
+      .site-title span {
+        color: var(--accent-light);
+      }
+
+      .site-subtitle {
+        max-width: 34rem;
+        color: var(--ink-soft);
+        margin-bottom: 2.25rem;
+      }
+
+      .hero-cta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem 2rem;
+      }
+
+      .hero-media {
+        position: relative;
+        margin: 0;
+      }
+
+      .hero-media img {
+        display: block;
         width: 100%;
-        height: clamp(220px, 32vw, 420px);
+        height: auto;
+        aspect-ratio: 4 / 5;
+        object-fit: cover;
+        object-position: 70% center;
+        border-radius: 3px;
+        box-shadow: 0 24px 50px -24px rgba(0, 0, 0, 0.8);
+      }
+
+      .hero-media figcaption {
+        margin-top: 0.85rem;
+        font-size: var(--fs-small);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: var(--tracking-caps);
+        color: var(--ink-muted);
+        text-align: right;
+      }
+
+      /* ---------- Bandeau éditorial ---------- */
+      .editorial-band {
+        padding: 0 var(--spacing-md);
+        background: linear-gradient(to bottom, var(--bg) 50%, var(--bg-alt) 50%);
+      }
+
+      .editorial-band-inner {
+        position: relative;
+        max-width: 1040px;
+        margin: 0 auto;
+        aspect-ratio: 16 / 9;
         overflow: hidden;
+        border-radius: 3px;
+        box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
       }
 
       .editorial-band img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        object-position: center 30%;
+        object-position: center 60%;
         display: block;
       }
 
+      /* ---------- Atelier ---------- */
+      .atelier {
+        padding-top: var(--spacing-lg);
+      }
+
+      .atelier-head {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: var(--spacing-md) var(--spacing-lg);
+        align-items: end;
+        margin-bottom: var(--spacing-md);
+      }
+
+      .atelier-head h2 {
+        margin-bottom: 0;
+      }
+
+      .atelier-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem 2rem;
+        margin-top: 1.25rem;
+      }
+
+      .atelier-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-md);
+      }
+
+      .atelier-grid img {
+        aspect-ratio: 4 / 5;
+        object-fit: cover;
+      }
+
+      /* ---------- Responsive ---------- */
+      @media screen and (max-width: 1024px) {
+        .main-nav {
+          display: none;
+        }
+      }
+
       @media screen and (max-width: 768px) {
+        .header-inner {
+          padding: 0 1.25rem;
+        }
+
+        .brand-name {
+          font-size: 1.2rem;
+        }
+
+        .brand-role {
+          letter-spacing: 0;
+        }
+
+        .hero-kicker {
+          justify-content: center;
+        }
+
+        .hero-kicker::before {
+          display: none;
+        }
+
+        .header-cta {
+          padding: 0.5rem 0.9rem;
+        }
+
+        .hero {
+          padding-top: calc(var(--header-height) + var(--spacing-md));
+        }
+
+        .hero-inner {
+          grid-template-columns: 1fr;
+          gap: var(--spacing-md);
+          padding: 0 1.25rem;
+        }
+
+        .hero-text {
+          text-align: center;
+        }
+
+        .site-subtitle {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .hero-cta {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .hero-cta .btn-primary {
+          width: 100%;
+          max-width: 340px;
+        }
+
+        .hero-media img {
+          aspect-ratio: 4 / 3;
+        }
+
+        .hero-media figcaption {
+          text-align: center;
+        }
+
         .editorial-band {
-          height: clamp(180px, 45vw, 260px);
+          padding: 0;
+          background: none;
+        }
+
+        .editorial-band-inner {
+          max-width: none;
+          aspect-ratio: auto;
+          height: clamp(200px, 55vw, 300px);
+          border-radius: 0;
+          box-shadow: none;
+        }
+
+        .editorial-band-inner::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to bottom,
+            var(--bg) 0%,
+            rgba(31, 26, 22, 0) 12%,
+            rgba(25, 21, 18, 0) 88%,
+            var(--bg-alt) 100%
+          );
+          pointer-events: none;
+        }
+
+        .atelier-head {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        /* Atelier : défilement horizontal */
+        .atelier-grid {
+          display: flex;
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+          gap: 1rem;
+          margin: 0 -1.25rem;
+          padding: 0 1.25rem 0.5rem;
+          scrollbar-width: none;
+        }
+
+        .atelier-grid::-webkit-scrollbar {
+          display: none;
+        }
+
+        .atelier-grid .frame {
+          flex: 0 0 72%;
+          scroll-snap-align: center;
         }
       }
     </style>

@@ -1,14 +1,12 @@
 /* ============================================
    DESIGN SYSTEM - MARAH.POKES
    Tatouage Handpoke à Rennes
+   Direction artistique : atelier sombre, brun chaud & rouille,
+   titres en serif italique, textes droits et lisibles.
    ============================================ */
 
-/* ============================================
-   IMPORTS DE POLICES
-   ============================================ */
-
-/* Polices chargées via <link> dans index.astro pour éviter le blocage du rendu CSS.
-   Rozha One (H1) + Amiri (textes, H2/H3) */
+/* Polices chargées via <link> dans index.astro :
+   Cormorant Garamond (titres), EB Garamond (textes), Pinyon Script (accents manuscrits) */
 
 
 /* ============================================
@@ -23,37 +21,69 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
 }
 
 
 /* ============================================
-   VARIABLES CSS - PALETTE DE COULEURS
+   VARIABLES CSS
    ============================================ */
 
 :root {
-  /* Couleurs principales */
-  --color-sable: #ba9a76;
-  --color-beige: #fff8f0;
+  /* Fonds */
+  --bg: #1f1a16;
+  --bg-alt: #191512;
+  --bg-deep: #13100d;
+  --surface: #2a231e;
 
-  /* Couleurs dérivées */
-  --color-sable-dark: #a08665;
-  --color-sable-light: #d4b899;
+  /* Textes (contrastes WCAG AA vérifiés sur --bg et --surface) */
+  --ink: #f3ebdf;        /* titres : ~15:1 */
+  --ink-soft: #d9cdbb;   /* textes courants : ~11:1 */
+  --ink-muted: #bfb2a0;  /* textes secondaires : ~8:1 */
 
-  /* Couleurs de texte */
-  --text-primary: #2c2c2c;
-  --text-secondary: #5a5a5a;
-  --text-light: #8a8a8a;
+  /* Accent rouille */
+  --accent: #8f452d;       /* fond des boutons : texte crème à ~5,4:1 */
+  --accent-light: #e08a6a; /* liens & accents sur fond sombre : ~6,5:1 */
+  --accent-dark: #7a3a25;  /* survol des boutons */
+
+  /* Lignes */
+  --line: rgba(243, 235, 223, 0.14);
+  --line-strong: rgba(243, 235, 223, 0.3);
+  --line-input: #8a7d6d; /* bordure des champs : > 3:1 */
+
+  /* Polices */
+  --font-display: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --font-body: 'EB Garamond', Georgia, serif;
+  --font-script: 'Pinyon Script', cursive;
+
+  /* Tailles de texte (aucun texte sous 14px) */
+  --fs-small: 0.875rem;
+  --fs-body: clamp(1.125rem, 0.95rem + 0.4vw, 1.25rem);
+  --tracking-caps: 0.14em;
 
   /* Espacements */
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
   --spacing-md: 2rem;
   --spacing-lg: 4rem;
-  --spacing-xl: 6rem;
+  --spacing-xl: 7rem;
 
-  /* Conteneur max-width */
+  /* Conteneurs */
   --container-width: 1200px;
-  --container-narrow: 800px;
+  --container-narrow: 820px;
+  --header-height: 72px;
 }
 
 
@@ -62,235 +92,69 @@ html {
    ============================================ */
 
 body {
-  background-color: var(--color-beige);
-  font-family: 'Amiri', serif;
-  color: var(--text-primary);
-  line-height: 1.6;
+  background-color: var(--bg);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  color: var(--ink-soft);
+  line-height: 1.7;
   min-height: 100vh;
-  position: relative;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Photo de fond fixe en haut du viewport */
-.photo-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-image: url('/assets/gallery/photosmarah/photo-marah-dessin.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -1;
+img {
+  max-width: 100%;
 }
 
-/* Overlay sombre sur la photo pour faire ressortir le texte */
-.photo-background::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.3) 0%,
-    rgba(0, 0, 0, 0.4) 50%,
-    rgba(0, 0, 0, 0.6) 100%
-  );
-  z-index: 1;
+::selection {
+  background: var(--accent);
+  color: var(--ink);
 }
 
-/* Contenu texte sur la photo (titre et sous-titre) */
-.photo-overlay-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0 var(--spacing-md);
-  z-index: 2;
-  margin-top: 15vh; /* Descend le contenu pour éviter le visage */
+/* Focus clavier visible partout */
+:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 3px;
 }
 
-.site-title {
-  font-family: 'Rozha One', serif;
-  font-size: clamp(3rem, 10vw, 5rem);
-  color: var(--color-beige);
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
 
-.site-subtitle {
-  font-family: 'Amiri', serif;
-  font-size: clamp(1.1rem, 3vw, 1.4rem);
-  color: var(--color-beige);
-  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.8);
-  max-width: 800px;
-  text-align: center;
-  line-height: 1.8;
+/* ============================================
+   TYPOGRAPHIE
+   ============================================ */
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
   font-style: italic;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.1;
 }
-
-/* Le contenu principal a un fond qui recouvre la photo au scroll */
-main {
-  position: relative;
-  z-index: 1;
-  background-color: var(--color-beige);
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)),
-    url('/assets/gallery/design/Template_Fond (1).jpg');
-  background-repeat: repeat;
-  background-size: auto;
-  /* On laisse un espace en haut pour voir la photo */
-  margin-top: 100vh;
-}
-
-/* Header mobile sticky */
-.mobile-header {
-  display: none;
-}
-
-@media screen and (max-width: 768px) {
-  .mobile-header {
-    display: flex;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 200;
-    background-color: rgba(30, 28, 26, 0.82);
-    backdrop-filter: blur(8px);
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 1rem;
-    transform: translateY(-100%);
-    transition: transform 0.4s ease;
-  }
-
-  .mobile-header.visible {
-    transform: translateY(0);
-  }
-
-  .mobile-header-title {
-    font-family: 'Rozha One', serif;
-    font-size: 1.4rem;
-    color: var(--color-beige);
-    letter-spacing: 0.02em;
-  }
-}
-
-/* Mobile : le main commence après toute la photo */
-@media screen and (max-width: 768px) {
-  main {
-    margin-top: 100vh;
-  }
-
-  .photo-overlay-content {
-    margin-top: 0;
-    justify-content: flex-end;
-    padding-bottom: 42vh;
-  }
-
-  .site-title {
-    font-size: clamp(2rem, 8vw, 3rem);
-  }
-
-  .site-subtitle {
-    font-size: clamp(1rem, 4vw, 1.2rem);
-  }
-}
-
-
-/* ============================================
-   HERO CTA SECTION - Au début du scroll
-   ============================================ */
-
-.hero-cta-section {
-  padding: var(--spacing-xl) 0;
-  background-color: rgba(255, 248, 240, 0.7);
-}
-
-.hero-cta {
-  display: flex;
-  gap: var(--spacing-sm);
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: var(--spacing-md);
-}
-
-@media screen and (max-width: 768px) {
-  .hero-cta-section {
-    padding: var(--spacing-md) 0;
-  }
-
-  .hero-cta {
-    flex-direction: column;
-    align-items: center;
-    margin-top: var(--spacing-sm);
-  }
-
-  .hero-cta .btn {
-    width: 100%;
-    max-width: 280px;
-  }
-}
-
-
-/* ============================================
-   TYPOGRAPHIE - TITRES
-   ============================================ */
 
 h1 {
-  font-family: 'Rozha One', serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: clamp(2.5rem, 8vw, 4rem);
-  line-height: 1.2;
-  color: var(--color-sable);
-  margin-bottom: 2rem;
+  font-size: clamp(3rem, 7vw, 5.25rem);
+  margin-bottom: 1.5rem;
 }
 
 h2 {
-  font-family: 'Amiri', serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: clamp(1.25rem, 3vw, 1.5rem);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-sable);
-  margin-bottom: 1.5rem;
-}
-
-h3 {
-  font-family: 'Amiri', serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-sable);
+  font-size: clamp(2.25rem, 4vw, 3rem);
   margin-bottom: 1.25rem;
 }
 
+h3 {
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  margin-bottom: 1rem;
+}
 
-/* ============================================
-   TYPOGRAPHIE - TEXTES
-   ============================================ */
+h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink);
+}
 
-p,
-body,
-.text-body {
-  font-family: 'Amiri', serif;
-  font-weight: 400;
-  font-size: clamp(1.0625rem, 2vw, 1.125rem);
-  line-height: 1.8;
-  color: var(--text-primary);
+p {
+  font-size: var(--fs-body);
+  line-height: 1.7;
   margin-bottom: 1rem;
 }
 
@@ -298,27 +162,127 @@ p:last-child {
   margin-bottom: 0;
 }
 
-/* Texte en gras */
 strong,
 b {
-  font-weight: 700;
-}
-
-/* Texte en italique */
-em,
-i {
-  font-style: italic;
+  font-weight: 600;
+  color: var(--ink);
 }
 
 a {
-  color: var(--color-sable);
+  color: var(--accent-light);
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 a:hover {
-  color: var(--color-sable-dark);
-  text-decoration: underline;
+  color: var(--ink);
+}
+
+/* Sur-titre de section : petites capitales */
+.eyebrow {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  color: var(--accent-light);
+  margin-bottom: 0.9rem;
+}
+
+/* Accent manuscrit rouille */
+.script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-style: normal;
+  color: var(--accent-light);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* En-tête de section centré avec ornement */
+.section-head {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.section-head h2 {
+  margin-bottom: 0;
+}
+
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  color: var(--accent-light);
+}
+
+.ornament::before,
+.ornament::after {
+  content: '';
+  width: 48px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.ornament span {
+  width: 5px;
+  height: 5px;
+  transform: rotate(45deg);
+  background: currentColor;
+}
+
+/* Lien souligné en capitales */
+.link-underline {
+  display: inline-block;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  color: var(--accent-light);
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid currentColor;
+}
+
+.link-underline:hover {
+  color: var(--ink);
+}
+
+
+/* ============================================
+   IMAGES & LÉGENDES
+   ============================================ */
+
+.frame {
+  margin: 0;
+}
+
+/* Image nette, sans passe-partout : léger arrondi et ombre douce */
+.frame-inner {
+  overflow: hidden;
+  border-radius: 3px;
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+}
+
+.frame-inner img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.frame figcaption,
+.caption {
+  margin-top: 0.85rem;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  color: var(--ink-muted);
+  text-align: center;
 }
 
 
@@ -336,17 +300,14 @@ a:hover {
   max-width: var(--container-narrow);
   margin: 0 auto;
   padding: 0 var(--spacing-md);
-  padding-bottom: 40px;
 }
 
 section {
   padding: var(--spacing-xl) 0;
 }
 
-@media screen and (max-width: 768px) {
-  section {
-    padding: var(--spacing-md) 0;
-  }
+.section-alt {
+  background-color: var(--bg-alt);
 }
 
 
@@ -354,35 +315,10 @@ section {
    CLASSES UTILITAIRES
    ============================================ */
 
-/* Couleurs de fond */
-.bg-sable {
-  background-color: var(--color-sable);
-}
-
-.bg-beige {
-  background-color: var(--color-beige);
-}
-
-/* Couleurs de texte */
-.text-sable {
-  color: var(--color-sable);
-}
-
-.text-beige {
-  color: var(--color-beige);
-}
-
 .text-center {
   text-align: center;
 }
 
-/* Texte en capitales */
-.uppercase {
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* Espacements */
 .mt-sm { margin-top: var(--spacing-sm); }
 .mt-md { margin-top: var(--spacing-md); }
 .mt-lg { margin-top: var(--spacing-lg); }
@@ -393,44 +329,55 @@ section {
 
 
 /* ============================================
-   COMPOSANTS - BOUTONS
+   BOUTONS
    ============================================ */
 
 .btn {
   display: inline-block;
-  padding: 0.875rem 2rem;
-  font-family: 'Amiri', serif;
-  font-size: 1rem;
-  font-weight: 400;
+  padding: 1rem 1.9rem;
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border: 2px solid var(--color-sable);
+  letter-spacing: var(--tracking-caps);
+  border: 1px solid var(--line-strong);
   background-color: transparent;
-  color: var(--color-sable);
+  color: var(--ink);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   text-decoration: none;
 }
 
 .btn:hover {
-  background-color: var(--color-sable);
-  color: var(--color-beige);
-  text-decoration: none;
+  border-color: var(--accent-light);
+  color: var(--ink);
 }
 
 .btn-primary {
-  background-color: var(--color-sable);
-  color: var(--color-beige);
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink);
 }
 
 .btn-primary:hover {
-  background-color: var(--color-sable-dark);
-  border-color: var(--color-sable-dark);
+  background-color: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+
+.btn-ghost {
+  padding-left: 0;
+  padding-right: 0;
+  border: none;
+  border-bottom: 1px solid var(--line-input);
+}
+
+.btn-ghost:hover {
+  border-bottom-color: var(--accent-light);
 }
 
 
 /* ============================================
-   COMPOSANTS - FORMULAIRES
+   FORMULAIRES
    ============================================ */
 
 .form-group {
@@ -439,12 +386,13 @@ section {
 
 label {
   display: block;
-  font-family: 'Amiri', serif;
-  font-size: 0.95rem;
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-sable);
-  margin-bottom: 0.5rem;
+  letter-spacing: var(--tracking-caps);
+  color: var(--ink-soft);
+  margin-bottom: 0.4rem;
 }
 
 input[type="text"],
@@ -453,71 +401,64 @@ input[type="tel"],
 textarea,
 select {
   width: 100%;
-  padding: 0.875rem 1rem;
-  font-family: 'Amiri', serif;
-  font-size: 1rem;
-  color: var(--text-primary);
-  background-color: rgba(255, 248, 240, 0.8);
-  border: 1px solid var(--color-sable-light);
+  padding: 0.7rem 0;
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  color: var(--ink);
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line-input);
+  border-radius: 0;
   transition: border-color 0.3s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--ink-muted);
+  opacity: 0.85;
+}
+
+select option {
+  background: var(--surface);
+  color: var(--ink);
 }
 
 input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: var(--color-sable);
+  border-bottom-color: var(--accent-light);
+  box-shadow: 0 1px 0 var(--accent-light);
 }
 
 textarea {
   resize: vertical;
-  min-height: 150px;
+  min-height: 120px;
 }
 
 
 /* ============================================
-   COMPOSANTS - GALERIE
-   ============================================ */
-
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-md);
-}
-
-.gallery-item {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 1 / 1;
-  background-color: rgba(186, 154, 118, 0.1);
-}
-
-.gallery-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.gallery-item:hover img {
-  transform: scale(1.05);
-}
-
-
-/* ============================================
-   RESPONSIVE - AJUSTEMENTS MOBILES
+   RESPONSIVE
    ============================================ */
 
 @media screen and (max-width: 768px) {
-  .container,
-  .container-narrow {
-    padding: 0 var(--spacing-sm);
-    padding-bottom: 10px;
+  /* Espacements resserrés sur mobile (desktop inchangé) */
+  :root {
+    --spacing-xl: 3rem;
+    --spacing-lg: 2.5rem;
+    --header-height: 60px;
   }
 
-  .gallery-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: var(--spacing-sm);
+  html {
+    scroll-padding-top: 60px;
+  }
+
+  .container,
+  .container-narrow {
+    padding: 0 1.25rem;
+  }
+
+  .section-head {
+    margin-bottom: var(--spacing-md);
   }
 }

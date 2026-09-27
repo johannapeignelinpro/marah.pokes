@@ -5,16 +5,20 @@ import materielImage from '../assets/images/editorial/marah-materiel-handpoke-en
 import artistImage from '../assets/images/editorial/marah-tatoueuse-handpoke-seance-rennes.jpg';
 ---
 
-<section id="a-propos" class="about">
-  <div class="container-narrow">
-    <h2 class="text-center">Le Handpoke, c'est quoi ?</h2>
+<section id="a-propos" class="about section-alt">
+  <div class="container">
+    <header class="section-head">
+      <span class="eyebrow">Savoir-faire</span>
+      <h2>Le Handpoke, c'est quoi ?</h2>
+      <div class="ornament" aria-hidden="true"><span></span></div>
+    </header>
 
-    <div class="about-content">
-      <div class="definition-row">
-        <p>
+    <div class="definition-row">
+      <p class="dropcap">
 Le tatouage handpoke est une technique traditionnelle réalisée à la main, point par point. L’aiguille dépose l’encre dans la peau pour créer une marque permanente, avec précision et intention. Contrairement au tatouage à la machine, il n’y a ni vibration, ni bruit : juste l’aiguille, l’encre et la main.
-        </p>
-        <div class="definition-media">
+      </p>
+      <figure class="frame definition-media">
+        <div class="frame-inner">
           <Image
             src={gesteImage}
             alt="Geste précis d'une tatoueuse réalisant un handpoke à l'aiguille"
@@ -23,10 +27,13 @@ Le tatouage handpoke est une technique traditionnelle réalisée à la main, poi
             loading="lazy"
           />
         </div>
-      </div>
+        <figcaption>À l'aiguille, sans machine</figcaption>
+      </figure>
+    </div>
 
-      <div class="definition-row definition-row--reverse">
-        <div class="definition-media">
+    <div class="definition-row definition-row--reverse">
+      <figure class="frame definition-media">
+        <div class="frame-inner">
           <Image
             src={materielImage}
             alt="Godets d'encre noire et aiguille de handpoke préparés pour une séance"
@@ -35,87 +42,91 @@ Le tatouage handpoke est une technique traditionnelle réalisée à la main, poi
             loading="lazy"
           />
         </div>
-        <p>
+        <figcaption>L'encre et l'aiguille</figcaption>
+      </figure>
+      <p>
 Cette méthode de tatouage offre un rendu fin et délicat, une sensation plus douce et une cicatrisation souvent plus rapide. C’est un moment plus lent, plus centré, où le corps est bien moins bousculé.
-        </p>
-      </div>
-    </div>
-
-    <!-- Section Artiste -->
-    <div class="artist-section mt-lg">
-      <h3 class="text-center">L'Artiste</h3>
-      <div class="artist-content">
-        <Image
-          src={artistImage}
-          alt="Marah, tatoueuse handpoke, concentrée pendant une séance de tatouage"
-          widths={[480, 768, 1200, artistImage.width]}
-          sizes="(max-width: 768px) 90vw, 400px"
-          loading="lazy"
-          class="artist-photo"
-        />
-
-        <div class="artist-text">
-          <p>
-            <!-- TODO: Ajouter la bio de l'artiste -->
-Je suis Marah, tatoueuse handpoke à Rennes. Sensible aux motifs ornementaux, à la fluidité des tracés organiques en lignes fines et à la douceur d’un bel ombré, je crée des tatouages intuitifs qui mêlent symboles abstraits et formes naturelles.
-          </p>
-
-          <p>
-            <!-- TODO: Compléter avec son parcours, sa vision, etc. -->
-A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des ombrages pour donner vie à un tatouage unique, en collaboration avec la personne qui le porte. Il sera pensé pour épouser le mouvement naturel du corps et s’harmoniser avec la peau dans un geste calme et ancestral. 
-          </p>
-
-          <!-- Lien vers Instagram -->
-          <p class="mt-md">
-            <a
-              href="https://instagram.com/marah.pokes"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="instagram-link"
-            >
-              <!-- TODO: Remplacer par le vrai lien Instagram -->
-              @Marah.pokes sur Instagram
-            </a>
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Section Spécialités -->
-    <div class="specialties mt-lg">
-      <h3 class="text-center">Spécialités</h3>
-      <div class="specialties-grid">
-        <div class="specialty-item">
-          <h4>Ornemental intuitif</h4>
-          <p>Tatouage de symboles abstraits, inspirés de rituels anciens et d’écritures imaginaires.</p>
-        </div>
-        <div class="specialty-item">
-          <h4>Organique</h4>
-          <p>Tatouages  inspirés de formes végétales et de mouvements naturels.</p>
-        </div>
-        <div class="specialty-item">
-          <h4>Lignes et ombrages</h4>
-          <p>Tatouages d’élégantes lignes fines et de subtils ombrages.</p>
-        </div>
-      </div>
+      </p>
     </div>
   </div>
 </section>
 
+<!-- Section Artiste -->
+<section id="artiste" class="artist">
+  <div class="container artist-content">
+    <figure class="frame artist-media">
+      <div class="frame-inner">
+        <Image
+          src={artistImage}
+          alt="Marah, tatoueuse handpoke, concentrée pendant une séance de tatouage"
+          widths={[480, 768, 1200, artistImage.width]}
+          sizes="(max-width: 768px) 90vw, 420px"
+          loading="lazy"
+        />
+      </div>
+      <figcaption>Marah, à l'atelier</figcaption>
+    </figure>
+
+    <div class="artist-text">
+      <span class="eyebrow">Portrait</span>
+      <h2>L'Artiste</h2>
+      <p>
+        <!-- TODO: Ajouter la bio de l'artiste -->
+Je suis Marah, tatoueuse handpoke à Rennes. Sensible aux motifs ornementaux, à la fluidité des tracés organiques en lignes fines et à la douceur d’un bel ombré, je crée des tatouages intuitifs qui mêlent symboles abstraits et formes naturelles.
+      </p>
+
+      <p>
+        <!-- TODO: Compléter avec son parcours, sa vision, etc. -->
+A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des ombrages pour donner vie à un tatouage unique, en collaboration avec la personne qui le porte. Il sera pensé pour épouser le mouvement naturel du corps et s’harmoniser avec la peau dans un geste calme et ancestral.
+      </p>
+
+      <!-- Lien vers Instagram -->
+      <a
+        href="https://instagram.com/marah.pokes"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="link-underline instagram-link"
+      >
+        <!-- TODO: Remplacer par le vrai lien Instagram -->
+        @Marah.pokes sur Instagram →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Section Spécialités -->
+<section class="specialties section-alt">
+  <div class="container">
+    <header class="section-head">
+      <h2>Spécialités</h2>
+      <div class="ornament" aria-hidden="true"><span></span></div>
+    </header>
+    <ul class="specialties-list">
+      <li class="specialty-item">
+        <h3>Ornemental intuitif</h3>
+        <p>Tatouage de symboles abstraits, inspirés de rituels anciens et d’écritures imaginaires.</p>
+      </li>
+      <li class="specialty-item">
+        <h3>Organique</h3>
+        <p>Tatouages  inspirés de formes végétales et de mouvements naturels.</p>
+      </li>
+      <li class="specialty-item">
+        <h3>Lignes et ombrages</h3>
+        <p>Tatouages d’élégantes lignes fines et de subtils ombrages.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
 <style>
-  .about {
-    background-color: rgba(255, 248, 240, 0.7);
-  }
-
-  .about-content {
-    margin-top: var(--spacing-md);
-  }
-
+  /* ---------- Le handpoke ---------- */
   .definition-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
     align-items: center;
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
+    gap: var(--spacing-lg);
+    max-width: 1040px;
+    margin: 0 auto var(--spacing-lg);
   }
 
   .definition-row:last-child {
@@ -123,139 +134,125 @@ A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des
   }
 
   .definition-row--reverse {
-    flex-direction: row-reverse;
+    grid-template-columns: 1fr 1.2fr;
   }
 
   .definition-row p {
-    flex: 1 1 55%;
     margin-bottom: 0;
   }
 
+  .dropcap::first-letter {
+    float: left;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 4.6em;
+    line-height: 0.8;
+    color: var(--accent-light);
+    padding: 0.08em 0.12em 0 0;
+  }
+
   .definition-media {
-    flex: 0 0 40%;
+    max-width: 440px;
+    width: 100%;
+    justify-self: center;
   }
 
   .definition-media img {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 2 / 3;
+    aspect-ratio: 4 / 5;
     object-fit: cover;
   }
 
-  .about-benefits {
-    list-style: none;
-    margin-top: var(--spacing-sm);
-    padding-left: 0;
-  }
-
-  .about-benefits li {
-    position: relative;
-    padding-left: 1.5rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .about-benefits li::before {
-    content: '•';
-    position: absolute;
-    left: 0;
-    color: var(--color-sable);
-    font-size: 1.5rem;
-    line-height: 1;
-  }
-
-  .artist-section {
-    padding-top: var(--spacing-lg);
-    border-top: 1px solid var(--color-sable-light);
-  }
-
+  /* ---------- L'artiste ---------- */
   .artist-content {
-    margin-top: var(--spacing-md);
+    display: grid;
+    grid-template-columns: minmax(0, 420px) 1fr;
+    gap: var(--spacing-lg);
+    align-items: center;
+    max-width: 1040px;
   }
 
-  .artist-photo {
-    width: 100%;
-    height: auto;
-    max-width: 400px;
-    margin: 0 auto var(--spacing-md);
-    display: block;
-    border: 2px solid var(--color-sable);
+  .artist-media img {
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+  }
+
+  .artist-text h2 {
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
   }
 
   .instagram-link {
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    margin-top: var(--spacing-sm);
   }
 
-  .specialties {
-    padding-top: var(--spacing-lg);
-  }
-
-  .specialties-grid {
+  /* ---------- Spécialités ---------- */
+  .specialties-list {
+    list-style: none;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--spacing-md);
-    margin-top: var(--spacing-md);
   }
 
   .specialty-item {
-    text-align: center;
-    padding: var(--spacing-md);
-    background-color: rgba(255, 255, 255, 0.5);
-    border: 1px solid var(--color-sable-light);
+    display: block;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line-strong);
+    position: relative;
   }
 
-  .specialty-item h4 {
-    font-family: 'Amiri', serif;
-    font-size: 1.1rem;
-    color: var(--color-sable);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  /* Petit trait rouille en tête de colonne */
+  .specialty-item::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--accent-light);
+  }
+
+  .specialty-item h3 {
+    font-size: 1.75rem;
     margin-bottom: 0.5rem;
   }
 
   .specialty-item p {
-    font-size: 1.0625rem;
-    color: var(--text-secondary);
+    color: var(--ink-soft);
     margin: 0;
   }
 
   @media screen and (max-width: 768px) {
     .definition-row,
     .definition-row--reverse {
-      flex-direction: column;
-      gap: var(--spacing-sm);
-      margin-bottom: var(--spacing-md);
+      grid-template-columns: 1fr;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
     }
 
+    /* Texte toujours avant l'image sur mobile */
     .definition-row p {
       order: 1;
     }
 
     .definition-media {
       order: 2;
-      flex-basis: auto;
-      max-width: 320px;
-      margin: 0 auto;
-    }
-
-    .specialties-grid {
-      grid-template-columns: 1fr;
-      gap: var(--spacing-sm);
-      margin-top: var(--spacing-sm);
-    }
-
-    .artist-section {
-      padding-top: var(--spacing-md);
-    }
-
-    .specialties {
-      padding-top: var(--spacing-md);
+      max-width: 340px;
     }
 
     .artist-content {
-      margin-top: var(--spacing-sm);
+      grid-template-columns: 1fr;
+      gap: var(--spacing-md);
+    }
+
+    .artist-media {
+      max-width: 340px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .specialties-list {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-md);
     }
   }
 </style>

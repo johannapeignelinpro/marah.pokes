@@ -27,7 +27,7 @@ export function generateEmailTemplate(data: EmailData): string {
 
   return `
 ${separator}
-✨  NOUVELLE DEMANDE DE TATOUAGE - MARAH.POKES  ✨
+✨  NOUVELLE DEMANDE DE TATOUAGE - MARAH CHENAÏNA  ✨
 ${separator}
 
 📅  Date de la demande : ${new Date().toLocaleDateString('fr-FR', {
@@ -98,7 +98,7 @@ ${data.instagram ? `📱  Instagram : @${data.instagram}` : ''}
 
 ${separator}
 
-Ce message a été généré automatiquement par le formulaire de contact de marah.pokes
+Ce message a été généré automatiquement par le formulaire de contact de Marah Chenaïna
 Système de sécurité actif : sanitisation, détection de spam, validation des fichiers
 `.trim();
 }
@@ -111,7 +111,7 @@ export function generateConfirmationEmail(clientName: string): string {
 
   return `
 ${separator}
-✨  DEMANDE BIEN REÇUE - MARAH.POKES  ✨
+✨  DEMANDE BIEN REÇUE - MARAH CHENAÏNA  ✨
 ${separator}
 
 Bonjour ${clientName},

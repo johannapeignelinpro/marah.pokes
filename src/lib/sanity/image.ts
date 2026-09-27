@@ -37,3 +37,27 @@ export function squareImage(image: SanityImageWithAsset, { widths, quality = 80 
     size: defaultSize,
   };
 }
+
+/**
+ * URLs d'une image à ses proportions d'origine (crop Sanity respecté, aucun
+ * recadrage forcé), avec un srcset. Utile quand rien ne doit être coupé,
+ * comme les prix sur les plaquettes de flashs.
+ */
+export function naturalImage(image: SanityImageWithAsset, { widths, quality = 80 }: SquareImageOptions) {
+  const sorted = [...widths].sort((a, b) => a - b);
+  const url = (width: number) => urlFor(image).width(width).fit('max').quality(quality).url();
+
+  const defaultWidth = sorted[Math.floor(sorted.length / 2)];
+
+  // Ratio affiché = ratio d'origine corrigé du crop éventuel défini dans le Studio
+  const { width = 1, height = 1 } = image.dimensions ?? {};
+  const { left = 0, right = 0, top = 0, bottom = 0 } = image.crop ?? {};
+  const ratio = (width * (1 - left - right)) / (height * (1 - top - bottom)) || 1;
+
+  return {
+    src: url(defaultWidth),
+    srcset: sorted.map((w) => `${url(w)} ${w}w`).join(', '),
+    width: defaultWidth,
+    height: Math.round(defaultWidth / ratio),
+  };
+}

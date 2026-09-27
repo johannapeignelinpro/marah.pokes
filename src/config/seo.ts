@@ -1,11 +1,11 @@
-// Configuration SEO pour Marah.Pokes
+// Configuration SEO pour Marah Chenaïna
 // Tatouage Handpoke à Rennes
 
 export const siteConfig = {
-  name: 'Marah.Pokes',
-  title: 'Marah.Pokes - Tatouage Handpoke à Rennes | Tatouages fines lignes et ombrages en Bretagne',
-  description: 'Marah.pokes, tatoueuse handpoke basée à Rennes en Bretagne. Tatouages ornementaux déposés à la main dans un geste traditionnel, mêlant symboles intuitifs, formes organiques, lignes fines et délicats ombrés.',
-  slogan: 'Marah.pokes, tatoueuse handpoke basée à Rennes en Bretagne. Tatouages ornementaux déposés à la main dans un geste traditionnel, mêlant symboles intuitifs, formes organiques, lignes fines et délicats ombrés.',
+  name: 'Marah Chenaïna',
+  title: 'Marah Chenaïna - Tatouage Handpoke à Rennes | Tatouages fines lignes et ombrages en Bretagne',
+  description: 'Marah Chenaïna, tatoueuse handpoke basée à Rennes en Bretagne. Tatouages ornementaux déposés à la main dans un geste traditionnel, mêlant symboles intuitifs, formes organiques, lignes fines et délicats ombrés.',
+  slogan: 'Marah Chenaïna, tatoueuse handpoke basée à Rennes en Bretagne. Tatouages ornementaux déposés à la main dans un geste traditionnel, mêlant symboles intuitifs, formes organiques, lignes fines et délicats ombrés.',
 
   // Contact
   instagram: '@marah.pokes',
@@ -55,6 +55,15 @@ export const siteConfig = {
     'Lignes délicates',
     'Compositions symboliques'
   ],
+
+  // Atelier Noir : lieu où Marah est artiste résidente
+  // TODO: Renseigner les liens (fiche Google Business et Instagram de l'Atelier Noir).
+  // Tant qu'un lien est vide, le bouton correspondant n'est pas affiché.
+  atelierNoir: {
+    name: 'Atelier Noir',
+    googleUrl: '',
+    instagramUrl: '',
+  },
 
   // Social Media (à compléter)
   social: {

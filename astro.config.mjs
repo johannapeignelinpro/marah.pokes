@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import { loadEnv } from 'vite';
 import sitemap from '@astrojs/sitemap';
 import sanity from '@sanity/astro';
@@ -40,6 +40,15 @@ function devOnlyPages() {
 // https://astro.build/config
 export default defineConfig({
   site: SITE_URL,
+
+  // SITE_NOINDEX=true (variable Netlify) : le site demande à Google et aux autres
+  // moteurs de ne pas l'indexer. À retirer (ou passer à false) le jour de la mise en ligne,
+  // puis redéployer : la valeur est lue au build.
+  env: {
+    schema: {
+      SITE_NOINDEX: envField.boolean({ context: 'server', access: 'public', default: false }),
+    },
+  },
 
   integrations: [
     devOnlyPages(),

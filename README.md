@@ -171,6 +171,22 @@ const galleryImages = [
 3. Build command : `npm run build`
 4. Publish directory : `dist`
 
+#### Bloquer l'indexation Google (site en préversion)
+
+Tant que le site n'est pas prêt à être référencé, ajouter dans Netlify
+(**Site configuration > Environment variables**) :
+
+```
+SITE_NOINDEX=true
+```
+
+puis relancer un déploiement. Toutes les pages portent alors
+`<meta name="robots" content="noindex, nofollow">` et le `robots.txt`
+n'annonce plus le sitemap.
+
+Pour la mise en ligne officielle : supprimer la variable (ou la passer à `false`)
+et redéployer.
+
 ### Build en local
 
 ```bash

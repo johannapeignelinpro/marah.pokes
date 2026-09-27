@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import '../styles/global.css';
+import { SITE_NOINDEX } from 'astro:env/server';
 import { siteConfig, schemaOrg } from '../config/seo';
 import About from '../components/About.astro';
 import Flashs from '../components/Flashs.astro';
@@ -35,7 +36,7 @@ const keywords = siteConfig.keywords.join(', ');
     <meta name="description" content={pageDescription} />
     <meta name="keywords" content={keywords} />
     <meta name="author" content={siteConfig.name} />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={SITE_NOINDEX ? 'noindex, nofollow' : 'index, follow'} />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />

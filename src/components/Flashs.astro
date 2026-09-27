@@ -1,11 +1,13 @@
 ---
-// Section Flashs - 4 flashs disponibles en 1 colonne
-const flashImages = [
-  { src: '/assets/gallery/flashs/Flash 1.jpg', alt: 'Flash 1 - Tatouage disponible par Marah' },
-  { src: '/assets/gallery/flashs/Flash 2.jpg', alt: 'Flash 2 - Tatouage disponible par Marah' },
-  { src: '/assets/gallery/flashs/Flash 3.jpg', alt: 'Flash 3 - Tatouage disponible par Marah' },
-  { src: '/assets/gallery/flashs/Flash 4.jpg', alt: 'Flash 4 - Tatouage disponible par Marah' },
-];
+// Section Flashs - plaquettes gérées dans Sanity (flashBoard visibles, triées par ordre)
+import { getFlashBoards } from '../lib/sanity/api';
+import { squareImage } from '../lib/sanity/image';
+
+const flashBoards = (await getFlashBoards()).map((board) => ({
+  ...board,
+  // Résolution élevée pour garder les prix lisibles sur la plaquette
+  ...squareImage(board.image, { widths: [400, 600, 800, 1200, 1600], quality: 85 }),
+}));
 ---
 
 <section id="flashs" class="flashs">
@@ -16,20 +18,27 @@ const flashImages = [
     </p>
     <p class="flashs-intro text-center">Informations:  J'accepte de modifier légèrement un flash s'il y a un petit détail qui gêne ou s’il y a l’envie d’ajouter quelque chose. A indiquer dans la section “demandes complémentaires”</p>
 
-    <div class="flashs-grid">
-      {
-        flashImages.map((image) => (
-          <div class="flash-item">
-            <img
-              src={image.src}
-              alt={image.alt}
-              loading="lazy"
-              class="flash-image"
-            />
-          </div>
-        ))
-      }
-    </div>
+    {flashBoards.length > 0 && (
+      <div class="flashs-grid">
+        {
+          flashBoards.map((board) => (
+            <div class="flash-item">
+              <img
+                src={board.src}
+                srcset={board.srcset}
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                width={board.size}
+                height={board.size}
+                alt={board.alt}
+                loading="lazy"
+                decoding="async"
+                class="flash-image"
+              />
+            </div>
+          ))
+        }
+      </div>
+    )}
 
     <p class="flashs-note text-center mt-lg">
       Pour réserver un flash, rendez-vous dans la section{' '}

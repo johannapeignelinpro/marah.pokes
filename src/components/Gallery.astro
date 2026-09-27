@@ -1,15 +1,16 @@
 ---
-// Galerie de tatouages - 8 premières images du dossier dessins
-const galleryImages = [
-  { src: '/assets/gallery/dessins/20251201_170125.jpg', alt: 'Tatouage handpoke par Marah' },
-  { src: '/assets/gallery/dessins/20251211_182304.jpg', alt: 'Tatouage handpoke par Marah' },
-  { src: '/assets/gallery/dessins/20251223_001807_exported_1665.jpg', alt: 'Tatouage handpoke par Marah' },
-  { src: '/assets/gallery/dessins/20260108_220636.jpg', alt: 'Tatouage handpoke par Marah' },
-  { src: '/assets/gallery/dessins/20260110_165406.jpg', alt: 'Tatouage handpoke par Marah' },
-  { src: '/assets/gallery/dessins/20260113_175654.jpg', alt: 'Tatouage handpoke par Marah' },
-  { src: '/assets/gallery/dessins/20260117_161749.jpg', alt: 'Tatouage handpoke par Marah' },
-  { src: '/assets/gallery/dessins/20260121_152725.jpg', alt: 'Tatouage handpoke par Marah' },
-];
+// Galerie de tatouages - réalisations gérées dans Sanity (tattoo, du plus récent au plus ancien)
+// Une vignette par tattoo : la première photo sert d'image principale.
+import { getTattoos } from '../lib/sanity/api';
+import { squareImage } from '../lib/sanity/image';
+
+const galleryImages = (await getTattoos()).map((tattoo) => {
+  const cover = tattoo.images[0];
+  return {
+    alt: cover.alt,
+    ...squareImage(cover.image, { widths: [400, 600, 800, 1200] }),
+  };
+});
 ---
 
 <section id="galerie" class="gallery">
@@ -19,20 +20,27 @@ const galleryImages = [
       Découvrez une sélection de tatouages handpoke réalisés à Rennes. Chaque pièce est unique, faite avec soin et ne peut être reproduite qu’une seule fois.
     </p>
 
-    <div class="gallery-grid">
-      {
-        galleryImages.map((image) => (
-          <div class="gallery-item">
-            <img
-              src={image.src}
-              alt={image.alt}
-              loading="lazy"
-              class="gallery-image"
-            />
-          </div>
-        ))
-      }
-    </div>
+    {galleryImages.length > 0 && (
+      <div class="gallery-grid">
+        {
+          galleryImages.map((image) => (
+            <div class="gallery-item">
+              <img
+                src={image.src}
+                srcset={image.srcset}
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                width={image.size}
+                height={image.size}
+                alt={image.alt}
+                loading="lazy"
+                decoding="async"
+                class="gallery-image"
+              />
+            </div>
+          ))
+        }
+      </div>
+    )}
 
     <p class="gallery-note text-center mt-lg">
       Pour discuter d'un projet ou voir plus de réalisations, rendez-vous dans la section{' '}

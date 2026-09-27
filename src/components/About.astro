@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import { siteConfig } from '../config/seo';
 import gesteImage from '../assets/images/editorial/marah-handpoke-geste-tatoueuse-rennes.jpg';
 import materielImage from '../assets/images/editorial/marah-materiel-handpoke-encre-rennes.jpg';
 import artistImage from '../assets/images/editorial/marah-tatoueuse-handpoke-seance-rennes.jpg';
@@ -51,7 +52,7 @@ Cette méthode de tatouage offre un rendu fin et délicat, une sensation plus do
   </div>
 </section>
 
-<!-- Section Artiste -->
+<!-- Section About : « Portrait de l'artiste » (bio de Marah) -->
 <section id="artiste" class="artist">
   <div class="container artist-content">
     <figure class="frame artist-media">
@@ -71,23 +72,20 @@ Cette méthode de tatouage offre un rendu fin et délicat, une sensation plus do
       <span class="eyebrow">Portrait</span>
       <h2>L'Artiste</h2>
       <p>
-        <!-- TODO: Ajouter la bio de l'artiste -->
 Je suis Marah, tatoueuse handpoke à Rennes. Sensible aux motifs ornementaux, à la fluidité des tracés organiques en lignes fines et à la douceur d’un bel ombré, je crée des tatouages intuitifs qui mêlent symboles abstraits et formes naturelles.
       </p>
 
       <p>
-        <!-- TODO: Compléter avec son parcours, sa vision, etc. -->
 A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des ombrages pour donner vie à un tatouage unique, en collaboration avec la personne qui le porte. Il sera pensé pour épouser le mouvement naturel du corps et s’harmoniser avec la peau dans un geste calme et ancestral.
       </p>
 
       <!-- Lien vers Instagram -->
       <a
-        href="https://instagram.com/marah.pokes"
+        href={siteConfig.social.instagram}
         target="_blank"
         rel="noopener noreferrer"
         class="link-underline instagram-link"
       >
-        <!-- TODO: Remplacer par le vrai lien Instagram -->
         @Marah.pokes sur Instagram →
       </a>
     </div>

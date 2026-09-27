@@ -17,11 +17,32 @@ if (!PUBLIC_SANITY_PROJECT_ID) {
   );
 }
 
+// URL de production : source unique, relue ailleurs via Astro.site / import.meta.env.SITE.
+// new URL() convertit le domaine accentué en punycode (https://xn--marah-chenana-zjb.fr),
+// la forme attendue par les robots dans le sitemap, le canonical et les balises OG.
+const SITE_URL = new URL('https://marah-chenaïna.fr').origin;
+
+// Outils internes (prévisualisation de l'email du formulaire) : routes servies
+// uniquement par `astro dev`, jamais générées au build ni présentes dans le sitemap.
+function devOnlyPages() {
+  return {
+    name: 'dev-only-pages',
+    hooks: {
+      /** @param {{ command: string, injectRoute: (route: { pattern: string, entrypoint: string }) => void }} options */
+      'astro:config:setup': ({ command, injectRoute }) => {
+        if (command !== 'dev') return;
+        injectRoute({ pattern: '/email-preview', entrypoint: './src/dev/email-preview.astro' });
+      },
+    },
+  };
+}
+
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://marah-pokes.fr',
+  site: SITE_URL,
 
   integrations: [
+    devOnlyPages(),
     sitemap(),
     sanity({
       projectId: PUBLIC_SANITY_PROJECT_ID,

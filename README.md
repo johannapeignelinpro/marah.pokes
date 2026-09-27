@@ -33,7 +33,7 @@ Marah.Pokes/
 ├── public/              # Fichiers statiques (images, fonts, etc.)
 │   ├── assets/          # Images et ressources
 │   │   └── Template_Fond__1_.jpg  # ⚠️ À ajouter manuellement
-│   └── robots.txt       # Configuration pour les moteurs de recherche
+│   └── (robots.txt généré par src/pages/robots.txt.ts)
 ├── src/
 │   ├── components/      # Composants Astro réutilisables
 │   │   ├── Hero.astro
@@ -128,7 +128,7 @@ const galleryImages = [
 ### Configuration de base (déjà faite)
 
 ✅ Meta tags optimisés
-✅ Schema.org (LocalBusiness + TattooShop)
+✅ Schema.org (TattooParlor)
 ✅ Géolocalisation meta tags
 ✅ Open Graph pour les réseaux sociaux
 ✅ Robots.txt

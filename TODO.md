@@ -66,11 +66,8 @@ Liste complète des tâches à effectuer pour finaliser le site.
 
 ### 7. Nom de domaine & Déploiement
 
-- [ ] **Acheter un nom de domaine** (ex: marah-pokes.fr, marahpokes.com, etc.)
-- [ ] **Mettre à jour l'URL** dans :
-  - `src/config/seo.ts` ligne 67
-  - `astro.config.mjs` ligne 7
-  - `public/robots.txt` ligne 6
+- [ ] **Acheter le nom de domaine** marah-chenaïna.fr (+ marah-chenaina.fr sans tréma, redirigé)
+- [x] **URL de production** : définie une seule fois dans `astro.config.mjs` (`site`) ; canonical, OG, JSON-LD, sitemap et robots.txt en dérivent
 - [ ] **Déployer sur Vercel ou Netlify**
 - [ ] **Configurer le domaine personnalisé**
 - [ ] **Activer HTTPS** (automatique sur Vercel/Netlify)

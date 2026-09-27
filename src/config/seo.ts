@@ -1,15 +1,29 @@
 // Configuration SEO pour Marah Chenaïna
 // Tatouage Handpoke à Rennes
 
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+
+// URL de production, définie une seule fois dans astro.config.mjs (`site`)
+const siteUrl = import.meta.env.SITE;
+
+// Image de partage (Open Graph / Twitter), 1200 × 630 px.
+// Tant que public/assets/og-image.jpg n'existe pas, la photo du hero sert de repli :
+// les partages affichent une vraie image au lieu de pointer vers un fichier absent.
+const OG_IMAGE = { path: '/assets/og-image.jpg', width: 1200, height: 630 };
+const OG_IMAGE_FALLBACK = { path: '/assets/gallery/photosmarah/photo-marah-dessin.jpg', width: 1920, height: 1265 };
+const ogImage = existsSync(join(process.cwd(), 'public', OG_IMAGE.path)) ? OG_IMAGE : OG_IMAGE_FALLBACK;
+
 export const siteConfig = {
   name: 'Marah Chenaïna',
-  title: 'Marah Chenaïna - Tatouage Handpoke à Rennes | Tatouages fines lignes et ombrages en Bretagne',
-  description: 'Marah Chenaïna, tatoueuse handpoke basée à Rennes en Bretagne. Tatouages ornementaux déposés à la main dans un geste traditionnel, mêlant symboles intuitifs, formes organiques, lignes fines et délicats ombrés.',
+  // Ancien nom de marque, conservé comme alias (Instagram @marah.pokes, fiche Google)
+  alternateName: 'Marah.Pokes',
+  title: 'Marah Chenaïna — Tatouage Handpoke à Rennes',
+  description: 'Tatouages handpoke réalisés à la main à Rennes par Marah Chenaïna. Pièces fines, organiques et ornementales, uniquement sur rendez-vous.',
   slogan: 'Marah Chenaïna, tatoueuse handpoke basée à Rennes en Bretagne. Tatouages ornementaux déposés à la main dans un geste traditionnel, mêlant symboles intuitifs, formes organiques, lignes fines et délicats ombrés.',
 
   // Contact
   instagram: '@marah.pokes',
-  email: 'contact@marah-pokes.fr', // Email fictif pour le formulaire
 
   // Localisation
   location: {
@@ -72,19 +86,25 @@ export const siteConfig = {
     // tiktok: '', // TODO: Ajouter si existe
   },
 
-  // URL du site (à définir lors du déploiement)
-  url: 'https://marah-pokes.fr', // TODO: Remplacer par l'URL réelle lors du déploiement
+  // URL canonique de la page d'accueil (avec slash final, comme dans le sitemap)
+  url: new URL('/', siteUrl).href,
 
-  // Image par défaut pour les partages sociaux
-  ogImage: '/assets/og-image.jpg', // TODO: Créer une image OG (1200x630px)
+  // Image pour les partages sociaux (URL absolue, exigée par Open Graph)
+  ogImage: {
+    url: new URL(ogImage.path, siteUrl).href,
+    width: ogImage.width,
+    height: ogImage.height,
+    alt: 'Marah Chenaïna, tatoueuse handpoke à Rennes',
+  },
 };
 
 // Schema.org structuré pour le SEO local
 export const schemaOrg = {
   '@context': 'https://schema.org',
-  '@type': 'TattooShop',
+  '@type': 'TattooParlor',
   name: siteConfig.name,
-  image: siteConfig.ogImage,
+  alternateName: siteConfig.alternateName,
+  image: siteConfig.ogImage.url,
   description: siteConfig.description,
 
   // Adresse
@@ -108,15 +128,8 @@ export const schemaOrg = {
   url: siteConfig.url,
   // telephone: '', // TODO: Ajouter si numéro public
 
-  // Horaires et tarifs
+  // Tarifs. Pas d'horaires structurés : Marah travaille uniquement sur rendez-vous.
   priceRange: siteConfig.priceRange,
-  openingHoursSpecification: {
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-    opens: '00:00',
-    closes: '23:59',
-    description: 'Sur rendez-vous uniquement'
-  },
 
   // Services proposés
   hasOfferCatalog: {

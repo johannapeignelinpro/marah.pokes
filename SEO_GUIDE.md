@@ -33,7 +33,7 @@ Meta tags pour les partages sur Twitter/X.
 
 Données structurées pour Google :
 
-**Type** : `TattooShop` (catégorie spécifique pour les salons de tatouage)
+**Type** : `TattooParlor` (type Schema.org des salons de tatouage)
 
 **Inclus** :
 - Nom, description, image

@@ -1,0 +1,168 @@
+---
+// FAQ de la page d'accueil. Contenu provisoire, écrit en dur pour l'instant :
+// pourra passer dans Sanity si Marah doit le modifier elle-même.
+// Les réponses sont du HTML de confiance (rendu via set:html).
+const questions = [
+  {
+    question: "Qu'est-ce que le tatouage handpoke ?",
+    answer:
+      "Le handpoke est une technique de tatouage réalisée entièrement à la main, sans machine. L'encre est déposée point par point avec une aiguille, pour un travail précis et un rythme plus doux.",
+  },
+  {
+    question: 'Est-ce que le handpoke fait mal ?',
+    answer:
+      "La sensation varie selon les personnes et la zone tatouée. Beaucoup trouvent le handpoke plus doux qu'un tatouage à la machine, mais cela reste un tatouage et certaines zones sont naturellement plus sensibles.",
+  },
+  {
+    question: 'Comment cicatrise un tatouage handpoke ?',
+    answer:
+      "La cicatrisation se déroule globalement comme pour un tatouage classique. Il faut garder la zone propre, l'hydrater correctement et éviter de la gratter ou de l'exposer au soleil pendant la cicatrisation.",
+  },
+  {
+    question: 'Combien coûte un tatouage ?',
+    answer:
+      "La sortie d'aiguille est de <strong>150&nbsp;€</strong>. Le tarif final dépend ensuite du projet, de sa taille, de son emplacement et du temps nécessaire. Le prix est communiqué avant le rendez-vous.",
+  },
+  {
+    question: 'Comment se déroule une séance ?',
+    answer:
+      "On commence par échanger autour du projet, puis on valide ensemble la taille et l'emplacement du tatouage. Le dessin est positionné sur la peau avant de commencer la séance de handpoke.",
+  },
+  {
+    question: 'Comment prendre rendez-vous avec Marah ?',
+    answer:
+      'Les demandes de rendez-vous et de projets peuvent être envoyées via le <a href="#contact">formulaire de contact</a> du site. Pense à donner un maximum d\'informations sur ton idée, l\'emplacement souhaité et tes disponibilités.',
+  },
+];
+---
+
+<section id="faq" class="faq" aria-labelledby="faq-title">
+  <div class="container">
+    <header class="section-head">
+      <span class="eyebrow">Bon à savoir</span>
+      <h2 id="faq-title">Questions fréquentes</h2>
+      <div class="ornament" aria-hidden="true"><span></span></div>
+    </header>
+
+    <div class="faq-list">
+      {questions.map(({ question, answer }) => (
+        <details class="faq-item">
+          <summary>
+            <h3>{question}</h3>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </summary>
+          <p set:html={answer} />
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-list {
+    max-width: 820px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  /* Même filet que les Spécialités */
+  .faq-item {
+    border-top: 1px solid var(--line-strong);
+    position: relative;
+  }
+
+  .faq-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    padding: 1.25rem 0;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-item summary:focus-visible {
+    outline: 2px solid var(--accent-light);
+    outline-offset: 4px;
+  }
+
+  .faq-item summary:hover h3 {
+    color: var(--accent-light);
+  }
+
+  /* Icône + qui devient − à l'ouverture */
+  .faq-icon {
+    position: relative;
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+  }
+
+  .faq-icon::before,
+  .faq-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background: var(--accent-light);
+    transition: transform 0.25s ease;
+  }
+
+  .faq-icon::after {
+    transform: rotate(90deg);
+  }
+
+  .faq-item[open] .faq-icon::after {
+    transform: rotate(0deg);
+  }
+
+  .faq-item::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--accent-light);
+  }
+
+  .faq-item h3 {
+    font-size: 1.6rem;
+    margin: 0;
+    transition: color 0.2s ease;
+  }
+
+  .faq-item p {
+    color: var(--ink-soft);
+    margin: 0;
+    padding-bottom: 1.5rem;
+  }
+
+  .faq-item :global(strong) {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .faq-item :global(a) {
+    color: var(--accent-light);
+    border-bottom: 1px solid currentColor;
+  }
+
+  .faq-item :global(a:hover) {
+    color: var(--ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-icon::before,
+    .faq-icon::after,
+    .faq-item h3 {
+      transition: none;
+    }
+  }
+</style>

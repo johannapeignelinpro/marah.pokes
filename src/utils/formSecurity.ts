@@ -173,14 +173,19 @@ export interface FileValidationResult {
  * Valide un fichier image
  */
 export function validateImageFile(file: File): FileValidationResult {
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-  const maxSize = 10 * 1024 * 1024; // 10 MB
+  // HEIC/HEIF : format par défaut des photos d'iPhone et de certains Android
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/heic', 'image/heif'];
+  const allowedExtensions = /.(jpe?g|png|webp|gif|heic|heif)$/i;
+  // Photos brutes de téléphone : elles sont compressées dans le navigateur avant l'envoi
+  const maxSize = 25 * 1024 * 1024; // 25 MB
 
-  // Vérification du type MIME
-  if (!allowedTypes.includes(file.type)) {
+  // Vérification du type MIME. Certains téléphones ne renseignent pas le type :
+  // on se rabat alors sur l'extension du fichier.
+  const typeOk = file.type ? allowedTypes.includes(file.type) : allowedExtensions.test(file.name);
+  if (!typeOk) {
     return {
       valid: false,
-      error: `Type de fichier non autorisé: ${file.name}. Formats acceptés: JPG, PNG, WEBP, GIF`,
+      error: `Format non accepté : ${file.name}. Formats acceptés : JPG, PNG, WEBP, GIF, HEIC`,
     };
   }
 
@@ -188,7 +193,7 @@ export function validateImageFile(file: File): FileValidationResult {
   if (file.size > maxSize) {
     return {
       valid: false,
-      error: `Fichier trop volumineux: ${file.name} (max 10MB)`,
+      error: `Photo trop lourde : ${file.name} (25 Mo maximum)`,
     };
   }
 
@@ -238,6 +243,14 @@ export interface FormData {
   instagram?: string;
   projectType: 'flash' | 'freehand';
   flashNumber?: string;
+  // Flash
+  flashPhoto?: boolean; // une photo du flash a-t-elle été choisie ?
+  flashBodyPart?: string;
+  flashSize?: string;
+  flashAvailability?: string;
+  // Projet perso
+  persoBodyPart?: string;
+  persoSize?: string;
   project: string;
   budget?: string;
   availability?: string;
@@ -299,10 +312,26 @@ export function validateFormData(data: FormData): ValidationResult {
     errors.projectType = 'Type de projet invalide';
   }
 
-  // 8. Description du projet
-  const projectValidation = validateTextLength(data.project, 'Description du projet', 10, 2000);
-  if (!projectValidation.valid) {
-    errors.project = projectValidation.error!;
+  // 7. Champs obligatoires propres au type choisi. Les champs de l'autre type sont
+  // masqués dans le formulaire : ils ne doivent jamais bloquer l'envoi.
+  const required = (value: string | undefined, key: string, message: string) => {
+    if (!value || value.trim() === '') errors[key] = message;
+  };
+
+  if (data.projectType === 'flash') {
+    if (!data.flashPhoto) errors['flash-photo'] = 'Ajoute la photo du flash qui te plaît';
+    required(data.flashBodyPart, 'flash-body-part', 'Indique la partie du corps');
+    required(data.flashSize, 'flash-size', 'Indique la taille souhaitée');
+    required(data.flashAvailability, 'flash-availability', 'Indique tes disponibilités');
+  } else {
+    required(data.persoBodyPart, 'perso-body-part', 'Indique la partie du corps');
+    required(data.persoSize, 'perso-size', 'Indique la taille souhaitée');
+
+    // 8. Description du projet (projet perso uniquement)
+    const projectValidation = validateTextLength(data.project, 'Description du projet', 10, 2000);
+    if (!projectValidation.valid) {
+      errors.project = projectValidation.error!;
+    }
   }
 
   // 9. Détection d'URLs dans les champs texte
@@ -315,7 +344,8 @@ export function validateFormData(data: FormData): ValidationResult {
 
   // 10. Budget (optionnel, mais doit être dans la liste si fourni)
   if (data.budget) {
-    const validBudgets = ['50-100', '100-200', '200-300', '300+'];
+    // Doit correspondre aux <option> du select #budget (ContactForm.astro)
+    const validBudgets = ['100-200', '200-300', '300-400', 'libre'];
     if (!validBudgets.includes(data.budget)) {
       errors.budget = 'Budget invalide';
     }

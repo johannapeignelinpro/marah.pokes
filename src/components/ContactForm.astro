@@ -154,7 +154,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
                 <polyline points="17 8 12 3 7 8"></polyline>
                 <line x1="12" y1="3" x2="12" y2="15"></line>
               </svg>
-              <span>Cliquez pour choisir la photo du flash</span>
+              <span>Choisir la photo du flash</span>
             </label>
             <div id="flash-file-list" class="file-list"></div>
           </div>
@@ -258,7 +258,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
                 <polyline points="17 8 12 3 7 8"></polyline>
                 <line x1="12" y1="3" x2="12" y2="15"></line>
               </svg>
-              <span>Cliquez pour choisir ou glissez vos photos ici</span>
+              <span>Ajouter des photos (5 max)</span>
             </label>
             <div id="file-list" class="file-list"></div>
             <!-- Champs techniques : un fichier par champ côté Netlify Forms. Les photos
@@ -268,6 +268,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
             <input type="file" name="photos-4" accept="image/*" hidden tabindex="-1" aria-hidden="true" />
             <input type="file" name="photos-5" accept="image/*" hidden tabindex="-1" aria-hidden="true" />
           </div>
+          <span class="error-message" id="error-photos"></span>
         </div>
 
         <!-- Description du projet -->
@@ -551,8 +552,10 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
     gap: 0.5rem;
   }
 
-  .file-item {
+  /* Lignes créées en JS : :global, sinon le style scopé d'Astro ne s'y applique pas */
+  .file-list :global(.file-item) {
     display: flex;
+    gap: 0.75rem;
     align-items: center;
     justify-content: space-between;
     padding: 0.5rem 1rem;
@@ -561,25 +564,34 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
     font-size: 1rem;
   }
 
-  .file-item-name {
+  .file-list :global(.file-item-name) {
     color: var(--ink-soft);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .file-item-remove {
+  .file-list :global(.file-item-remove) {
     background: none;
     border: none;
     color: var(--link);
     cursor: pointer;
-    font-size: 1.2rem;
-    padding: 0 0.5rem;
+    font-size: 1.35rem;
     line-height: 1;
+    /* Cible tactile confortable (~40 px) sans agrandir la pastille */
+    flex-shrink: 0;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    margin: -0.5rem -0.75rem -0.5rem 0;
   }
 
-  .file-item-remove:hover {
+  .file-list :global(.file-item-remove:hover) {
     color: var(--ink);
+  }
+
+  .file-list :global(.file-item--pending) {
+    color: var(--ink-muted);
+    font-style: italic;
   }
 
   .form-actions {
@@ -678,6 +690,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
     containsURL,
     countURLs,
     validateFiles,
+    validateImageFile,
     validateFormData,
     type FormData as SecurityFormData
   } from '../utils/formSecurity';
@@ -776,61 +789,135 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
   // =======================
   // UPLOAD DE FICHIERS
   // =======================
+  // Les photos de téléphone pèsent souvent 3 à 6 Mo : deux suffiraient à dépasser
+  // la limite de 8 Mo de Netlify. Elles sont donc réduites dans le navigateur
+  // (2000 px de côté max, JPEG) dès qu'elles sont choisies.
+  const MAX_PHOTOS = 5;
+  const MAX_DIMENSION = 2000;
+
+  async function compressImage(file: File): Promise<File> {
+    const alreadyLight =
+      file.size < 1.2 * 1024 * 1024 && ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
+    if (alreadyLight || file.type === 'image/gif') return file;
+
+    try {
+      const bitmap = await createImageBitmap(file);
+      const scale = Math.min(1, MAX_DIMENSION / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(bitmap.width * scale);
+      canvas.height = Math.round(bitmap.height * scale);
+      const context = canvas.getContext('2d');
+      if (!context) return file;
+      // Fond blanc : les zones transparentes d'un PNG ne deviennent pas noires en JPEG
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      bitmap.close();
+
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.85));
+      if (!blob || blob.size >= file.size) return file;
+      const name = file.name.replace(/\.[^.]+$/, '') + '.jpg';
+      return new File([blob], name, { type: 'image/jpeg', lastModified: file.lastModified });
+    } catch {
+      // Format que ce navigateur ne sait pas décoder (HEIC hors Safari…) : envoyé tel quel
+      return file;
+    }
+  }
+
+  function formatSize(bytes: number) {
+    return bytes < 1024 * 1024
+      ? `${Math.max(1, Math.round(bytes / 1024))} Ko`
+      : `${(bytes / 1024 / 1024).toFixed(1).replace('.', ',')} Mo`;
+  }
+
+  function renderFileList(container: HTMLElement | null, files: File[], onRemove: (index: number) => void) {
+    if (!container) return;
+    container.innerHTML = '';
+
+    files.forEach((file, index) => {
+      const fileItem = document.createElement('div');
+      fileItem.className = 'file-item';
+
+      const fileName = document.createElement('span');
+      fileName.className = 'file-item-name';
+      fileName.textContent = `${file.name} · ${formatSize(file.size)}`;
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'file-item-remove';
+      removeBtn.type = 'button';
+      removeBtn.textContent = '×';
+      removeBtn.setAttribute('aria-label', `Retirer ${file.name}`);
+      removeBtn.addEventListener('click', () => onRemove(index));
+
+      fileItem.appendChild(fileName);
+      fileItem.appendChild(removeBtn);
+      container.appendChild(fileItem);
+    });
+  }
+
+  function showPreparing(container: HTMLElement | null) {
+    if (!container) return;
+    const note = document.createElement('div');
+    note.className = 'file-item file-item--pending';
+    note.textContent = 'Préparation de la photo…';
+    container.appendChild(note);
+  }
+
+  // Compression en cours : l'envoi attend qu'elle soit terminée
+  let pendingFiles: Promise<unknown> = Promise.resolve();
+
+  // --- Photos d'inspiration (projet perso) : jusqu'à 5, ajoutées une par une ou ensemble ---
   const fileInput = document.getElementById('photos') as HTMLInputElement | null;
   const fileUploadArea = document.getElementById('file-upload-area') as HTMLElement | null;
   const fileList = document.getElementById('file-list') as HTMLElement | null;
   let selectedFiles: File[] = [];
 
   function updateFileList() {
-    if (!fileList) return;
-
-    fileList.innerHTML = '';
-
-    if (selectedFiles.length === 0) return;
-
-    selectedFiles.forEach((file, index) => {
-      const fileItem = document.createElement('div');
-      fileItem.className = 'file-item';
-
-      const fileName = document.createElement('span');
-      fileName.className = 'file-item-name';
-      fileName.textContent = file.name;
-
-      const removeBtn = document.createElement('button');
-      removeBtn.className = 'file-item-remove';
-      removeBtn.innerHTML = '×';
-      removeBtn.type = 'button';
-      removeBtn.onclick = () => {
-        selectedFiles.splice(index, 1);
-        updateFileList();
-      };
-
-      fileItem.appendChild(fileName);
-      fileItem.appendChild(removeBtn);
-      fileList.appendChild(fileItem);
+    renderFileList(fileList, selectedFiles, (index) => {
+      selectedFiles.splice(index, 1);
+      clearError('photos');
+      updateFileList();
     });
   }
 
-  if (fileInput) {
-    fileInput.addEventListener('change', (e) => {
-      const target = e.target as HTMLInputElement;
-      if (target.files) {
-        const newFiles = Array.from(target.files);
-        const validation = validateFiles(newFiles);
+  function addPhotos(files: File[]) {
+    clearError('photos');
+    if (files.length === 0) return;
 
-        if (!validation.valid) {
-          alert(validation.error);
-          target.value = '';
-          return;
-        }
+    const validation = validateFiles(files);
+    if (!validation.valid) {
+      showError('photos', validation.error!);
+      return;
+    }
 
-        selectedFiles = newFiles;
-        updateFileList();
+    const room = MAX_PHOTOS - selectedFiles.length;
+    if (room <= 0) {
+      showError('photos', `${MAX_PHOTOS} photos maximum : retire une photo pour en ajouter une autre.`);
+      return;
+    }
+
+    const accepted = files.slice(0, room);
+    showPreparing(fileList);
+    pendingFiles = Promise.all(accepted.map(compressImage)).then((compressed) => {
+      selectedFiles = [...selectedFiles, ...compressed];
+      updateFileList();
+      if (files.length > room) {
+        showError('photos', `${MAX_PHOTOS} photos maximum : seules les premières ont été ajoutées.`);
       }
     });
   }
 
-  // Drag & Drop
+  if (fileInput) {
+    fileInput.addEventListener('change', () => {
+      const files = Array.from(fileInput.files ?? []);
+      // On vide le champ : la sélection suivante s'ajoute à la liste (et la même
+      // photo peut être choisie à nouveau après l'avoir retirée)
+      fileInput.value = '';
+      addPhotos(files);
+    });
+  }
+
+  // Glisser-déposer (ordinateur)
   if (fileUploadArea) {
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
       fileUploadArea.addEventListener(eventName, (e) => {
@@ -855,18 +942,41 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
 
     fileUploadArea.addEventListener('drop', (e) => {
       const dt = (e as DragEvent).dataTransfer;
-      if (dt && dt.files) {
-        const newFiles = Array.from(dt.files).filter(file => file.type.startsWith('image/'));
+      if (dt?.files) addPhotos(Array.from(dt.files));
+    });
+  }
 
-        const validation = validateFiles(newFiles);
-        if (!validation.valid) {
-          alert(validation.error);
-          return;
-        }
+  // --- Photo du flash : une seule, affichée une fois choisie ---
+  const flashInput = document.getElementById('flash-photo') as HTMLInputElement | null;
+  const flashFileList = document.getElementById('flash-file-list') as HTMLElement | null;
+  let flashFile: File | null = null;
 
-        selectedFiles = [...selectedFiles, ...newFiles];
-        updateFileList();
+  function updateFlashFile() {
+    renderFileList(flashFileList, flashFile ? [flashFile] : [], () => {
+      flashFile = null;
+      updateFlashFile();
+    });
+  }
+
+  if (flashInput) {
+    flashInput.addEventListener('change', () => {
+      const file = flashInput.files?.[0];
+      flashInput.value = '';
+      clearError('flash-photo');
+      if (!file) return;
+
+      const validation = validateImageFile(file);
+      if (!validation.valid) {
+        showError('flash-photo', validation.error!);
+        return;
       }
+
+      if (flashFileList) flashFileList.innerHTML = '';
+      showPreparing(flashFileList);
+      pendingFiles = compressImage(file).then((compressed) => {
+        flashFile = compressed;
+        updateFlashFile();
+      });
     });
   }
 
@@ -950,13 +1060,25 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
         return;
       }
 
+      // Photos encore en préparation : on attend qu'elles soient prêtes
+      await pendingFiles;
+
       // 2. Collecter les données
+      const value = (id: string) =>
+        (document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement | null)?.value ?? '';
+      const isFlash = Boolean(flashRadio?.checked);
       const formData: SecurityFormData = {
         name: (document.getElementById('name') as HTMLInputElement).value,
         email: (document.getElementById('email') as HTMLInputElement).value,
         phone: (document.getElementById('phone') as HTMLInputElement)?.value,
         instagram: (document.getElementById('instagram') as HTMLInputElement)?.value,
-        projectType: flashRadio?.checked ? 'flash' : 'freehand',
+        projectType: isFlash ? 'flash' : 'freehand',
+        flashPhoto: Boolean(flashFile),
+        flashBodyPart: value('flash-body-part'),
+        flashSize: value('flash-size'),
+        flashAvailability: value('flash-availability'),
+        persoBodyPart: value('perso-body-part'),
+        persoSize: value('perso-size'),
         project: projectTextarea?.value || '',
         budget: (document.getElementById('budget') as HTMLSelectElement)?.value,
         availability: (document.getElementById('availability') as HTMLTextAreaElement)?.value,
@@ -994,14 +1116,19 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
       // FormData(form) reprend tous les champs nommés (dont form-name et bot-field) ;
       // les photos d'inspiration sont remplacées par la sélection gérée en JS
       // (glisser-déposer compris), à raison d'un fichier par champ.
+      // Seules les photos du type choisi sont envoyées (l'autre partie est masquée)
       const payload = new FormData(form);
-      ['photos', 'photos-2', 'photos-3', 'photos-4', 'photos-5'].forEach(key => payload.delete(key));
-      selectedFiles.forEach((file, index) => {
-        payload.append(index === 0 ? 'photos' : `photos-${index + 1}`, file);
-      });
+      ['flash-photo', 'photos', 'photos-2', 'photos-3', 'photos-4', 'photos-5'].forEach(key => payload.delete(key));
+      const filesToSend = isFlash ? (flashFile ? [flashFile] : []) : selectedFiles;
+      if (isFlash && flashFile) {
+        payload.append('flash-photo', flashFile);
+      } else if (!isFlash) {
+        selectedFiles.forEach((file, index) => {
+          payload.append(index === 0 ? 'photos' : `photos-${index + 1}`, file);
+        });
+      }
 
-      const flashPhoto = (document.getElementById('flash-photo') as HTMLInputElement | null)?.files?.[0];
-      const totalSize = selectedFiles.reduce((sum, file) => sum + file.size, flashPhoto?.size ?? 0);
+      const totalSize = filesToSend.reduce((sum, file) => sum + file.size, 0);
       if (totalSize > MAX_SUBMISSION_SIZE) {
         showStatus(
           'error',
@@ -1030,6 +1157,8 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
         form.reset();
         selectedFiles = [];
         updateFileList();
+        flashFile = null;
+        updateFlashFile();
         clearAllErrors();
         if (sectionFlash) sectionFlash.style.display = 'none';
         if (sectionProjetPerso) sectionProjetPerso.style.display = 'none';

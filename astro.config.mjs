@@ -52,7 +52,8 @@ export default defineConfig({
 
   integrations: [
     devOnlyPages(),
-    sitemap(),
+    // La page de confirmation du formulaire n'a rien à faire dans le sitemap
+    sitemap({ filter: (page) => !page.includes('/merci') }),
     sanity({
       projectId: PUBLIC_SANITY_PROJECT_ID,
       dataset: PUBLIC_SANITY_DATASET || 'production',

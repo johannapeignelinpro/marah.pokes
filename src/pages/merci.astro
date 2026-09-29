@@ -1,0 +1,78 @@
+---
+// Page de confirmation du formulaire de contact (action du <form> Netlify).
+// Affichée seulement quand le formulaire est envoyé sans JavaScript : avec JS,
+// l'envoi se fait en arrière-plan et le message s'affiche sous le formulaire.
+// Jamais indexée, et exclue du sitemap (astro.config.mjs).
+import '../styles/global.css';
+import { siteConfig } from '../config/seo';
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#F5EEE4" />
+    <title>Demande envoyée | {siteConfig.name}</title>
+
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Figtree:wght@400..600&display=swap"
+    />
+  </head>
+
+  <body>
+    <main class="thanks">
+      <span class="eyebrow">Demande envoyée</span>
+      <h1>Merci <span>!</span></h1>
+      <p>
+        Ta demande a bien été envoyée. Marah reviendra vers toi dès que possible,
+        par email ou sur Instagram.
+      </p>
+      <div class="thanks-actions">
+        <a href="/" class="btn btn-primary">Retour au site</a>
+        <a href={siteConfig.social.instagram} target="_blank" rel="noopener noreferrer" class="link-underline">
+          @marah.pokes sur Instagram →
+        </a>
+      </div>
+    </main>
+
+    <style>
+      .thanks {
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-width: 38rem;
+        margin: 0 auto;
+        padding: var(--spacing-lg) 1.25rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+      }
+
+      h1 span {
+        font-style: italic;
+        color: var(--link);
+      }
+
+      .thanks p {
+        margin-bottom: 2.25rem;
+      }
+
+      .thanks-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 1.25rem 2rem;
+      }
+    </style>
+  </body>
+</html>

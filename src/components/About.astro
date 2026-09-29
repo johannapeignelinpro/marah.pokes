@@ -8,17 +8,17 @@ import artistImage from '../assets/images/editorial/marah-tatoueuse-handpoke-sea
 
 <section id="a-propos" class="about section-alt">
   <div class="container">
-    <header class="section-head">
+    <header class="section-head" data-reveal>
       <span class="eyebrow">Savoir-faire</span>
       <h2>Le Handpoke, c'est quoi ?</h2>
       <div class="ornament" aria-hidden="true"><span></span></div>
     </header>
 
     <div class="definition-row">
-      <p class="dropcap">
+      <p class="dropcap" data-reveal>
 Le tatouage handpoke est une technique traditionnelle réalisée à la main, point par point. L’aiguille dépose l’encre dans la peau pour créer une marque permanente, avec précision et intention. Contrairement au tatouage à la machine, il n’y a ni vibration, ni bruit : juste l’aiguille, l’encre et la main.
       </p>
-      <figure class="frame definition-media">
+      <figure class="frame definition-media" data-reveal style="--reveal-i: 1">
         <div class="frame-inner">
           <Image
             src={gesteImage}
@@ -33,7 +33,7 @@ Le tatouage handpoke est une technique traditionnelle réalisée à la main, poi
     </div>
 
     <div class="definition-row definition-row--reverse">
-      <figure class="frame definition-media">
+      <figure class="frame definition-media" data-reveal style="--reveal-i: 1">
         <div class="frame-inner">
           <Image
             src={materielImage}
@@ -45,7 +45,7 @@ Le tatouage handpoke est une technique traditionnelle réalisée à la main, poi
         </div>
         <figcaption>L'encre et l'aiguille</figcaption>
       </figure>
-      <p>
+      <p data-reveal>
 Cette méthode de tatouage offre un rendu fin et délicat, une sensation plus douce et une cicatrisation souvent plus rapide. C’est un moment plus lent, plus centré, où le corps est bien moins bousculé.
       </p>
     </div>
@@ -55,7 +55,7 @@ Cette méthode de tatouage offre un rendu fin et délicat, une sensation plus do
 <!-- Section About : « Portrait de l'artiste » (bio de Marah) -->
 <section id="artiste" class="artist">
   <div class="container artist-content">
-    <figure class="frame artist-media">
+    <figure class="frame artist-media" data-reveal="fade">
       <div class="frame-inner">
         <Image
           src={artistImage}
@@ -68,7 +68,7 @@ Cette méthode de tatouage offre un rendu fin et délicat, une sensation plus do
       <figcaption>Marah, à l'atelier</figcaption>
     </figure>
 
-    <div class="artist-text">
+    <div class="artist-text" data-reveal style="--reveal-i: 1">
       <span class="eyebrow">Portrait</span>
       <h2>L'Artiste</h2>
       <p>
@@ -95,20 +95,20 @@ A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des
 <!-- Section Spécialités -->
 <section class="specialties section-alt">
   <div class="container">
-    <header class="section-head">
+    <header class="section-head" data-reveal>
       <h2>Spécialités</h2>
       <div class="ornament" aria-hidden="true"><span></span></div>
     </header>
     <ul class="specialties-list">
-      <li class="specialty-item">
+      <li class="specialty-item" data-reveal style="--reveal-i: 0">
         <h3>Ornemental intuitif</h3>
         <p>Tatouage de symboles abstraits, inspirés de rituels anciens et d’écritures imaginaires.</p>
       </li>
-      <li class="specialty-item">
+      <li class="specialty-item" data-reveal style="--reveal-i: 1">
         <h3>Organique</h3>
         <p>Tatouages  inspirés de formes végétales et de mouvements naturels.</p>
       </li>
-      <li class="specialty-item">
+      <li class="specialty-item" data-reveal style="--reveal-i: 2">
         <h3>Lignes et ombrages</h3>
         <p>Tatouages d’élégantes lignes fines et de subtils ombrages.</p>
       </li>
@@ -141,12 +141,11 @@ A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des
 
   .dropcap::first-letter {
     float: left;
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 600;
+    font-family: var(--f-display);
+    font-weight: var(--fw-display);
     font-size: 4.6em;
     line-height: 0.8;
-    color: var(--accent-light);
+    color: var(--link);
     padding: 0.08em 0.12em 0 0;
   }
 
@@ -161,18 +160,39 @@ A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des
     object-fit: cover;
   }
 
+  /* Asymétrie discrète (desktop) : deux images de tailles différentes,
+     calées vers l'extérieur de la page, sans jamais sortir du conteneur */
+  @media (min-width: 1025px) {
+    .definition-row:not(.definition-row--reverse) .definition-media {
+      max-width: 460px;
+      justify-self: end;
+    }
+
+    .definition-row--reverse .definition-media {
+      max-width: 380px;
+      justify-self: start;
+    }
+  }
+
   /* ---------- L'artiste ---------- */
   .artist-content {
     display: grid;
-    grid-template-columns: minmax(0, 420px) 1fr;
+    grid-template-columns: minmax(0, 480px) 1fr;
     gap: var(--spacing-lg);
-    align-items: center;
+    align-items: start;
     max-width: 1040px;
   }
 
   .artist-media img {
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 2 / 3;
     object-fit: cover;
+  }
+
+  /* Le portrait, plus haut que le texte, défile pendant que le texte reste en place */
+  .artist-text {
+    position: sticky;
+    top: calc(var(--header-height) + var(--spacing-lg));
+    padding-top: var(--spacing-md);
   }
 
   .artist-text h2 {
@@ -185,6 +205,7 @@ A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des
 
   /* ---------- Spécialités ---------- */
   .specialties-list {
+    counter-reset: specialty;
     list-style: none;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -206,12 +227,25 @@ A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des
     left: 0;
     width: 40px;
     height: 2px;
-    background: var(--accent-light);
+    background: var(--link);
   }
 
   .specialty-item h3 {
     font-size: 1.75rem;
     margin-bottom: 0.5rem;
+  }
+
+  /* Grand numéro graphique au-dessus de chaque spécialité */
+  .specialty-item h3::before {
+    counter-increment: specialty;
+    content: counter(specialty, decimal-leading-zero);
+    display: block;
+    font-style: italic;
+    font-size: clamp(3rem, 5vw, 4.25rem);
+    line-height: 1;
+    color: var(--link);
+    opacity: 0.85;
+    margin-bottom: 0.75rem;
   }
 
   .specialty-item p {
@@ -240,6 +274,15 @@ A travers mon aiguille, j’explore la finesse des lignes et la délicatesse des
     .artist-content {
       grid-template-columns: 1fr;
       gap: var(--spacing-md);
+    }
+
+    .artist-text {
+      position: static;
+      padding-top: 0;
+    }
+
+    .artist-media img {
+      aspect-ratio: 3 / 4;
     }
 
     .artist-media {

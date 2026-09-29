@@ -6,8 +6,8 @@ const stars = (rating: number) => '★'.repeat(Math.round(rating)) + '☆'.repea
 
 <section id="avis" class="reviews section-alt">
   <div class="container reviews-layout">
-    <aside class="reviews-summary">
-      <span class="reviews-kicker script">Avis Google</span>
+    <aside class="reviews-summary" data-reveal>
+      <span class="eyebrow">Avis Google</span>
       <h2>Ils me font confiance</h2>
       <div class="reviews-score-row">
         <span class="reviews-score">{googleReviews.rating.toFixed(1).replace('.', ',')}</span>
@@ -25,8 +25,8 @@ const stars = (rating: number) => '★'.repeat(Math.round(rating)) + '☆'.repea
 
     <div class="reviews-grid">
       {
-        reviews.map((review) => (
-          <figure class="review-card">
+        reviews.map((review, i) => (
+          <figure class="review-card" data-reveal style={`--reveal-i: ${i % 2}`}>
             <figcaption class="review-author">
               <span class="review-avatar" aria-hidden="true">{review.author.charAt(0)}</span>
               <span>
@@ -60,13 +60,6 @@ const stars = (rating: number) => '★'.repeat(Math.round(rating)) + '☆'.repea
     top: calc(var(--header-height) + 2rem);
   }
 
-  .reviews-kicker {
-    display: block;
-    font-size: 2rem;
-    line-height: 1.2;
-    margin-bottom: 0.25rem;
-  }
-
   .reviews-score-row {
     display: flex;
     align-items: center;
@@ -75,8 +68,9 @@ const stars = (rating: number) => '★'.repeat(Math.round(rating)) + '☆'.repea
   }
 
   .reviews-score {
-    font-family: var(--font-display);
-    font-weight: 500;
+    font-family: var(--f-display);
+    font-weight: var(--fw-display);
+    letter-spacing: var(--tracking-display);
     font-size: 4rem;
     line-height: 1;
     color: var(--ink);
@@ -84,20 +78,20 @@ const stars = (rating: number) => '★'.repeat(Math.round(rating)) + '☆'.repea
 
   .reviews-score::before {
     content: '[';
-    color: var(--accent-light);
+    color: var(--link);
     font-weight: 400;
   }
 
   .reviews-score::after {
     content: ']';
-    color: var(--accent-light);
+    color: var(--link);
     font-weight: 400;
   }
 
   .reviews-stars,
   .review-stars {
     display: block;
-    color: var(--accent-light);
+    color: var(--link);
     letter-spacing: 0.15em;
   }
 
@@ -123,6 +117,15 @@ const stars = (rating: number) => '★'.repeat(Math.round(rating)) + '☆'.repea
     padding: 1.75rem;
     background-color: var(--surface);
     border: 1px solid var(--line);
+    border-radius: var(--radius-img);
+    transition: translate var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .review-card:hover {
+      translate: 0 -2px;
+      box-shadow: var(--shadow-soft);
+    }
   }
 
   .review-author {
@@ -130,8 +133,8 @@ const stars = (rating: number) => '★'.repeat(Math.round(rating)) + '☆'.repea
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 0.85rem;
-    font-family: var(--font-display);
-    font-weight: 600;
+    font-family: var(--f-display);
+    font-weight: var(--fw-display);
     font-size: 1.1rem;
     color: var(--ink);
     margin-bottom: 1.1rem;
@@ -144,20 +147,20 @@ const stars = (rating: number) => '★'.repeat(Math.round(rating)) + '☆'.repea
     height: 2.4rem;
     border-radius: 50%;
     background: var(--accent);
-    color: var(--ink);
+    color: var(--on-accent);
     font-style: normal;
     font-size: 1.1rem;
-    font-family: var(--font-body);
+    font-family: var(--f-body);
   }
 
   .review-stars {
-    font-family: var(--font-body);
+    font-family: var(--f-body);
     font-size: var(--fs-small);
   }
 
   .review-date {
     align-self: start;
-    font-family: var(--font-body);
+    font-family: var(--f-body);
     font-weight: 400;
     font-size: var(--fs-small);
     color: var(--ink-muted);

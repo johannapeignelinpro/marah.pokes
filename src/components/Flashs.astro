@@ -11,9 +11,9 @@ const flashBoards = (await getFlashBoards()).map((board) => ({
 }));
 ---
 
-<section id="flashs" class="flashs">
+<section id="flashs" class="flashs section-alt">
   <div class="container">
-    <header class="flashs-head">
+    <header class="flashs-head" data-reveal>
       <span class="eyebrow">Disponibles à l'atelier</span>
       <h2>Flashs</h2>
       <div class="flashs-intro">
@@ -27,10 +27,11 @@ const flashBoards = (await getFlashBoards()).map((board) => ({
     {flashBoards.length > 0 && (
       <>
         <p class="swipe-hint" aria-hidden="true">Faites glisser →</p>
-        <div class="flashs-grid">
+        <div class="flashs-grid" data-reveal-group>
           {
-            flashBoards.map((board) => (
-              <div class="flash-item">
+            flashBoards.map((board, i) => (
+              <div class="flash-item" data-reveal style={`--reveal-i: ${i % 4}`}>
+                <div class="flash-card">
                 <img
                   src={board.src}
                   srcset={board.srcset}
@@ -42,6 +43,7 @@ const flashBoards = (await getFlashBoards()).map((board) => ({
                   decoding="async"
                   class="flash-image"
                 />
+                </div>
               </div>
             ))
           }
@@ -75,7 +77,7 @@ const flashBoards = (await getFlashBoards()).map((board) => ({
 
   .flashs-intro a,
   .flashs-note a {
-    color: var(--accent-light);
+    color: var(--link);
     border-bottom: 1px solid currentColor;
   }
 
@@ -95,23 +97,27 @@ const flashBoards = (await getFlashBoards()).map((board) => ({
     align-items: start;
   }
 
-  /* Plaquette seule, sans cadre : léger arrondi et ombre douce */
-  .flash-item {
+  /* Plaquette seule, sans cadre : coins arrondis et ombre douce.
+     .flash-item porte l'apparition au scroll, .flash-card le survol et la mise
+     au point au swipe : deux éléments pour que les transform ne se contrarient pas. */
+  .flash-card {
     overflow: hidden;
-    border-radius: 3px;
-    box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
-    transition: transform 0.4s ease;
+    border-radius: var(--radius-img);
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
   }
 
   .flash-image {
     display: block;
     width: 100%;
     height: auto;
-    cursor: pointer;
   }
 
-  .flash-item:hover {
-    transform: translateY(-4px);
+  @media (hover: hover) and (pointer: fine) {
+    .flash-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-strong);
+    }
   }
 
   .flashs-note {
@@ -135,10 +141,10 @@ const flashBoards = (await getFlashBoards()).map((board) => ({
 
     .swipe-hint {
       display: block;
-      font-size: var(--fs-small);
+      font-size: var(--fs-caps);
       text-transform: uppercase;
       letter-spacing: var(--tracking-caps);
-      color: var(--accent-light);
+      color: var(--link);
       margin-bottom: 0.75rem;
       text-align: right;
     }
@@ -160,6 +166,14 @@ const flashBoards = (await getFlashBoards()).map((board) => ({
     .flash-item {
       flex: 0 0 78%;
       scroll-snap-align: center;
+    }
+
+    /* La plaquette centrée prend légèrement le dessus pendant le glissement */
+    @supports (animation-timeline: view()) {
+      .flash-card {
+        animation: snap-focus linear both;
+        animation-timeline: view(inline);
+      }
     }
 
     .flashs-note {

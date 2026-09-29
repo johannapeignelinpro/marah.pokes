@@ -38,25 +38,84 @@ const questions = [
 
 <section id="faq" class="faq" aria-labelledby="faq-title">
   <div class="container">
-    <header class="section-head">
+    <header class="section-head" data-reveal>
       <span class="eyebrow">Bon à savoir</span>
       <h2 id="faq-title">Questions fréquentes</h2>
       <div class="ornament" aria-hidden="true"><span></span></div>
     </header>
 
-    <div class="faq-list">
+    <div class="faq-list" data-reveal style="--reveal-i: 1">
       {questions.map(({ question, answer }) => (
         <details class="faq-item">
           <summary>
             <h3>{question}</h3>
             <span class="faq-icon" aria-hidden="true"></span>
           </summary>
-          <p set:html={answer} />
+          <div class="faq-answer">
+            <p set:html={answer} />
+          </div>
         </details>
       ))}
     </div>
   </div>
 </section>
+
+<script>
+  // Ouverture / fermeture fluides des volets (hauteur + fondu), en surcouche du
+  // <details> natif : sans JS ou avec prefers-reduced-motion, comportement natif.
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const OPTIONS = { duration: 280, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)' };
+
+  document.querySelectorAll<HTMLDetailsElement>('.faq-item').forEach((item) => {
+    const summary = item.querySelector('summary');
+    const answer = item.querySelector<HTMLElement>('.faq-answer');
+    if (!summary || !answer) return;
+
+    let animation: Animation | null = null;
+    let closing = false;
+
+    summary.addEventListener('click', (event) => {
+      if (reducedMotion.matches) return;
+      event.preventDefault();
+
+      // Clic pendant une animation : on repart de la hauteur affichée
+      const current = answer.getBoundingClientRect().height;
+      animation?.cancel();
+      answer.classList.add('is-animating');
+
+      if (!item.open || closing) {
+        closing = false;
+        item.open = true;
+        const target = answer.scrollHeight;
+        animation = answer.animate(
+          [
+            { height: `${current}px`, opacity: current ? 1 : 0, transform: 'translateY(-6px)' },
+            { height: `${target}px`, opacity: 1, transform: 'none' },
+          ],
+          OPTIONS
+        );
+      } else {
+        closing = true;
+        animation = answer.animate(
+          [
+            { height: `${current}px`, opacity: 1 },
+            { height: '0px', opacity: 0 },
+          ],
+          // Reste à 0 jusqu'à la fermeture effective du <details> (pas de flash)
+          { ...OPTIONS, fill: 'forwards' }
+        );
+      }
+
+      animation.onfinish = () => {
+        if (closing) item.open = false;
+        closing = false;
+        animation?.cancel();
+        animation = null;
+        answer.classList.remove('is-animating');
+      };
+    });
+  });
+</script>
 
 <style>
   .faq-list {
@@ -86,12 +145,12 @@ const questions = [
   }
 
   .faq-item summary:focus-visible {
-    outline: 2px solid var(--accent-light);
+    outline: 2px solid var(--link);
     outline-offset: 4px;
   }
 
   .faq-item summary:hover h3 {
-    color: var(--accent-light);
+    color: var(--link);
   }
 
   /* Icône + qui devient − à l'ouverture */
@@ -110,7 +169,7 @@ const questions = [
     left: 0;
     width: 100%;
     height: 1.5px;
-    background: var(--accent-light);
+    background: var(--link);
     transition: transform 0.25s ease;
   }
 
@@ -129,13 +188,17 @@ const questions = [
     left: 0;
     width: 40px;
     height: 2px;
-    background: var(--accent-light);
+    background: var(--link);
   }
 
   .faq-item h3 {
     font-size: 1.6rem;
     margin: 0;
     transition: color 0.2s ease;
+  }
+
+  .faq-answer.is-animating {
+    overflow: hidden;
   }
 
   .faq-item p {
@@ -150,7 +213,7 @@ const questions = [
   }
 
   .faq-item :global(a) {
-    color: var(--accent-light);
+    color: var(--link);
     border-bottom: 1px solid currentColor;
   }
 

@@ -1,12 +1,12 @@
 /* ============================================
    DESIGN SYSTEM - MARAH.POKES
    Tatouage Handpoke à Rennes
-   Direction artistique : atelier sombre, brun chaud & rouille,
-   titres en serif italique, textes droits et lisibles.
+   Direction artistique « Sable chaud » : fond sable lumineux, accent terracotta,
+   titres Fraunces, textes Figtree, formes arrondies.
    ============================================ */
 
 /* Polices chargées via <link> dans index.astro :
-   Cormorant Garamond (titres), EB Garamond (textes), Pinyon Script (accents manuscrits) */
+   Fraunces (titres, nom de marque), Figtree (textes, boutons, navigation, formulaires) */
 
 
 /* ============================================
@@ -22,6 +22,8 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 72px;
+  /* Réserve la place de la barre de défilement : rien ne bouge quand la lightbox bloque le scroll */
+  scrollbar-gutter: stable;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -33,6 +35,7 @@ html {
   *::before,
   *::after {
     transition: none !important;
+    animation: none !important;
   }
 }
 
@@ -43,35 +46,56 @@ html {
 
 :root {
   /* Fonds */
-  --bg: #1f1a16;
-  --bg-alt: #191512;
-  --bg-deep: #13100d;
-  --surface: #2a231e;
+  --bg: #F5EEE4;       /* fond principal (sable) */
+  --bg-alt: #ECE1D2;   /* sections alternées (FAQ, avis, pied de page…) */
+  --surface: #FBF7F1;  /* cartes, formulaire */
 
-  /* Textes (contrastes WCAG AA vérifiés sur --bg et --surface) */
-  --ink: #f3ebdf;        /* titres : ~15:1 */
-  --ink-soft: #d9cdbb;   /* textes courants : ~11:1 */
-  --ink-muted: #bfb2a0;  /* textes secondaires : ~8:1 */
+  /* Textes (contrastes WCAG AA vérifiés) */
+  --ink: #2F2620;        /* titres : 12,8:1 sur --bg */
+  --ink-soft: #4E4239;   /* texte courant : 8,4:1 sur --bg */
+  --ink-muted: #6A5C51;  /* textes secondaires, légendes : 5,0:1 sur --bg-alt */
 
-  /* Accent rouille */
-  --accent: #8f452d;       /* fond des boutons : texte crème à ~5,4:1 */
-  --accent-light: #e08a6a; /* liens & accents sur fond sombre : ~6,5:1 */
-  --accent-dark: #7a3a25;  /* survol des boutons */
+  /* Accent terracotta */
+  --accent: #A0503A;       /* fond des boutons : texte blanc à 5,7:1 */
+  --accent-dark: #8A4230;  /* survol des boutons : 7,2:1 */
+  --on-accent: #FFFFFF;
+  --link: #914832;         /* liens, surtitres, petits accents : 5,7:1 sur --bg, 5,1:1 sur --bg-alt */
+  --tint: #F2D8CB;         /* fond des messages de confirmation, éléments sélectionnés */
 
   /* Lignes */
-  --line: rgba(243, 235, 223, 0.14);
-  --line-strong: rgba(243, 235, 223, 0.3);
-  --line-input: #8a7d6d; /* bordure des champs : > 3:1 */
+  --line: rgba(47, 38, 32, 0.13);        /* séparateurs légers */
+  --line-strong: rgba(47, 38, 32, 0.24); /* séparateurs FAQ */
+  --line-input: #95816F;                 /* bordure des champs : > 3:1 */
+
+  /* Messages du formulaire */
+  --error: #A3372B;                      /* 6,3:1 sur --surface */
+  --error-bg: rgba(163, 55, 43, 0.08);
+  --warning: #7A5212;
+  --warning-line: #B8862E;
+  --warning-bg: rgba(184, 134, 46, 0.12);
+
+  /* Voiles et ombres (teintés sable, pensés pour un fond clair) */
+  --header-bg: rgba(245, 238, 228, 0.72);
+  --header-bg-scrolled: rgba(245, 238, 228, 0.94);
+  --scrim: rgba(251, 247, 241, 0.7);
+  --shadow-soft: 0 18px 40px -24px rgba(47, 38, 32, 0.26);
+  --shadow-strong: 0 26px 50px -30px rgba(47, 38, 32, 0.32);
+
+  /* Formes */
+  --radius-pill: 999px; /* boutons, champs */
+  --radius-img: 20px;   /* images, cartes */
 
   /* Polices */
-  --font-display: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
-  --font-body: 'EB Garamond', Georgia, serif;
-  --font-script: 'Pinyon Script', cursive;
+  --f-display: 'Fraunces', Georgia, serif;   /* titres, nom de marque : serif ronde et douce */
+  --f-body: 'Figtree', system-ui, sans-serif; /* textes, boutons, nav, formulaires */
+  --fw-display: 400;                          /* graisse des titres (Fraunces est déjà dense) */
 
-  /* Tailles de texte (aucun texte sous 14px) */
+  /* Tailles de texte */
   --fs-small: 0.875rem;
-  --fs-body: clamp(1.125rem, 0.95rem + 0.4vw, 1.25rem);
-  --tracking-caps: 0.14em;
+  --fs-body: 1.0625rem;   /* 17px */
+  --fs-caps: 0.78125rem;  /* 12.5px : navigation, surtitres, petites capitales */
+  --tracking-caps: 0.13em;
+  --tracking-display: -0.01em;
 
   /* Espacements */
   --spacing-xs: 0.5rem;
@@ -79,6 +103,14 @@ html {
   --spacing-md: 2rem;
   --spacing-lg: 4rem;
   --spacing-xl: 7rem;
+
+  /* Mouvement */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);        /* survols, FAQ : réponse vive */
+  --ease-reveal: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* apparitions : départ progressif, sans à-coup */
+  --dur-fast: 0.25s;         /* survols, FAQ */
+  --dur-reveal: 1s;          /* apparitions au scroll */
+  --reveal-distance: 14px;
+  --reveal-step: 80ms;       /* décalage entre éléments d'un même groupe */
 
   /* Conteneurs */
   --container-width: 1200px;
@@ -93,7 +125,7 @@ html {
 
 body {
   background-color: var(--bg);
-  font-family: var(--font-body);
+  font-family: var(--f-body);
   font-size: var(--fs-body);
   color: var(--ink-soft);
   line-height: 1.7;
@@ -107,12 +139,12 @@ img {
 
 ::selection {
   background: var(--accent);
-  color: var(--ink);
+  color: var(--on-accent);
 }
 
 /* Focus clavier visible partout */
 :focus-visible {
-  outline: 2px solid var(--accent-light);
+  outline: 2px solid var(--link);
   outline-offset: 3px;
 }
 
@@ -124,11 +156,13 @@ img {
 h1,
 h2,
 h3 {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 600;
+  font-family: var(--f-display);
+  font-style: normal;
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tracking-display);
   color: var(--ink);
-  line-height: 1.1;
+  line-height: 1.08;
+  text-wrap: balance;
 }
 
 h1 {
@@ -147,8 +181,9 @@ h3 {
 }
 
 h4 {
-  font-family: var(--font-display);
-  font-weight: 600;
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tracking-display);
   color: var(--ink);
 }
 
@@ -169,7 +204,7 @@ b {
 }
 
 a {
-  color: var(--accent-light);
+  color: var(--link);
   text-decoration: none;
   transition: color 0.3s ease;
 }
@@ -181,24 +216,14 @@ a:hover {
 /* Sur-titre de section : petites capitales */
 .eyebrow {
   display: block;
-  font-family: var(--font-body);
-  font-size: var(--fs-small);
+  font-family: var(--f-body);
+  font-size: var(--fs-caps);
   font-weight: 500;
   font-style: normal;
   text-transform: uppercase;
   letter-spacing: var(--tracking-caps);
-  color: var(--accent-light);
+  color: var(--link);
   margin-bottom: 0.9rem;
-}
-
-/* Accent manuscrit rouille */
-.script {
-  font-family: var(--font-script);
-  font-weight: 400;
-  font-style: normal;
-  color: var(--accent-light);
-  letter-spacing: 0;
-  text-transform: none;
 }
 
 /* En-tête de section centré avec ornement */
@@ -217,7 +242,7 @@ a:hover {
   justify-content: center;
   gap: 0.75rem;
   margin-top: 1.25rem;
-  color: var(--accent-light);
+  color: var(--link);
 }
 
 .ornament::before,
@@ -239,17 +264,59 @@ a:hover {
 /* Lien souligné en capitales */
 .link-underline {
   display: inline-block;
-  font-size: var(--fs-small);
+  font-size: var(--fs-caps);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: var(--tracking-caps);
-  color: var(--accent-light);
+  color: var(--link);
   padding-bottom: 0.3rem;
   border-bottom: 1px solid currentColor;
 }
 
 .link-underline:hover {
   color: var(--ink);
+}
+
+/* Survols : uniquement avec une souris (pas de faux survol au toucher) */
+@media (hover: hover) and (pointer: fine) {
+  /* Le soulignement s'efface puis se redessine depuis la gauche */
+  .link-underline {
+    position: relative;
+    border-bottom-color: transparent;
+  }
+
+  .link-underline::after,
+  .btn-ghost::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background: currentColor;
+    transform-origin: left;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .link-underline:hover::after {
+    animation: underline-redraw 0.45s var(--ease-out);
+  }
+
+  .btn-ghost::after {
+    background: var(--link);
+    transform: scaleX(0);
+  }
+
+  .btn-ghost:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes underline-redraw {
+  0% { transform: scaleX(1); transform-origin: right; }
+  45% { transform: scaleX(0); transform-origin: right; }
+  46% { transform: scaleX(0); transform-origin: left; }
+  100% { transform: scaleX(1); transform-origin: left; }
 }
 
 
@@ -261,11 +328,11 @@ a:hover {
   margin: 0;
 }
 
-/* Image nette, sans passe-partout : léger arrondi et ombre douce */
+/* Image nette, sans passe-partout : coins arrondis et ombre douce */
 .frame-inner {
   overflow: hidden;
-  border-radius: 3px;
-  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+  border-radius: var(--radius-img);
+  box-shadow: var(--shadow-soft);
 }
 
 .frame-inner img {
@@ -277,7 +344,7 @@ a:hover {
 .frame figcaption,
 .caption {
   margin-top: 0.85rem;
-  font-size: var(--fs-small);
+  font-size: var(--fs-caps);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: var(--tracking-caps);
@@ -312,6 +379,55 @@ section {
 
 
 /* ============================================
+   APPARITIONS AU SCROLL
+   Les éléments [data-reveal] ne sont masqués que si la classe .motion est
+   posée sur <html> (JS actif et mouvement non réduit) : sans JS, pour les
+   robots et avec prefers-reduced-motion, tout est visible d'emblée.
+   L'animation n'a pas de fill-mode « forwards » : une fois jouée, elle ne
+   bloque pas les transform des survols.
+   ============================================ */
+
+.motion [data-reveal]:not(.is-visible) {
+  opacity: 0;
+}
+
+.motion [data-reveal].is-visible {
+  animation: reveal-up var(--dur-reveal) var(--ease-reveal) backwards;
+  animation-delay: calc(var(--reveal-i, 0) * var(--reveal-step));
+}
+
+.motion [data-reveal='fade'].is-visible {
+  animation-name: reveal-fade;
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-distance), 0);
+  }
+}
+
+@keyframes reveal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Bandes à faire glisser (Flashs, Atelier) sur mobile : l'élément centré est à
+   taille réelle, ses voisins légèrement en retrait. Utilisé avec
+   animation-timeline: view(inline). */
+@keyframes snap-focus {
+  0%,
+  100% {
+    transform: scale(0.94);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+
+
+/* ============================================
    CLASSES UTILITAIRES
    ============================================ */
 
@@ -335,44 +451,56 @@ section {
 .btn {
   display: inline-block;
   padding: 1rem 1.9rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-small);
-  font-weight: 500;
+  font-family: var(--f-body);
+  font-size: var(--fs-caps);
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: var(--tracking-caps);
   border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
   background-color: transparent;
   color: var(--ink);
   cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease,
+    translate var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
   text-decoration: none;
 }
 
 .btn:hover {
-  border-color: var(--accent-light);
+  border-color: var(--link);
   color: var(--ink);
 }
 
 .btn-primary {
   background-color: var(--accent);
   border-color: var(--accent);
-  color: var(--ink);
+  color: var(--on-accent);
 }
 
 .btn-primary:hover {
   background-color: var(--accent-dark);
   border-color: var(--accent-dark);
+  color: var(--on-accent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover {
+    translate: 0 -1px;
+    box-shadow: 0 10px 22px -12px rgba(138, 66, 48, 0.55);
+  }
 }
 
 .btn-ghost {
+  position: relative;
   padding-left: 0;
   padding-right: 0;
   border: none;
+  border-radius: 0;
   border-bottom: 1px solid var(--line-input);
 }
 
 .btn-ghost:hover {
-  border-bottom-color: var(--accent-light);
+  border-bottom-color: var(--link);
 }
 
 
@@ -386,7 +514,7 @@ section {
 
 label {
   display: block;
-  font-family: var(--font-body);
+  font-family: var(--f-body);
   font-size: var(--fs-small);
   font-weight: 500;
   text-transform: uppercase;
@@ -401,15 +529,19 @@ input[type="tel"],
 textarea,
 select {
   width: 100%;
-  padding: 0.7rem 0;
-  font-family: var(--font-body);
-  font-size: 1.125rem;
+  padding: 0.8rem 1.25rem;
+  font-family: var(--f-body);
+  font-size: 1rem;
   color: var(--ink);
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px solid var(--line-input);
-  border-radius: 0;
-  transition: border-color 0.3s ease;
+  background-color: var(--bg);
+  border: 1px solid var(--line-input);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Une pilule ne convient pas à un champ sur plusieurs lignes */
+textarea {
+  border-radius: var(--radius-img);
 }
 
 input::placeholder,
@@ -427,8 +559,8 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-bottom-color: var(--accent-light);
-  box-shadow: 0 1px 0 var(--accent-light);
+  border-color: var(--link);
+  box-shadow: 0 0 0 1px var(--link);
 }
 
 textarea {
@@ -447,6 +579,10 @@ textarea {
     --spacing-xl: 3rem;
     --spacing-lg: 2.5rem;
     --header-height: 60px;
+    /* Mouvements plus courts et plus rapides sur mobile */
+    --reveal-distance: 10px;
+    --dur-reveal: 0.8s;
+    --reveal-step: 60ms;
   }
 
   html {

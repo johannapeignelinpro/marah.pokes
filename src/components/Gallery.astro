@@ -2,8 +2,10 @@
 // Galerie de tatouages - réalisations gérées dans Sanity (tattoo, du plus récent au plus ancien)
 // Une vignette par tattoo : la première photo sert d'image principale.
 // Mosaïque bord à bord : 9 réalisations max + une case « Voir plus » vers Instagram.
+// Chaque vignette ouvre la photo entière (non recadrée) dans une lightbox. Sans JS,
+// le lien ouvre simplement l'image.
 import { getTattoos } from '../lib/sanity/api';
-import { squareImage } from '../lib/sanity/image';
+import { squareImage, naturalImage } from '../lib/sanity/image';
 import { siteConfig } from '../config/seo';
 
 const MAX_IMAGES = 9;
@@ -12,14 +14,16 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
   const cover = tattoo.images[0];
   return {
     alt: cover.alt,
-    ...squareImage(cover.image, { widths: [300, 450, 600, 900] }),
+    title: tattoo.title?.trim() || '',
+    thumb: squareImage(cover.image, { widths: [300, 450, 600, 900] }),
+    full: naturalImage(cover.image, { widths: [800, 1200, 1600, 2000], quality: 85 }),
   };
 });
 ---
 
 <section id="galerie" class="gallery">
   <div class="container">
-    <header class="gallery-head">
+    <header class="gallery-head" data-reveal>
       <span class="eyebrow">Dernières créations</span>
       <h2>Galerie</h2>
       <p class="gallery-intro">
@@ -31,20 +35,31 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
   {galleryImages.length > 0 && (
     <div class="gallery-grid">
       {
-        galleryImages.map((image) => (
-          <div class="gallery-item">
+        galleryImages.map((image, i) => (
+          <a
+            href={image.full.src}
+            class="gallery-item"
+            data-reveal="fade"
+            style={`--reveal-i: ${i % 5}`}
+            data-lightbox
+            data-srcset={image.full.srcset}
+            data-width={image.full.width}
+            data-height={image.full.height}
+            data-title={image.title}
+            aria-haspopup="dialog"
+          >
             <img
-              src={image.src}
-              srcset={image.srcset}
+              src={image.thumb.src}
+              srcset={image.thumb.srcset}
               sizes="(max-width: 768px) 50vw, 20vw"
-              width={image.size}
-              height={image.size}
+              width={image.thumb.size}
+              height={image.thumb.size}
               alt={image.alt}
               loading="lazy"
               decoding="async"
               class="gallery-image"
             />
-          </div>
+          </a>
         ))
       }
       <a
@@ -52,6 +67,8 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
         target="_blank"
         rel="noopener noreferrer"
         class="gallery-more"
+        data-reveal="fade"
+        style={`--reveal-i: ${galleryImages.length % 5}`}
       >
         <span>Voir plus →</span>
       </a>
@@ -71,7 +88,121 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
       </a>
     </p>
   </div>
+
+  {galleryImages.length > 0 && (
+    <dialog class="lightbox" id="lightbox" aria-label="Photo du tatouage en grand">
+      <button type="button" class="lightbox-close" aria-label="Fermer la photo">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+      <figure class="lightbox-figure">
+        <img class="lightbox-image" alt="" decoding="async" />
+        <figcaption class="lightbox-caption"></figcaption>
+      </figure>
+    </dialog>
+  )}
 </section>
+
+<script>
+  // Lightbox de la galerie : <dialog> natif (piège le focus, Échap, fond inerte).
+  // Transition douce depuis la vignette via la View Transitions API quand elle
+  // existe ; sinon simple fondu CSS. Aucun mouvement si prefers-reduced-motion.
+  const dialog = document.querySelector<HTMLDialogElement>('#lightbox');
+  const photo = dialog?.querySelector<HTMLImageElement>('.lightbox-image');
+  const caption = dialog?.querySelector<HTMLElement>('.lightbox-caption');
+  const closeButton = dialog?.querySelector<HTMLButtonElement>('.lightbox-close');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const TRANSITION_NAME = 'lightbox-photo';
+
+  let activeLink: HTMLAnchorElement | null = null;
+
+  function runTransition(update: () => void) {
+    if (!document.startViewTransition || reducedMotion.matches) {
+      update();
+      return Promise.resolve();
+    }
+    return document.startViewTransition(update).finished;
+  }
+
+  // Attend la photo en grand, sans bloquer plus de 400 ms si le réseau est lent
+  function whenReady(img: HTMLImageElement) {
+    const timeout = new Promise((resolve) => setTimeout(resolve, 400));
+    return Promise.race([img.decode().catch(() => {}), timeout]);
+  }
+
+  async function open(link: HTMLAnchorElement) {
+    if (!dialog || !photo || !caption) return;
+    const thumb = link.querySelector('img');
+    activeLink = link;
+
+    photo.width = Number(link.dataset.width);
+    photo.height = Number(link.dataset.height);
+    photo.sizes = '(max-width: 768px) 100vw, 80vw';
+    photo.srcset = link.dataset.srcset ?? '';
+    photo.src = link.href;
+    photo.alt = thumb?.alt ?? '';
+    caption.textContent = link.dataset.title ?? '';
+    caption.hidden = !link.dataset.title;
+
+    await whenReady(photo);
+
+    if (thumb) thumb.style.viewTransitionName = TRANSITION_NAME;
+    await runTransition(() => {
+      if (thumb) thumb.style.viewTransitionName = '';
+      photo.style.viewTransitionName = TRANSITION_NAME;
+      dialog.showModal();
+    });
+    photo.style.viewTransitionName = '';
+  }
+
+  async function close() {
+    if (!dialog?.open || !photo) return;
+    const link = activeLink;
+    const thumb = link?.querySelector('img');
+
+    // Sans View Transitions : fondu de sortie CSS avant de fermer
+    if (!document.startViewTransition && !reducedMotion.matches) {
+      dialog.classList.add('is-closing');
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      dialog.classList.remove('is-closing');
+      dialog.close();
+    } else {
+      photo.style.viewTransitionName = TRANSITION_NAME;
+      await runTransition(() => {
+        photo.style.viewTransitionName = '';
+        if (thumb) thumb.style.viewTransitionName = TRANSITION_NAME;
+        dialog.close();
+      });
+      if (thumb) thumb.style.viewTransitionName = '';
+    }
+
+    link?.focus({ preventScroll: true });
+    activeLink = null;
+  }
+
+  document.querySelectorAll<HTMLAnchorElement>('[data-lightbox]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      // Ctrl/Cmd + clic : on laisse le navigateur ouvrir l'image dans un onglet
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+      event.preventDefault();
+      open(link);
+    });
+  });
+
+  closeButton?.addEventListener('click', close);
+
+  // Échap : on intercepte pour jouer l'animation de fermeture
+  dialog?.addEventListener('cancel', (event) => {
+    event.preventDefault();
+    close();
+  });
+
+  // Clic en dehors de la photo (sur le fond) : fermeture
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) close();
+  });
+</script>
 
 <style>
   .gallery-head {
@@ -92,6 +223,9 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 3px;
+    border-radius: var(--radius-img);
+    overflow: hidden;
+    --reveal-step: 70ms;
   }
 
   .gallery-item,
@@ -101,16 +235,42 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
     aspect-ratio: 1 / 1;
   }
 
+  .gallery-item {
+    display: block;
+    cursor: zoom-in;
+  }
+
   .gallery-image {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.6s ease;
+    transition: transform 0.6s var(--ease-out);
   }
 
-  .gallery-item:hover .gallery-image {
-    transform: scale(1.04);
+  /* Voile très léger au survol */
+  .gallery-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(47, 38, 32, 0.12);
+    opacity: 0;
+    transition: opacity var(--dur-fast) ease;
+    pointer-events: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .gallery-item:hover .gallery-image {
+      transform: scale(1.04);
+    }
+
+    .gallery-item:hover::after {
+      opacity: 1;
+    }
+  }
+
+  .gallery-item:focus-visible {
+    outline-offset: -4px;
   }
 
   /* Case « Voir plus » */
@@ -118,9 +278,9 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-deep);
+    background: var(--bg-alt);
     color: var(--ink);
-    font-size: var(--fs-small);
+    font-size: var(--fs-caps);
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: var(--tracking-caps);
@@ -129,12 +289,16 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
 
   .gallery-more span {
     padding-bottom: 0.3rem;
-    border-bottom: 1px solid var(--accent-light);
+    border-bottom: 1px solid var(--link);
   }
 
   .gallery-more:hover {
     background: var(--accent);
-    color: var(--ink);
+    color: var(--on-accent);
+  }
+
+  .gallery-more:hover span {
+    border-bottom-color: currentColor;
   }
 
   .gallery-note {
@@ -143,7 +307,7 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
   }
 
   .gallery-note a {
-    color: var(--accent-light);
+    color: var(--link);
     border-bottom: 1px solid currentColor;
   }
 
@@ -151,10 +315,150 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
     color: var(--ink);
   }
 
-  /* Mobile : 2 colonnes */
+  /* ---------- Lightbox ---------- */
+  .lightbox {
+    /* Plein écran : un clic hors de la photo tombe sur le <dialog> lui-même */
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: clamp(1rem, 4vw, 3rem);
+    border: none;
+    background: transparent;
+    color: #f5eee4;
+  }
+
+  .lightbox[open] {
+    display: grid;
+    place-items: center;
+  }
+
+  .lightbox::backdrop {
+    background: rgba(30, 24, 20, 0.93);
+  }
+
+  /* Blocage du scroll de la page pendant l'ouverture. Le fond de <html> colore
+     l'emplacement réservé à la barre de défilement, que le voile ne couvre pas. */
+  :global(html:has(.lightbox[open])) {
+    overflow: hidden;
+    background: rgb(30, 24, 20);
+  }
+
+  .lightbox-figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    max-width: 100%;
+    max-height: 100%;
+    min-height: 0;
+  }
+
+  .lightbox-image {
+    display: block;
+    max-width: min(100%, 1100px);
+    max-height: calc(100dvh - 7rem);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: var(--radius-img);
+    background: rgba(245, 238, 228, 0.06);
+  }
+
+  .lightbox-caption {
+    font-size: var(--fs-caps);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-caps);
+    color: rgba(245, 238, 228, 0.8);
+    text-align: center;
+  }
+
+  .lightbox-close {
+    position: fixed;
+    top: clamp(0.75rem, 2vw, 1.5rem);
+    right: clamp(0.75rem, 2vw, 1.5rem);
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid rgba(245, 238, 228, 0.35);
+    border-radius: 50%;
+    background: rgba(30, 24, 20, 0.4);
+    color: inherit;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) ease, border-color var(--dur-fast) ease,
+      transform var(--dur-fast) var(--ease-out);
+  }
+
+  .lightbox-close:focus-visible {
+    outline-color: #f5eee4;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .lightbox-close:hover {
+      background: rgba(245, 238, 228, 0.12);
+      border-color: rgba(245, 238, 228, 0.7);
+      transform: rotate(90deg);
+    }
+  }
+
+  /* Repli sans View Transitions : fondu d'entrée et de sortie */
+  @supports not (view-transition-name: none) {
+    .lightbox[open],
+    .lightbox[open]::backdrop {
+      animation: lightbox-in 0.25s var(--ease-out);
+    }
+
+    .lightbox.is-closing,
+    .lightbox.is-closing::backdrop {
+      animation: lightbox-out 0.2s ease forwards;
+    }
+  }
+
+  @keyframes lightbox-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes lightbox-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Morphing vignette carrée → photo entière : on recadre pendant la transition
+     plutôt que de déformer l'image */
+  :global(::view-transition-old(lightbox-photo)),
+  :global(::view-transition-new(lightbox-photo)) {
+    height: 100%;
+    object-fit: cover;
+    overflow: clip;
+  }
+
+  :global(::view-transition-group(lightbox-photo)) {
+    animation-duration: 0.4s;
+    animation-timing-function: var(--ease-out);
+  }
+
+  :global(::view-transition-old(root)),
+  :global(::view-transition-new(root)) {
+    animation-duration: 0.3s;
+  }
+
+  /* Mobile : 2 colonnes, décalage des apparitions plus court */
   @media screen and (max-width: 768px) {
     .gallery-grid {
       grid-template-columns: repeat(2, 1fr);
+      --reveal-step: 40ms;
+    }
+
+    .lightbox-image {
+      max-height: calc(100dvh - 6rem);
     }
   }
 </style>

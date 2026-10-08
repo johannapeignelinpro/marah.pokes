@@ -1,5 +1,7 @@
 ---
-import { reviews, googleReviews } from '../data/reviews';
+import { getGoogleReviews } from '../lib/googleReviews';
+
+const { summary: googleReviews, reviews } = await getGoogleReviews();
 
 const stars = (rating: number) => '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
 ---
@@ -30,7 +32,13 @@ const stars = (rating: number) => '★'.repeat(Math.round(rating)) + '☆'.repea
             <figcaption class="review-author">
               <span class="review-avatar" aria-hidden="true">{review.author.charAt(0)}</span>
               <span>
-                {review.author}
+                {review.authorUrl ? (
+                  <a href={review.authorUrl} target="_blank" rel="noopener noreferrer" class="review-author-link">
+                    {review.author}
+                  </a>
+                ) : (
+                  review.author
+                )}
                 <span class="review-stars" aria-label={`Note : ${review.rating} sur 5`}>
                   {stars(review.rating)}
                 </span>
@@ -151,6 +159,15 @@ const stars = (rating: number) => '★'.repeat(Math.round(rating)) + '☆'.repea
     font-style: normal;
     font-size: 1.1rem;
     font-family: var(--f-body);
+  }
+
+  .review-author-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .review-author-link:hover {
+    text-decoration: underline;
   }
 
   .review-stars {

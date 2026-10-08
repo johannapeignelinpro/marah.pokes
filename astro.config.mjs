@@ -47,6 +47,10 @@ export default defineConfig({
   env: {
     schema: {
       SITE_NOINDEX: envField.boolean({ context: 'server', access: 'public', default: false }),
+      // Avis Google (API Places, lue au build). Sans ces variables, le site affiche
+      // les avis de secours de src/data/reviews.ts.
+      GOOGLE_PLACES_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
+      GOOGLE_PLACE_ID: envField.string({ context: 'server', access: 'public', optional: true }),
     },
   },
 

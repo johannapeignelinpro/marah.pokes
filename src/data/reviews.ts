@@ -1,15 +1,24 @@
-// Avis Google de Marah Chenaïna
-// Copier ici les avis depuis la fiche Google Business (texte tel quel, sans le modifier).
+// Avis Google de Marah Chenaïna — données de secours
+// Les avis affichés sont récupérés automatiquement sur la fiche Google à chaque build
+// (src/lib/googleReviews.ts). Ce fichier ne sert que si l'API Google ne répond pas
+// ou si GOOGLE_PLACES_API_KEY / GOOGLE_PLACE_ID ne sont pas renseignées.
 // Un saut de ligne (\n) dans le texte crée un nouveau paragraphe.
 
 export interface Review {
   author: string;
+  authorUrl?: string; // profil Google de l'auteur
   rating: number; // 1 à 5
   date: string; // ex. 'mars 2026'
   text: string;
 }
 
-export const googleReviews = {
+export interface ReviewsSummary {
+  rating: number;
+  count: number;
+  url: string;
+}
+
+export const googleReviews: ReviewsSummary = {
   rating: 5.0,
   count: 4,
   url: 'https://share.google/asrFyJwTa8N6Zlx9P',

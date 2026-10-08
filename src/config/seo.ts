@@ -74,10 +74,12 @@ export const siteConfig = {
     'Compositions symboliques'
   ],
 
-  // Atelier Noir : lieu où Marah est artiste résidente
+  // Atelier Noir : salon du tatoueur du même nom, où Marah est artiste résidente.
+  // Les liens renvoient vers son travail à lui (recommandation d'un collègue).
   // Tant qu'un lien est vide, le bouton correspondant n'est pas affiché.
   atelierNoir: {
     name: 'Atelier Noir',
+    styles: ['Fineline', 'Lettering', 'Dotwork'],
     googleUrl: 'https://share.google/6pvlD4pl9a6fd8qmG',
     instagramUrl: 'https://www.instagram.com/ateliernoir_tatouage/',
   },

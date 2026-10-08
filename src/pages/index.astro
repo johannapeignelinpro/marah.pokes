@@ -203,24 +203,31 @@ const keywords = siteConfig.keywords.join(', ');
             </div>
             <div class="atelier-text">
               <p>
-                Marah est artiste tatoueuse résidente de l'{atelierNoir.name}, au
-                {' '}{siteConfig.location.address}. C'est là qu'elle vous accueille, sur
-                rendez-vous, pour chaque séance de tatouage handpoke.
+                Marah est tatoueuse résidente de l'{atelierNoir.name}, le salon du tatoueur du
+                même nom, au {siteConfig.location.address}. C'est dans ce lieu qu'elle vous
+                accueille, sur rendez-vous, pour chaque séance de tatouage handpoke.
               </p>
-              {(atelierNoir.googleUrl || atelierNoir.instagramUrl) && (
-                <div class="atelier-links">
-                  {atelierNoir.googleUrl && (
-                    <a href={atelierNoir.googleUrl} target="_blank" rel="noopener noreferrer" class="link-underline">
-                      L'{atelierNoir.name} sur Google →
-                    </a>
-                  )}
-                  {atelierNoir.instagramUrl && (
-                    <a href={atelierNoir.instagramUrl} target="_blank" rel="noopener noreferrer" class="link-underline">
-                      L'{atelierNoir.name} sur Instagram →
-                    </a>
-                  )}
-                </div>
-              )}
+              <aside class="atelier-artist" aria-labelledby="atelier-artist-title">
+                <span class="eyebrow" id="atelier-artist-title">Le tatoueur de l'atelier</span>
+                <p>
+                  {atelierNoir.name} y signe ses tatouages {new Intl.ListFormat('fr', { type: 'conjunction' }).format(atelierNoir.styles).toLowerCase()} :
+                  un travail précis et graphique, à découvrir sur ses réseaux.
+                </p>
+                {(atelierNoir.instagramUrl || atelierNoir.googleUrl) && (
+                  <div class="atelier-links">
+                    {atelierNoir.instagramUrl && (
+                      <a href={atelierNoir.instagramUrl} target="_blank" rel="noopener noreferrer" class="link-underline">
+                        Son travail sur Instagram →
+                      </a>
+                    )}
+                    {atelierNoir.googleUrl && (
+                      <a href={atelierNoir.googleUrl} target="_blank" rel="noopener noreferrer" class="link-underline">
+                        Ses avis sur Google →
+                      </a>
+                    )}
+                  </div>
+                )}
+              </aside>
             </div>
           </div>
           <div class="atelier-grid" data-reveal-group>
@@ -784,12 +791,23 @@ const keywords = siteConfig.keywords.join(', ');
         display: grid;
         grid-template-columns: 1fr 1.2fr;
         gap: var(--spacing-md) var(--spacing-lg);
-        align-items: end;
+        align-items: start;
         margin-bottom: var(--spacing-md);
       }
 
       .atelier-head h2 {
         margin-bottom: 0;
+      }
+
+      /* Encart du tatoueur de l'atelier : séparé du texte sur Marah par un filet */
+      .atelier-artist {
+        margin-top: 1.5rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--line);
+      }
+
+      .atelier-artist .eyebrow {
+        margin-bottom: 0.5rem;
       }
 
       .atelier-links {

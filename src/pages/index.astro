@@ -87,8 +87,11 @@ const keywords = siteConfig.keywords.join(', ');
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Figtree:wght@400..600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Figtree:wght@400..600&display=swap"
     />
+
+    <!-- Poster de la vidéo du hero : première image affichée, chargée en priorité -->
+    <link rel="preload" as="image" href="/assets/poster-webp.webp" type="image/webp" fetchpriority="high" />
 
     <!-- Apparitions au scroll : activées seulement si JS tourne et que le mouvement n'est pas réduit.
          Posé dans le <head> pour éviter tout clignotement du contenu. -->
@@ -122,30 +125,52 @@ const keywords = siteConfig.keywords.join(', ');
     </header>
 
     <main>
-      <!-- Hero : texte à gauche, photo à droite -->
+      <!-- Hero : texte aéré à gauche, vidéo portrait à droite (desktop) ;
+           vidéo immersive avec le texte fondu dans le sable en bas (mobile) -->
       <section class="hero" id="hero">
         <div class="hero-inner">
           <div class="hero-text">
-            <p class="hero-kicker">Tatouage Handpoke à {siteConfig.location.city}</p>
-            <h1 class="site-title">Marah <span>Chenaïna</span></h1>
-            <p class="site-subtitle">{siteConfig.slogan}</p>
-            <div class="hero-cta">
-              <a href="#contact" class="btn btn-primary">Réserver un tatouage handpoke</a>
+            <div class="hero-overlay">
+              <p class="hero-kicker hero-anim" style="--i: 0">Tatouage Handpoke à {siteConfig.location.city}</p>
+              <h1 class="site-title hero-anim" style="--i: 1">Marah <span>Chenaïna</span></h1>
+              <a href="#contact" class="btn btn-primary hero-main-cta hero-anim" style="--i: 3">Réserver un tatouage handpoke</a>
+            </div>
+            <p class="hero-lead hero-anim" style="--i: 2">{siteConfig.heroLead}</p>
+            <div class="hero-links hero-anim" style="--i: 3">
               <a href="#flashs" class="btn btn-ghost">Voir les Flashs disponibles</a>
               <a href="#galerie" class="btn btn-ghost">Voir la Galerie</a>
             </div>
           </div>
-          <figure class="hero-media">
-            <img
-              src="/assets/gallery/photosmarah/photo-marah-dessin.jpg"
-              alt="Marah, tatoueuse handpoke, en train de dessiner dans son atelier à Rennes"
-              width="1920"
-              height="1265"
-              fetchpriority="high"
-              decoding="async"
-            />
-            <figcaption>Marah et ses créations</figcaption>
-          </figure>
+
+          <div class="hero-media">
+            <video
+              class="hero-video"
+              id="heroVideo"
+              width="720"
+              height="1280"
+              poster="/assets/poster-webp.webp"
+              autoplay
+              muted
+              loop
+              playsinline
+              aria-label="Les mains gantées de Marah tatouant un avant-bras à l'aiguille, point par point"
+            >
+              <source src="/assets/video-hero-mobile-webp.webm" type="video/webm" />
+              <source src="/assets/video-hero-mobile.mp4" type="video/mp4" />
+            </video>
+            <button class="hero-video-toggle" id="heroVideoToggle" type="button" aria-label="Mettre la vidéo en pause" hidden>
+              <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
+              <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" /></svg>
+            </button>
+          </div>
+          <script is:inline>
+            // Mouvement réduit : la vidéo ne démarre pas, seul le poster reste affiché
+            if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+              const v = document.getElementById('heroVideo');
+              v.removeAttribute('autoplay');
+              v.pause();
+            }
+          </script>
         </div>
       </section>
 
@@ -269,6 +294,25 @@ const keywords = siteConfig.keywords.join(', ');
           { rootMargin: '0px 0px -20% 0px' }
         );
         document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
+      }
+
+      // Vidéo du hero : bouton pause/lecture (mouvement en boucle de plus de 5 s)
+      const heroVideo = document.getElementById('heroVideo') as HTMLVideoElement | null;
+      const heroVideoToggle = document.getElementById('heroVideoToggle');
+      if (heroVideo && heroVideoToggle) {
+        const syncToggle = () => {
+          const paused = heroVideo.paused;
+          heroVideoToggle.classList.toggle('is-paused', paused);
+          heroVideoToggle.setAttribute('aria-label', paused ? 'Lire la vidéo' : 'Mettre la vidéo en pause');
+        };
+        heroVideoToggle.hidden = false;
+        heroVideoToggle.addEventListener('click', () => {
+          if (heroVideo.paused) heroVideo.play();
+          else heroVideo.pause();
+        });
+        heroVideo.addEventListener('play', syncToggle);
+        heroVideo.addEventListener('pause', syncToggle);
+        syncToggle();
       }
 
       // Header : fond plus opaque une fois la page scrollée
@@ -395,9 +439,16 @@ const keywords = siteConfig.keywords.join(', ');
         color: var(--on-accent);
       }
 
-      /* ---------- Hero ---------- */
+      /* ---------- Hero ----------
+         Desktop et tablette : texte aéré à gauche, vidéo portrait (9:16) à droite,
+         dimensionnée sur la hauteur d'écran pour que le haut de la section suivante
+         reste visible. La vidéo déborde sur la section suivante pour lier les deux. */
       .hero {
-        padding: calc(var(--header-height) + var(--spacing-lg)) 0 var(--spacing-xl);
+        --hero-overlap: 4rem;
+        --hero-video-w: clamp(260px, min(calc((100svh - var(--header-height) - 7rem) * 9 / 16), 40vw), 440px);
+        position: relative;
+        z-index: 1;
+        padding: calc(var(--header-height) + 2.5rem) 0 0;
       }
 
       .hero-inner {
@@ -405,9 +456,22 @@ const keywords = siteConfig.keywords.join(', ');
         margin: 0 auto;
         padding: 0 var(--spacing-md);
         display: grid;
-        grid-template-columns: 1fr 1.1fr;
-        gap: var(--spacing-lg);
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: clamp(2rem, 6vw, 6rem);
         align-items: center;
+      }
+
+      .hero-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        max-width: 36rem;
+        padding-bottom: var(--hero-overlap);
+      }
+
+      /* Le bloc qui se superpose à la vidéo sur mobile n'a pas de rôle en desktop */
+      .hero-overlay {
+        display: contents;
       }
 
       .hero-kicker {
@@ -419,7 +483,7 @@ const keywords = siteConfig.keywords.join(', ');
         text-transform: uppercase;
         letter-spacing: var(--tracking-caps);
         color: var(--link);
-        margin-bottom: 1.1rem;
+        margin-bottom: 1.25rem;
       }
 
       .hero-kicker::before {
@@ -430,51 +494,236 @@ const keywords = siteConfig.keywords.join(', ');
       }
 
       .site-title {
+        font-size: clamp(3.5rem, 6vw, 6rem);
+        line-height: 1;
         margin-bottom: 1.75rem;
       }
 
+      /* « Chenaïna » sur sa propre ligne, légèrement en retrait : écriture à la main */
       .site-title span {
+        display: block;
+        padding-left: 0.55em;
         font-style: italic;
         color: var(--link);
       }
 
-      .site-subtitle {
-        max-width: 34rem;
+      /* En desktop, l'accroche passe avant les actions (ordre du DOM pensé pour mobile) */
+      .hero-lead {
+        order: 1;
+        max-width: 31rem;
+        font-size: 1.125rem;
         color: var(--ink-soft);
         margin-bottom: 2.25rem;
       }
 
-      .hero-cta {
+      .hero-main-cta {
+        order: 2;
+        text-align: center;
+      }
+
+      .hero-links {
+        order: 3;
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
         gap: 1rem 2rem;
+        margin-top: 1.5rem;
       }
 
       .hero-media {
         position: relative;
-        margin: 0;
-      }
-
-      .hero-media img {
-        display: block;
-        width: 100%;
-        height: auto;
-        aspect-ratio: 4 / 5;
-        object-fit: cover;
-        object-position: 70% center;
+        width: var(--hero-video-w);
+        aspect-ratio: 9 / 16;
+        margin-bottom: calc(-1 * var(--hero-overlap));
+        overflow: hidden;
         border-radius: var(--radius-img);
+        background: var(--ink);
         box-shadow: var(--shadow-strong);
       }
 
-      .hero-media figcaption {
-        margin-top: 0.85rem;
-        font-size: var(--fs-caps);
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: var(--tracking-caps);
-        color: var(--ink-muted);
-        text-align: right;
+      .hero-video {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .hero-video-toggle {
+        position: absolute;
+        top: 0.85rem;
+        right: 0.85rem;
+        z-index: 2;
+        display: grid;
+        place-items: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: var(--header-bg);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        color: var(--ink);
+        cursor: pointer;
+        opacity: 0.75;
+        transition: opacity var(--dur-fast) ease;
+      }
+
+      .hero-video-toggle:hover,
+      .hero-video-toggle:focus-visible {
+        opacity: 1;
+      }
+
+      .hero-video-toggle[hidden] {
+        display: none;
+      }
+
+      .hero-video-toggle svg {
+        width: 1rem;
+        height: 1rem;
+        fill: currentColor;
+        stroke: currentColor;
+        stroke-width: 2.2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .hero-video-toggle .icon-pause {
+        fill: none;
+      }
+
+      .hero-video-toggle .icon-play,
+      .hero-video-toggle.is-paused .icon-pause {
+        display: none;
+      }
+
+      .hero-video-toggle.is-paused .icon-play {
+        display: block;
+      }
+
+      /* Apparition douce au chargement, sans attendre le scroll : la vidéo reste
+         le seul mouvement permanent du hero */
+      .motion .hero-anim {
+        animation: reveal-up 0.9s var(--ease-reveal) backwards;
+        animation-delay: calc(var(--i, 0) * 90ms + 60ms);
+      }
+
+      /* Mobile : la vidéo verticale devient l'élément immersif, pleine largeur.
+         Le nom, la spécialité et l'action principale se posent en bas, sur un fondu
+         sable qui laisse visibles les mains et l'aiguille ; l'accroche et les liens
+         secondaires suivent sous la vidéo. */
+      @media screen and (max-width: 640px) {
+        .hero {
+          padding-top: var(--header-height);
+          padding-bottom: var(--spacing-md);
+        }
+
+        .hero-inner {
+          grid-template-columns: 1fr;
+          grid-template-areas:
+            'stage'
+            'lead'
+            'links';
+          gap: 0;
+          padding: 0;
+        }
+
+        .hero-text {
+          display: contents;
+        }
+
+        .hero-overlay {
+          display: block;
+          grid-area: stage;
+          align-self: end;
+          z-index: 1;
+          padding: 3.75rem 1.25rem 1.5rem;
+          text-align: center;
+          background: linear-gradient(
+            to bottom,
+            rgba(245, 238, 228, 0) 0,
+            rgba(245, 238, 228, 0.8) 3.25rem,
+            var(--bg) 100%
+          );
+        }
+
+        .hero-kicker {
+          justify-content: center;
+          margin-bottom: 0.75rem;
+        }
+
+        .hero-kicker::before {
+          display: none;
+        }
+
+        .site-title {
+          font-size: clamp(2.6rem, 12vw, 3.4rem);
+          margin-bottom: 1.25rem;
+        }
+
+        .site-title span {
+          padding-left: 0;
+        }
+
+        .hero-main-cta {
+          width: 100%;
+          max-width: 340px;
+          padding-left: 1.25rem;
+          padding-right: 1.25rem;
+        }
+
+        /* Hauteur : presque tout l'écran, en laissant juste deviner la suite de la page.
+           Plafond à 2 × la largeur : au pire un léger recadrage sur les côtés */
+        .hero-media {
+          grid-area: stage;
+          width: 100%;
+          height: min(calc(100svh - var(--header-height) - 1.25rem), calc(100vw * 2));
+          aspect-ratio: auto;
+          margin: 0;
+          border-radius: 0;
+          box-shadow: none;
+        }
+
+        .hero-video {
+          object-position: 50% 35%;
+        }
+
+        .hero-lead {
+          grid-area: lead;
+          max-width: 30rem;
+          margin: 0.5rem auto 1.25rem;
+          padding: 0 1.25rem;
+          font-size: var(--fs-body);
+          text-align: center;
+        }
+
+        .hero-links {
+          grid-area: links;
+          justify-content: center;
+          margin-top: 0;
+          padding: 0 1.25rem;
+        }
+      }
+
+      /* Petits écrans peu hauts : bloc superposé plus compact pour garder l'aiguille visible */
+      @media screen and (max-width: 640px) and (max-height: 700px) {
+        .hero-overlay {
+          padding-top: 3.25rem;
+          padding-bottom: 1.25rem;
+        }
+
+        .site-title {
+          font-size: 2.4rem;
+          margin-bottom: 1rem;
+        }
+
+        .hero-kicker {
+          margin-bottom: 0.5rem;
+        }
+
+        .hero-main-cta {
+          padding-top: 0.85rem;
+          padding-bottom: 0.85rem;
+        }
       }
 
       /* ---------- Bandeau éditorial ---------- */
@@ -599,53 +848,20 @@ const keywords = siteConfig.keywords.join(', ');
           letter-spacing: 0;
         }
 
-        .hero-kicker {
-          justify-content: center;
-        }
-
-        .hero-kicker::before {
-          display: none;
-        }
-
         .header-cta {
           padding: 0.5rem 0.9rem;
         }
 
-        .hero {
-          padding-top: calc(var(--header-height) + var(--spacing-md));
-        }
+        /* Petits téléphones (360 px) : le bouton Rendez-vous tient dans l'en-tête */
+        @media (max-width: 400px) {
+          .brand-role {
+            font-size: 0.75rem;
+          }
 
-        .hero-inner {
-          grid-template-columns: 1fr;
-          gap: var(--spacing-md);
-          padding: 0 1.25rem;
-        }
-
-        .hero-text {
-          text-align: center;
-        }
-
-        .site-subtitle {
-          margin-left: auto;
-          margin-right: auto;
-        }
-
-        .hero-cta {
-          flex-direction: column;
-          gap: 1rem;
-        }
-
-        .hero-cta .btn-primary {
-          width: 100%;
-          max-width: 340px;
-        }
-
-        .hero-media img {
-          aspect-ratio: 4 / 3;
-        }
-
-        .hero-media figcaption {
-          text-align: center;
+          .header-cta {
+            padding: 0.45rem 0.75rem;
+            letter-spacing: 0.08em;
+          }
         }
 
         /* Mobile : même traitement qu'en desktop (coins arrondis, marges), sans voile */

@@ -7,12 +7,14 @@ import { join } from 'node:path';
 // URL de production, définie une seule fois dans astro.config.mjs (`site`)
 const siteUrl = import.meta.env.SITE;
 
-// Image de partage (Open Graph / Twitter), 1200 × 630 px.
+// Image de partage (Open Graph / Twitter), 1200 × 600 px.
 // Tant que public/assets/og-image.jpg n'existe pas, la photo du hero sert de repli :
 // les partages affichent une vraie image au lieu de pointer vers un fichier absent.
-const OG_IMAGE = { path: '/assets/og-image.jpg', width: 1200, height: 630 };
+const OG_IMAGE = { path: '/assets/og-image.jpg', width: 1200, height: 600 };
 const OG_IMAGE_FALLBACK = { path: '/assets/gallery/photosmarah/photo-marah-dessin.jpg', width: 1920, height: 1265 };
 const ogImage = existsSync(join(process.cwd(), 'public', OG_IMAGE.path)) ? OG_IMAGE : OG_IMAGE_FALLBACK;
+
+const HERO_LEAD = 'Tatouages ornementaux déposés à la main dans un geste traditionnel, mêlant symboles intuitifs, formes organiques, lignes fines et ombrages.';
 
 export const siteConfig = {
   name: 'Marah Chenaïna',
@@ -20,7 +22,9 @@ export const siteConfig = {
   alternateName: 'Marah.Pokes',
   title: 'Marah Chenaïna — Tatouage Handpoke à Rennes',
   description: 'Tatouages handpoke réalisés à la main à Rennes par Marah Chenaïna. Pièces fines, organiques et ornementales, uniquement sur rendez-vous.',
-  slogan: 'Marah Chenaïna, tatoueuse handpoke basée à Rennes en Bretagne. Tatouages ornementaux déposés à la main dans un geste traditionnel, mêlant symboles intuitifs, formes organiques, lignes fines et délicats ombrés.',
+  // Phrase d'accroche du hero (le nom, la technique et la ville sont déjà dans le titre)
+  heroLead: HERO_LEAD,
+  slogan: `Marah Chenaïna, tatoueuse handpoke basée à Rennes en Bretagne. ${HERO_LEAD}`,
 
   // Contact
   instagram: '@marah.pokes',
@@ -57,7 +61,7 @@ export const siteConfig = {
   ],
 
   // Business
-  priceRange: '€€', // TODO: Ajuster selon les tarifs
+  priceRange: 'À partir de 100 €', // sortie d'aiguille
   openingHours: 'Sur rendez-vous uniquement',
   languages: ['Français'],
 
@@ -71,12 +75,11 @@ export const siteConfig = {
   ],
 
   // Atelier Noir : lieu où Marah est artiste résidente
-  // TODO: Renseigner les liens (fiche Google Business et Instagram de l'Atelier Noir).
   // Tant qu'un lien est vide, le bouton correspondant n'est pas affiché.
   atelierNoir: {
     name: 'Atelier Noir',
-    googleUrl: '',
-    instagramUrl: '',
+    googleUrl: 'https://share.google/6pvlD4pl9a6fd8qmG',
+    instagramUrl: 'https://www.instagram.com/ateliernoir_tatouage/',
   },
 
   // Social Media (à compléter)

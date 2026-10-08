@@ -2,11 +2,11 @@
    DESIGN SYSTEM - MARAH.POKES
    Tatouage Handpoke à Rennes
    Direction artistique « Sable chaud » : fond sable lumineux, accent terracotta,
-   titres Fraunces, textes Figtree, formes arrondies.
+   titres Playfair Display, textes Figtree, formes arrondies.
    ============================================ */
 
 /* Polices chargées via <link> dans index.astro :
-   Fraunces (titres, nom de marque), Figtree (textes, boutons, navigation, formulaires) */
+   Playfair Display (titres, nom de marque), Figtree (textes, boutons, navigation, formulaires) */
 
 
 /* ============================================
@@ -86,9 +86,9 @@ html {
   --radius-img: 20px;   /* images, cartes */
 
   /* Polices */
-  --f-display: 'Fraunces', Georgia, serif;   /* titres, nom de marque : serif ronde et douce */
-  --f-body: 'Figtree', system-ui, sans-serif; /* textes, boutons, nav, formulaires */
-  --fw-display: 400;                          /* graisse des titres (Fraunces est déjà dense) */
+  --f-display: 'Playfair Display', Georgia, serif; /* titres, nom de marque */
+  --f-body: 'Figtree', system-ui, sans-serif;      /* textes, boutons, nav, formulaires */
+  --fw-display: 400;                               /* graisse des titres */
 
   /* Tailles de texte */
   --fs-small: 0.875rem;

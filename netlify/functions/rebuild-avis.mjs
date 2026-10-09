@@ -17,7 +17,8 @@ export default async () => {
   return new Response(null, { status: response.ok ? 200 : 502 });
 };
 
-// Chaque lundi à 6 h UTC (8 h à Paris en été, 7 h en hiver)
+// Le 1er de chaque mois à 6 h UTC (8 h à Paris en été, 7 h en hiver) : chaque build
+// consomme des crédits Netlify, un rythme mensuel suffit pour les avis
 export const config = {
-  schedule: '0 6 * * 1',
+  schedule: '0 6 1 * *',
 };

@@ -43,3 +43,17 @@ export const tattoosQuery = /* groq */ `
     }
   }
 `;
+
+// Dessins visibles, par ordre croissant ; sans ordre, en fin de liste par date d'ajout.
+// Les dimensions de l'asset (incluses dans imageProjection) servent à déduire
+// l'orientation et à réserver la place de chaque dessin sans recadrage.
+export const illustrationsQuery = /* groq */ `
+  *[_type == "illustration" && visible == true && !(_id in path("drafts.**"))]
+  | order(coalesce(order, 999999) asc, _createdAt asc) {
+    _id,
+    title,
+    "image": image${imageProjection},
+    alt,
+    orientation
+  }
+`;

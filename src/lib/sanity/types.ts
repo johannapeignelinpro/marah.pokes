@@ -45,3 +45,14 @@ export interface Tattoo {
   technique: string | null;
   images: TattooImage[] | null;
 }
+
+/** Orientation saisie dans le Studio (facultative : déduite des dimensions sinon). */
+export type IllustrationOrientation = 'portrait' | 'paysage' | 'carre';
+
+export interface Illustration {
+  _id: string;
+  title: string | null;
+  image: SanityImage | null;
+  alt: string | null;
+  orientation: IllustrationOrientation | null;
+}

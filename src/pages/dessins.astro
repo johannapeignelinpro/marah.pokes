@@ -1,0 +1,222 @@
+---
+// Page Dessins : illustrations de Marah gérées dans Sanity (document « illustration »).
+// Galerie en lignes justifiées : chaque dessin garde ses proportions d'origine et
+// occupe une largeur proportionnelle à son ratio. Sur une même ligne, tous les
+// dessins ont la même hauteur : un paysage A3 prend naturellement deux fois la
+// largeur d'un portrait A3. Rien n'est recadré, ni dans la grille ni en grand.
+// La mise en page découle du ratio de chaque image : un dessin ajouté dans
+// Sanity trouve sa place tout seul au prochain build.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Lightbox from '../components/Lightbox.astro';
+import { getIllustrations } from '../lib/sanity/api';
+import { naturalImage } from '../lib/sanity/image';
+import { siteConfig } from '../config/seo';
+
+// Hauteur de ligne de référence (desktop / tablette), transmise au CSS :
+// sert à estimer la largeur affichée de chaque vignette pour l'attribut sizes.
+const ROW_HEIGHT = { desktop: 340, tablet: 260 };
+// Une ligne peut s'étirer au-delà de sa hauteur de référence pour remplir la largeur
+const ROW_STRETCH = 1.5;
+
+const drawings = (await getIllustrations()).map((drawing) => {
+  const { ratio } = drawing;
+  return {
+    ...drawing,
+    // Traits fins et pointillisme : qualité élevée, plusieurs largeurs pour ne
+    // jamais envoyer le scan d'origine en vignette
+    thumb: naturalImage(drawing.image, { widths: [400, 600, 800, 1000, 1300, 1600], quality: 85 }),
+    thumbSizes: [
+      '(max-width: 768px) calc(100vw - 2.5rem)',
+      `(max-width: 1024px) ${Math.round(ratio * ROW_HEIGHT.tablet * ROW_STRETCH)}px`,
+      `${Math.round(ratio * ROW_HEIGHT.desktop * ROW_STRETCH)}px`,
+    ].join(', '),
+    full: naturalImage(drawing.image, { widths: [1000, 1400, 1800, 2400], quality: 90 }),
+    // En grand, la hauteur d'écran limite l'image : largeur affichée ≈ ratio × hauteur
+    fullSizes: `(max-width: 768px) 100vw, calc(${ratio.toFixed(3)} * 100vh)`,
+  };
+});
+
+const title = `Dessins | ${siteConfig.name}`;
+const description = `Dessins et illustrations originales de ${siteConfig.name}, artiste tatoueuse et illustratrice à ${siteConfig.location.city}.`;
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="drawings" aria-labelledby="drawings-title">
+    <div class="container">
+      <header class="drawings-head" data-reveal>
+        <span class="eyebrow">Illustrations</span>
+        <h1 id="drawings-title">Dessins</h1>
+        <p class="drawings-intro">
+          Dessins et illustrations originales de Marah. Cliquez sur une œuvre pour la voir en entier
+          et en apprécier les détails.
+        </p>
+      </header>
+
+      {drawings.length > 0 ? (
+        <div class="drawings-grid" style={`--row-height-desktop: ${ROW_HEIGHT.desktop}px; --row-height-tablet: ${ROW_HEIGHT.tablet}px`}>
+          {drawings.map((drawing, i) => (
+            <a
+              href={drawing.full.src}
+              class="drawing"
+              data-orientation={drawing.orientation}
+              data-reveal="fade"
+              style={`--ratio: ${drawing.ratio.toFixed(4)}; --reveal-i: ${i % 4}`}
+              data-lightbox="drawings-lightbox"
+              data-srcset={drawing.full.srcset}
+              data-sizes={drawing.fullSizes}
+              data-width={drawing.full.width}
+              data-height={drawing.full.height}
+              data-title={drawing.title}
+              aria-haspopup="dialog"
+            >
+              <img
+                src={drawing.thumb.src}
+                srcset={drawing.thumb.srcset}
+                sizes={drawing.thumbSizes}
+                width={drawing.thumb.width}
+                height={drawing.thumb.height}
+                alt={drawing.alt}
+                loading={i < 4 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="drawings-empty">Les dessins arrivent très bientôt.</p>
+      )}
+
+      <p class="drawings-note">
+        Pour un projet de tatouage inspiré d'un dessin, rendez-vous dans la section{' '}
+        <a href="/#contact">Contact</a> ou sur{' '}
+        <a href={siteConfig.social.instagram} target="_blank" rel="noopener noreferrer">
+          Instagram {siteConfig.instagram}
+        </a>
+      </p>
+    </div>
+  </section>
+
+  {drawings.length > 0 && (
+    <Lightbox id="drawings-lightbox" label="Dessin en grand" navigation maxWidth="1600px" />
+  )}
+</BaseLayout>
+
+<style>
+  .drawings {
+    padding-top: calc(var(--header-height) + var(--spacing-lg));
+  }
+
+  .drawings-head {
+    max-width: 720px;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .drawings-intro {
+    color: var(--ink-soft);
+  }
+
+  /* Lignes justifiées : la largeur de base de chaque dessin vaut ratio × hauteur de
+     ligne, et l'espace restant se répartit au prorata du ratio. Toutes les œuvres
+     d'une ligne gardent donc la même hauteur et leurs proportions d'origine. */
+  .drawings-grid {
+    --row-height: var(--row-height-desktop);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    --reveal-step: 60ms;
+  }
+
+  /* Dernière ligne : pas d'étirement, les dessins restent à la hauteur de référence */
+  .drawings-grid::after {
+    content: '';
+    flex-grow: 1000000;
+  }
+
+  .drawing {
+    flex: var(--ratio) 1 calc(var(--ratio) * var(--row-height));
+    aspect-ratio: var(--ratio);
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-img);
+    background: var(--surface);
+    box-shadow: var(--shadow-soft);
+    cursor: zoom-in;
+    transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+  }
+
+  /* L'image remplit exactement un cadre à ses propres proportions : contain ne
+     sert que de garde-fou, rien n'est jamais coupé */
+  .drawing img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .drawing:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-strong);
+    }
+  }
+
+  .drawing:focus-visible {
+    outline-offset: 4px;
+  }
+
+  .drawings-empty {
+    color: var(--ink-muted);
+    font-style: italic;
+  }
+
+  .drawings-note {
+    margin-top: var(--spacing-lg);
+    color: var(--ink-muted);
+  }
+
+  .drawings-note a {
+    color: var(--link);
+    border-bottom: 1px solid currentColor;
+  }
+
+  .drawings-note a:hover {
+    color: var(--ink);
+  }
+
+  @media screen and (max-width: 1024px) {
+    .drawings-grid {
+      --row-height: var(--row-height-tablet);
+      gap: 1rem;
+    }
+  }
+
+  /* Mobile : un dessin par ligne, pleine largeur, hauteur selon son ratio */
+  @media screen and (max-width: 768px) {
+    .drawings {
+      padding-top: calc(var(--header-height) + var(--spacing-md));
+    }
+
+    .drawings-head {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .drawings-grid {
+      flex-direction: column;
+      gap: 1.25rem;
+      --reveal-step: 40ms;
+    }
+
+    .drawings-grid::after {
+      content: none;
+    }
+
+    .drawing {
+      flex: none;
+      width: 100%;
+    }
+
+    .drawings-note {
+      margin-top: var(--spacing-md);
+    }
+  }
+</style>

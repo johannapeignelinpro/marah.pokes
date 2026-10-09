@@ -1,0 +1,118 @@
+---
+// Squelette commun des pages publiques : <head> (SEO, partage, polices),
+// header fixe, footer et apparitions au scroll.
+// Le slot « head » accueille les balises propres à une page (préchargements, JSON-LD…).
+import '../styles/global.css';
+import { SITE_NOINDEX } from 'astro:env/server';
+import { siteConfig } from '../config/seo';
+import SiteHeader from '../components/SiteHeader.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+const keywords = siteConfig.keywords.join(', ');
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#F5EEE4" />
+
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content={siteConfig.name} />
+    <meta name="robots" content={SITE_NOINDEX ? 'noindex, nofollow' : 'index, follow'} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={siteConfig.ogImage.url} />
+    <meta property="og:image:width" content={String(siteConfig.ogImage.width)} />
+    <meta property="og:image:height" content={String(siteConfig.ogImage.height)} />
+    <meta property="og:image:alt" content={siteConfig.ogImage.alt} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:locale" content="fr_FR" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={siteConfig.ogImage.url} />
+    <meta name="twitter:image:alt" content={siteConfig.ogImage.alt} />
+
+    <!-- Favicon : logo de Marah sur pastille sable (généré depuis src/assets/images/editorial/logo-marahchenaina.jpg) -->
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- Google Fonts - chargement optimisé via <link> (évite le blocage du @import CSS) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Figtree:wght@400..600&display=swap"
+    />
+
+    <slot name="head" />
+
+    <!-- Apparitions au scroll : activées seulement si JS tourne et que le mouvement n'est pas réduit.
+         Posé dans le <head> pour éviter tout clignotement du contenu. -->
+    <script is:inline>
+      if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('motion');
+      }
+    </script>
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalUrl} />
+  </head>
+
+  <body>
+    <SiteHeader />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // Le défilement doux vers les ancres est géré en CSS (scroll-behavior),
+      // qui respecte prefers-reduced-motion.
+
+      // Apparitions au scroll : un seul observer, chaque élément n'est animé qu'une fois
+      if (document.documentElement.classList.contains('motion')) {
+        const revealObserver = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              // Dans un groupe (bande à faire glisser sur mobile), tout apparaît
+              // ensemble : les éléments hors écran à droite ne restent pas cachés
+              const group = entry.target.closest('[data-reveal-group]');
+              const targets = group ? group.querySelectorAll('[data-reveal]') : [entry.target];
+              for (const target of targets) {
+                target.classList.add('is-visible');
+                revealObserver.unobserve(target);
+              }
+            }
+          },
+          // Déclenchement quand le haut de l'élément dépasse 80 % de la hauteur de
+          // l'écran : l'animation se joue sous les yeux, pas avant d'y arriver
+          { rootMargin: '0px 0px -20% 0px' }
+        );
+        document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
+      }
+    </script>
+  </body>
+</html>

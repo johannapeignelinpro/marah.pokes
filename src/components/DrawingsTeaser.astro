@@ -1,0 +1,60 @@
+---
+// Accueil : encart vers la page Dessins (Marah illustratrice), avec son dernier dessin en petit
+import { Image } from 'astro:assets';
+import { siteConfig } from '../config/seo';
+import dessinImage from '../assets/images/editorial/dessin-encre-lignes-organiques-marah-chenaina-rennes.jpg';
+---
+
+<section id="dessins" class="drawings-teaser section-alt" aria-labelledby="drawings-teaser-title">
+  <div class="container drawings-teaser-inner">
+    <figure class="frame drawings-teaser-image" data-reveal>
+      <div class="frame-inner">
+        <Image
+          src={dessinImage}
+          alt="Dessin à l'encre de Marah Chenaïna : lignes fines ondulantes formant des tourbillons organiques"
+          widths={[300, 450, 600, 800]}
+          sizes="(max-width: 768px) 60vw, 300px"
+          quality={85}
+          loading="lazy"
+        />
+      </div>
+    </figure>
+    <div class="drawings-teaser-text" data-reveal style="--reveal-i: 1">
+      <span class="eyebrow">Illustratrice à {siteConfig.location.city}</span>
+      <h2 id="drawings-teaser-title">Dessins et illustrations à l'encre</h2>
+      <p>
+        Les lignes que l'on retrouve dans ses tatouages naissent d'abord sur le papier.
+        Illustratrice à {siteConfig.location.city}, Marah dessine à l'encre des compositions
+        organiques et ornementales : courbes fluides, traits fins répétés, jeux de pleins et de vides.
+      </p>
+      <a href="/dessins" class="btn btn-ghost">Découvrir ses dessins</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .drawings-teaser-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 300px) minmax(0, 560px);
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-lg);
+  }
+
+  .drawings-teaser-text p {
+    color: var(--ink-soft);
+    margin-bottom: 1.75rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    .drawings-teaser-inner {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-md);
+    }
+
+    .drawings-teaser-image {
+      width: min(60%, 260px);
+      margin: 0 auto;
+    }
+  }
+</style>

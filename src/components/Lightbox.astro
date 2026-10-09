@@ -1,0 +1,399 @@
+---
+// Lightbox partagée : affiche une image entière, jamais recadrée, au-dessus de la page.
+// Elle s'ouvre depuis les liens portant data-lightbox="<id>" (même valeur que la prop id) ;
+// chaque lien fournit l'image en grand : href, data-srcset, data-sizes, data-width,
+// data-height et data-title (légende).
+// Avec navigation, on passe d'une image du groupe à l'autre : flèches du clavier,
+// boutons précédent / suivant (écrans larges) et glissement du doigt (mobile).
+interface Props {
+  id: string;
+  label: string;
+  navigation?: boolean;
+  /** Largeur maximale de l'image en grand */
+  maxWidth?: string;
+}
+
+const { id, label, navigation = false, maxWidth = '1100px' } = Astro.props;
+---
+
+<dialog class="lightbox" id={id} aria-label={label} data-navigation={navigation ? '' : undefined} style={`--lightbox-max-width: ${maxWidth}`}>
+  <button type="button" class="lightbox-button lightbox-close" aria-label="Fermer">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+  </button>
+  {navigation && (
+    <>
+      <button type="button" class="lightbox-button lightbox-prev" aria-label="Image précédente">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      <button type="button" class="lightbox-button lightbox-next" aria-label="Image suivante">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </>
+  )}
+  <figure class="lightbox-figure">
+    <img class="lightbox-image" alt="" decoding="async" />
+    <figcaption class="lightbox-caption">
+      <span class="lightbox-title"></span>
+      {navigation && <span class="lightbox-counter" aria-live="polite"></span>}
+    </figcaption>
+  </figure>
+</dialog>
+
+<script>
+  // <dialog> natif : piège le focus, Échap, fond inerte.
+  // Transition douce depuis la vignette via la View Transitions API quand elle
+  // existe ; sinon simple fondu CSS. Aucun mouvement si prefers-reduced-motion.
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const TRANSITION_NAME = 'lightbox-photo';
+  const SWIPE_THRESHOLD = 50;
+  // GIF transparent de 1 px : vide le cadre (un <img> sans src afficherait son texte alternatif)
+  const BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
+  function runTransition(update: () => void) {
+    if (!document.startViewTransition || reducedMotion.matches) {
+      update();
+      return Promise.resolve();
+    }
+    return document.startViewTransition(update).finished;
+  }
+
+  // Attend une promesse sans bloquer plus de 400 ms si le réseau est lent
+  function atMost400ms(promise: Promise<unknown>) {
+    const timeout = new Promise((resolve) => setTimeout(resolve, 400));
+    return Promise.race([promise, timeout]);
+  }
+
+  document.querySelectorAll<HTMLDialogElement>('dialog.lightbox').forEach((dialog) => {
+    const photo = dialog.querySelector<HTMLImageElement>('.lightbox-image');
+    const title = dialog.querySelector<HTMLElement>('.lightbox-title');
+    const counter = dialog.querySelector<HTMLElement>('.lightbox-counter');
+    const links = [...document.querySelectorAll<HTMLAnchorElement>(`[data-lightbox="${dialog.id}"]`)];
+    if (!photo || !title || links.length === 0) return;
+
+    const navigation = dialog.hasAttribute('data-navigation') && links.length > 1;
+    if (!navigation) dialog.querySelectorAll('.lightbox-prev, .lightbox-next').forEach((button) => button.remove());
+
+    let activeIndex = -1;
+    let loadToken = 0;
+
+    // Affiche l'image n° index. Le navigateur garde l'ancienne image à l'écran tant
+    // que la nouvelle source charge : on n'y touche donc qu'une fois l'image en grand
+    // prête. En attendant, la vignette (déjà en cache) sert d'aperçu si elle a les
+    // mêmes proportions ; sinon le cadre reste vide, jamais sur l'image précédente.
+    // Renvoie une promesse résolue quand l'image en grand est affichée.
+    function fill(index: number) {
+      const link = links[index];
+      const thumb = link.querySelector('img');
+      const token = ++loadToken;
+      const width = Number(link.dataset.width);
+      const height = Number(link.dataset.height);
+      activeIndex = index;
+
+      photo!.width = width;
+      photo!.height = height;
+      photo!.style.setProperty('--ratio', String(width / height));
+      photo!.alt = thumb?.alt ?? '';
+      title!.textContent = link.dataset.title ?? '';
+      if (counter) counter.textContent = `${index + 1} / ${links.length}`;
+      dialog.querySelector<HTMLElement>('.lightbox-caption')!.hidden = !link.dataset.title && !counter;
+
+      const sameRatio =
+        thumb?.naturalWidth && Math.abs(thumb.naturalWidth / thumb.naturalHeight - width / height) < 0.02;
+      photo!.removeAttribute('srcset');
+      photo!.src = sameRatio && thumb ? thumb.currentSrc : BLANK;
+
+      const full = new Image();
+      full.sizes = link.dataset.sizes ?? '(max-width: 768px) 100vw, 80vw';
+      full.srcset = link.dataset.srcset ?? '';
+      full.src = link.href;
+      return full.decode().catch(() => {}).then(() => {
+        // Entre-temps, on a pu passer à une autre image
+        if (token !== loadToken) return;
+        photo!.sizes = full.sizes;
+        photo!.srcset = full.srcset;
+        photo!.src = full.src;
+      });
+    }
+
+    async function open(index: number) {
+      const thumb = links[index].querySelector('img');
+      await atMost400ms(fill(index));
+
+      if (thumb) thumb.style.viewTransitionName = TRANSITION_NAME;
+      await runTransition(() => {
+        if (thumb) thumb.style.viewTransitionName = '';
+        photo!.style.viewTransitionName = TRANSITION_NAME;
+        dialog.showModal();
+      });
+      photo!.style.viewTransitionName = '';
+    }
+
+    function go(step: number) {
+      if (!navigation || !dialog.open) return;
+      fill((activeIndex + step + links.length) % links.length);
+    }
+
+    async function close() {
+      if (!dialog.open) return;
+      const link = links[activeIndex];
+      const thumb = link?.querySelector('img');
+      // La page suit la navigation : la vignette de l'image affichée revient à l'écran
+      link?.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+
+      // Sans View Transitions : fondu de sortie CSS avant de fermer
+      if (!document.startViewTransition && !reducedMotion.matches) {
+        dialog.classList.add('is-closing');
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        dialog.classList.remove('is-closing');
+        dialog.close();
+      } else {
+        photo!.style.viewTransitionName = TRANSITION_NAME;
+        await runTransition(() => {
+          photo!.style.viewTransitionName = '';
+          if (thumb) thumb.style.viewTransitionName = TRANSITION_NAME;
+          dialog.close();
+        });
+        if (thumb) thumb.style.viewTransitionName = '';
+      }
+
+      link?.focus({ preventScroll: true });
+      activeIndex = -1;
+    }
+
+    links.forEach((link, index) => {
+      link.addEventListener('click', (event) => {
+        // Ctrl/Cmd + clic : on laisse le navigateur ouvrir l'image dans un onglet
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+        event.preventDefault();
+        open(index);
+      });
+    });
+
+    dialog.querySelector('.lightbox-close')?.addEventListener('click', close);
+    dialog.querySelector('.lightbox-prev')?.addEventListener('click', () => go(-1));
+    dialog.querySelector('.lightbox-next')?.addEventListener('click', () => go(1));
+
+    // Échap : on intercepte pour jouer l'animation de fermeture
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      close();
+    });
+
+    // Clic en dehors de l'image (sur le fond) : fermeture
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) close();
+    });
+
+    if (!navigation) return;
+
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') go(-1);
+      else if (event.key === 'ArrowRight') go(1);
+    });
+
+    // Glissement horizontal du doigt : image précédente / suivante
+    let touchStart: { x: number; y: number } | null = null;
+    dialog.addEventListener('touchstart', (event) => {
+      const touch = event.touches[0];
+      touchStart = event.touches.length === 1 ? { x: touch.clientX, y: touch.clientY } : null;
+    }, { passive: true });
+    dialog.addEventListener('touchend', (event) => {
+      if (!touchStart) return;
+      const touch = event.changedTouches[0];
+      const dx = touch.clientX - touchStart.x;
+      const dy = touch.clientY - touchStart.y;
+      touchStart = null;
+      if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? 1 : -1);
+    });
+  });
+</script>
+
+<style>
+  .lightbox {
+    /* Plein écran : un clic hors de l'image tombe sur le <dialog> lui-même */
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    --lightbox-padding: clamp(1rem, 4vw, 3rem);
+    --lightbox-chrome: 7rem; /* légende et marges sous l'image */
+    padding: var(--lightbox-padding);
+    border: none;
+    background: transparent;
+    color: #f5eee4;
+  }
+
+  .lightbox[open] {
+    display: grid;
+    place-items: center;
+  }
+
+  .lightbox::backdrop {
+    background: rgba(30, 24, 20, 0.93);
+  }
+
+  /* Blocage du scroll de la page pendant l'ouverture. Le fond de <html> colore
+     l'emplacement réservé à la barre de défilement, que le voile ne couvre pas. */
+  :global(html:has(.lightbox[open])) {
+    overflow: hidden;
+    background: rgb(30, 24, 20);
+  }
+
+  .lightbox-figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    max-width: 100%;
+    max-height: 100%;
+    min-height: 0;
+  }
+
+  /* Image entière à ses proportions d'origine : jamais recadrée */
+  /* Taille calculée sur les proportions du dessin (--ratio, posé par le script) et
+     non sur l'image chargée : le cadre est juste dès l'ouverture, pendant que
+     l'aperçu puis l'image en grand s'y affichent */
+  .lightbox-image {
+    display: block;
+    width: min(
+      100vw - 2 * var(--lightbox-padding),
+      var(--lightbox-max-width),
+      (100dvh - var(--lightbox-chrome)) * var(--ratio, 1)
+    );
+    height: auto;
+    aspect-ratio: var(--ratio, auto);
+    object-fit: contain;
+    border-radius: var(--radius-img);
+    background: rgba(245, 238, 228, 0.06);
+  }
+
+  .lightbox-caption {
+    display: flex;
+    gap: 1rem;
+    font-size: var(--fs-caps);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-caps);
+    color: rgba(245, 238, 228, 0.8);
+    text-align: center;
+  }
+
+  .lightbox-counter {
+    color: rgba(245, 238, 228, 0.55);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lightbox-button {
+    position: fixed;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid rgba(245, 238, 228, 0.35);
+    border-radius: 50%;
+    background: rgba(30, 24, 20, 0.4);
+    color: inherit;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) ease, border-color var(--dur-fast) ease,
+      transform var(--dur-fast) var(--ease-out);
+  }
+
+  .lightbox-button:focus-visible {
+    outline-color: #f5eee4;
+  }
+
+  .lightbox-close {
+    top: clamp(0.75rem, 2vw, 1.5rem);
+    right: clamp(0.75rem, 2vw, 1.5rem);
+  }
+
+  .lightbox-prev,
+  .lightbox-next {
+    top: 50%;
+    translate: 0 -50%;
+  }
+
+  .lightbox-prev {
+    left: clamp(0.75rem, 2vw, 1.5rem);
+  }
+
+  .lightbox-next {
+    right: clamp(0.75rem, 2vw, 1.5rem);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .lightbox-button:hover {
+      background: rgba(245, 238, 228, 0.12);
+      border-color: rgba(245, 238, 228, 0.7);
+    }
+
+    .lightbox-close:hover {
+      transform: rotate(90deg);
+    }
+  }
+
+  /* Repli sans View Transitions : fondu d'entrée et de sortie */
+  @supports not (view-transition-name: none) {
+    .lightbox[open],
+    .lightbox[open]::backdrop {
+      animation: lightbox-in 0.25s var(--ease-out);
+    }
+
+    .lightbox.is-closing,
+    .lightbox.is-closing::backdrop {
+      animation: lightbox-out 0.2s ease forwards;
+    }
+  }
+
+  @keyframes lightbox-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes lightbox-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Morphing vignette → image entière : on recadre pendant la transition
+     plutôt que de déformer l'image */
+  :global(::view-transition-old(lightbox-photo)),
+  :global(::view-transition-new(lightbox-photo)) {
+    height: 100%;
+    object-fit: cover;
+    overflow: clip;
+  }
+
+  :global(::view-transition-group(lightbox-photo)) {
+    animation-duration: 0.4s;
+    animation-timing-function: var(--ease-out);
+  }
+
+  :global(::view-transition-old(root)),
+  :global(::view-transition-new(root)) {
+    animation-duration: 0.3s;
+  }
+
+  @media screen and (max-width: 768px) {
+    .lightbox {
+      --lightbox-chrome: 6rem;
+    }
+
+    /* Mobile : on glisse du doigt, les boutons précédent / suivant masqueraient l'image */
+    .lightbox-prev,
+    .lightbox-next {
+      display: none;
+    }
+  }
+</style>

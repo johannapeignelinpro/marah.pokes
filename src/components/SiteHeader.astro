@@ -1,0 +1,368 @@
+---
+// Header fixe commun à toutes les pages.
+// Les liens pointent vers les sections de l'accueil (« /#… ») : depuis l'accueil,
+// le navigateur se contente de défiler ; depuis une autre page, il y retourne.
+const navLinks = [
+  { href: '/#a-propos', label: 'Le handpoke' },
+  { href: '/#artiste', label: "L'artiste" },
+  { href: '/#galerie', label: 'Galerie' },
+  { href: '/#flashs', label: 'Flashs' },
+  { href: '/#avis', label: 'Avis' },
+  { href: '/dessins', label: 'Dessins' },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+---
+
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <a href="/#hero" class="brand" aria-label="Marah Chenaïna, artiste tatoueuse et illustratrice : retour à l'accueil">
+      <span class="brand-name">Marah Chenaïna</span>
+      <span class="brand-role">Artiste Tatoueuse – Illustratrice</span>
+    </a>
+    <nav class="main-nav" id="mainNav" aria-label="Navigation principale">
+      {navLinks.map(({ href, label }) => (
+        <a href={href} aria-current={href === currentPath ? 'page' : undefined}>{label}</a>
+      ))}
+      <!-- Mobile uniquement : remplace le bouton Rendez-vous de l'en-tête -->
+      <a href="/#contact" class="btn btn-primary nav-cta">Prendre rendez-vous</a>
+    </nav>
+    <div class="header-actions">
+      <a href="/#contact" class="header-cta">Rendez-vous</a>
+      <!-- Menu des écrans étroits : affiché par le script (sans JS, le footer garde la navigation) -->
+      <button type="button" class="menu-toggle" aria-controls="mainNav" aria-expanded="false" aria-label="Ouvrir le menu" hidden>
+        <span class="menu-toggle-bars" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Header : fond plus opaque une fois la page scrollée
+  const siteHeader = document.getElementById('siteHeader');
+  function updateHeader() {
+    siteHeader?.classList.toggle('scrolled', window.scrollY > 24);
+  }
+  updateHeader();
+  window.addEventListener('scroll', updateHeader, { passive: true });
+
+  // Menu des écrans étroits : panneau déroulant sous le header.
+  // Fermeture au choix d'un lien, à Échap, au clic en dehors ou en repassant en grand écran.
+  const menuToggle = siteHeader?.querySelector<HTMLButtonElement>('.menu-toggle');
+  if (siteHeader && menuToggle) {
+    const wideScreen = matchMedia('(min-width: 1025px)');
+
+    function setMenu(open: boolean) {
+      siteHeader!.classList.toggle('menu-open', open);
+      menuToggle!.setAttribute('aria-expanded', String(open));
+      menuToggle!.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+    }
+
+    menuToggle.hidden = false;
+    menuToggle.addEventListener('click', () => setMenu(!siteHeader.classList.contains('menu-open')));
+    siteHeader.querySelectorAll('.main-nav a').forEach((link) => link.addEventListener('click', () => setMenu(false)));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape' || !siteHeader.classList.contains('menu-open')) return;
+      setMenu(false);
+      menuToggle.focus();
+    });
+    document.addEventListener('click', (event) => {
+      if (!siteHeader.contains(event.target as Node)) setMenu(false);
+    });
+    wideScreen.addEventListener('change', () => setMenu(false));
+  }
+</script>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 100;
+    height: var(--header-height);
+    background: var(--header-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid transparent;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .site-header.scrolled {
+    background: var(--header-bg-scrolled);
+    border-bottom-color: var(--line);
+  }
+
+  .header-inner {
+    max-width: var(--container-width);
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    color: var(--ink);
+    white-space: nowrap;
+    line-height: 1.1;
+  }
+
+  .brand-name {
+    font-family: var(--f-display);
+    font-weight: var(--fw-display);
+    letter-spacing: var(--tracking-display);
+    font-size: 1.45rem;
+  }
+
+  .brand-role {
+    font-size: var(--fs-small);
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+  }
+
+  .brand:hover {
+    color: var(--ink);
+  }
+
+  .main-nav {
+    display: flex;
+    gap: 2.25rem;
+  }
+
+  .main-nav a {
+    font-size: var(--fs-caps);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-caps);
+    color: var(--ink-soft);
+  }
+
+  .main-nav a:hover,
+  .main-nav a[aria-current='page'] {
+    color: var(--link);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .main-nav a {
+      position: relative;
+    }
+
+    .main-nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -5px;
+      height: 1px;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--dur-fast) var(--ease-out);
+    }
+
+    .main-nav a:hover::after,
+    .main-nav a[aria-current='page']::after {
+      transform: scaleX(1);
+    }
+  }
+
+  .header-cta {
+    font-size: var(--fs-caps);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-caps);
+    color: var(--ink);
+    border: 1px solid var(--link);
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .header-cta:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .main-nav .nav-cta {
+    display: none;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /* Bouton menu (écrans étroits) : trois traits qui se croisent en × à l'ouverture */
+  .menu-toggle {
+    display: none;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .menu-toggle-bars,
+  .menu-toggle-bars::before,
+  .menu-toggle-bars::after {
+    display: block;
+    width: 1.375rem;
+    height: 1.5px;
+    border-radius: 1px;
+    background: currentColor;
+    transition: transform var(--dur-fast) var(--ease-out), background-color var(--dur-fast) ease;
+  }
+
+  .menu-toggle-bars {
+    position: relative;
+  }
+
+  .menu-toggle-bars::before,
+  .menu-toggle-bars::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+
+  .menu-toggle-bars::before {
+    transform: translateY(-7px);
+  }
+
+  .menu-toggle-bars::after {
+    transform: translateY(7px);
+  }
+
+  .menu-open .menu-toggle-bars {
+    background-color: transparent;
+  }
+
+  .menu-open .menu-toggle-bars::before {
+    transform: rotate(45deg);
+  }
+
+  .menu-open .menu-toggle-bars::after {
+    transform: rotate(-45deg);
+  }
+
+  /* Écrans étroits : la navigation devient un panneau déroulant sous le header */
+  @media screen and (max-width: 1024px) {
+    .menu-toggle:not([hidden]) {
+      display: grid;
+    }
+
+    .site-header.menu-open {
+      background: var(--header-bg-scrolled);
+      border-bottom-color: var(--line);
+    }
+
+    .main-nav {
+      position: absolute;
+      inset: 100% 0 auto 0;
+      flex-direction: column;
+      gap: 0;
+      padding: 0.5rem var(--spacing-md) 1.5rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+      visibility: hidden;
+      opacity: 0;
+      transform: translateY(-0.5rem);
+      transition: opacity var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out),
+        visibility 0s linear var(--dur-fast);
+    }
+
+    .menu-open .main-nav {
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+      transition-delay: 0s;
+    }
+
+    .main-nav a {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.875rem;
+    }
+
+    /* Dernier lien avant le bouton Rendez-vous (toujours en fin de liste, masqué sur tablette) */
+    .main-nav a:nth-last-child(2) {
+      border-bottom: none;
+    }
+
+    .main-nav .nav-cta {
+      justify-content: center;
+      margin-top: 1rem;
+      padding: 1rem 1.9rem;
+      border: 1px solid var(--accent);
+      color: var(--on-accent);
+      font-size: var(--fs-caps);
+    }
+
+    .main-nav .nav-cta:hover {
+      color: var(--on-accent);
+    }
+
+    .main-nav a::after {
+      content: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .main-nav,
+    .menu-toggle-bars,
+    .menu-toggle-bars::before,
+    .menu-toggle-bars::after {
+      transition: none;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .header-inner {
+      padding: 0 1.25rem;
+    }
+
+    .main-nav {
+      padding-inline: 1.25rem;
+    }
+
+    /* Mobile : la prise de rendez-vous passe dans le menu, l'en-tête garde le nom et le menu */
+    .header-cta {
+      display: none;
+    }
+
+    .main-nav .nav-cta {
+      display: inline-flex;
+    }
+
+    /* Les traits du bouton s'alignent sur la marge de la page, pas le bord du bouton */
+    .menu-toggle {
+      margin-right: -0.5rem;
+    }
+
+    .brand-name {
+      font-size: 1.2rem;
+    }
+
+    .brand-role {
+      letter-spacing: 0;
+    }
+
+    /* Petits téléphones (360 px) */
+    @media (max-width: 400px) {
+      .brand-role {
+        font-size: 0.75rem;
+      }
+    }
+  }
+</style>

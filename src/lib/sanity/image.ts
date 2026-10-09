@@ -15,6 +15,13 @@ export function urlFor(image: SanityImageWithAsset) {
   return builder.image(image).auto('format');
 }
 
+/** Ratio largeur / hauteur affiché : ratio d'origine corrigé du crop éventuel défini dans le Studio. */
+export function displayRatio(image: SanityImage): number {
+  const { width = 1, height = 1 } = image.dimensions ?? {};
+  const { left = 0, right = 0, top = 0, bottom = 0 } = image.crop ?? {};
+  return (width * (1 - left - right)) / (height * (1 - top - bottom)) || 1;
+}
+
 interface SquareImageOptions {
   widths: number[];
   quality?: number;
@@ -48,11 +55,7 @@ export function naturalImage(image: SanityImageWithAsset, { widths, quality = 80
   const url = (width: number) => urlFor(image).width(width).fit('max').quality(quality).url();
 
   const defaultWidth = sorted[Math.floor(sorted.length / 2)];
-
-  // Ratio affiché = ratio d'origine corrigé du crop éventuel défini dans le Studio
-  const { width = 1, height = 1 } = image.dimensions ?? {};
-  const { left = 0, right = 0, top = 0, bottom = 0 } = image.crop ?? {};
-  const ratio = (width * (1 - left - right)) / (height * (1 - top - bottom)) || 1;
+  const ratio = displayRatio(image);
 
   return {
     src: url(defaultWidth),

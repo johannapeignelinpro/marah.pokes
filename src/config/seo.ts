@@ -24,7 +24,9 @@ export const siteConfig = {
   description: 'Tatouages handpoke réalisés à la main à Rennes par Marah Chenaïna. Pièces fines, organiques et ornementales, uniquement sur rendez-vous.',
   // Phrase d'accroche du hero (le nom, la technique et la ville sont déjà dans le titre)
   heroLead: HERO_LEAD,
-  slogan: `Marah Chenaïna, tatoueuse handpoke basée à Rennes en Bretagne. ${HERO_LEAD}`,
+  // Footer : présentation courte, sans reprendre l'accroche du hero
+  role: 'Artiste tatoueuse et illustratrice à Rennes',
+  slogan: 'Tatouages handpoke réalisés entièrement à la main, sans machine, point par point. Flashs, projets personnalisés et dessins originaux à l\'encre, sur rendez-vous à l\'Atelier Noir, en Bretagne (Ille-et-Vilaine).',
 
   // Contact
   instagram: '@marah.pokes',

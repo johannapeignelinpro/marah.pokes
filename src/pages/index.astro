@@ -1,7 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import '../styles/global.css';
-import { SITE_NOINDEX } from 'astro:env/server';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import { siteConfig, schemaOrg } from '../config/seo';
 import About from '../components/About.astro';
 import Flashs from '../components/Flashs.astro';
@@ -9,54 +8,17 @@ import Gallery from '../components/Gallery.astro';
 import Reviews from '../components/Reviews.astro';
 import Faq from '../components/Faq.astro';
 import ContactForm from '../components/ContactForm.astro';
-import Footer from '../components/Footer.astro';
+import DrawingsTeaser from '../components/DrawingsTeaser.astro';
 import bandeauImage from '../assets/images/editorial/marah-studio-tatouage-rennes.jpg';
 import seanceImage from '../assets/images/editorial/marah-seance-tatouage-handpoke-rennes.jpg';
 import brasImage from '../assets/images/editorial/marah-handpoke-tatouage-bras-rennes.jpg';
 import studioVueImage from '../assets/images/editorial/marah-tatoueuse-studio-handpoke-rennes.jpg';
 
 const { atelierNoir } = siteConfig;
-
-// Meta tags pour le SEO
-const pageTitle = siteConfig.title;
-const pageDescription = siteConfig.description;
-const keywords = siteConfig.keywords.join(', ');
 ---
 
-<!doctype html>
-<html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#F5EEE4" />
-
-    <!-- SEO Meta Tags -->
-    <title>{pageTitle}</title>
-    <meta name="description" content={pageDescription} />
-    <meta name="keywords" content={keywords} />
-    <meta name="author" content={siteConfig.name} />
-    <meta name="robots" content={SITE_NOINDEX ? 'noindex, nofollow' : 'index, follow'} />
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={siteConfig.url} />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={pageDescription} />
-    <meta property="og:image" content={siteConfig.ogImage.url} />
-    <meta property="og:image:width" content={String(siteConfig.ogImage.width)} />
-    <meta property="og:image:height" content={String(siteConfig.ogImage.height)} />
-    <meta property="og:image:alt" content={siteConfig.ogImage.alt} />
-    <meta property="og:site_name" content={siteConfig.name} />
-    <meta property="og:locale" content="fr_FR" />
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={pageDescription} />
-    <meta name="twitter:image" content={siteConfig.ogImage.url} />
-    <meta name="twitter:image:alt" content={siteConfig.ogImage.alt} />
-
+<BaseLayout title={siteConfig.title} description={siteConfig.description}>
+  <Fragment slot="head">
     <!-- Géolocalisation -->
     <meta
       name="geo.region"
@@ -75,859 +37,641 @@ const keywords = siteConfig.keywords.join(', ');
     <!-- Schema.org JSON-LD pour le SEO local -->
     <script type="application/ld+json" set:html={JSON.stringify(schemaOrg)} />
 
-    <!-- Favicon -->
-    <!-- Favicon : logo de Marah sur pastille sable (généré depuis src/assets/images/editorial/logo-marahchenaina.jpg) -->
-    <link rel="icon" href="/favicon.ico" sizes="48x48" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-
-    <!-- Google Fonts - chargement optimisé via <link> (évite le blocage du @import CSS) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Figtree:wght@400..600&display=swap"
-    />
-
     <!-- Poster de la vidéo du hero : première image affichée, chargée en priorité -->
     <link rel="preload" as="image" href="/assets/poster-webp.webp" type="image/webp" fetchpriority="high" />
+  </Fragment>
 
-    <!-- Apparitions au scroll : activées seulement si JS tourne et que le mouvement n'est pas réduit.
-         Posé dans le <head> pour éviter tout clignotement du contenu. -->
-    <script is:inline>
-      if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.documentElement.classList.add('motion');
-      }
-    </script>
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href={siteConfig.url} />
-  </head>
-
-  <body>
-    <!-- Header fixe -->
-    <header class="site-header" id="siteHeader">
-      <div class="header-inner">
-        <a href="#hero" class="brand" aria-label="Marah Chenaïna, artiste tatoueuse et illustratrice : retour en haut">
-          <span class="brand-name">Marah Chenaïna</span>
-          <span class="brand-role">Artiste Tatoueuse – Illustratrice</span>
-        </a>
-        <nav class="main-nav" aria-label="Navigation principale">
-          <a href="#a-propos">Le handpoke</a>
-          <a href="#artiste">L'artiste</a>
-          <a href="#galerie">Galerie</a>
-          <a href="#flashs">Flashs</a>
-          <a href="#avis">Avis</a>
-        </nav>
-        <a href="#contact" class="header-cta">Rendez-vous</a>
-      </div>
-    </header>
-
-    <main>
-      <!-- Hero : texte aéré à gauche, vidéo portrait à droite (desktop) ;
-           vidéo immersive avec le texte fondu dans le sable en bas (mobile) -->
-      <section class="hero" id="hero">
-        <div class="hero-inner">
-          <div class="hero-text">
-            <div class="hero-overlay">
-              <p class="hero-kicker hero-anim" style="--i: 0">Tatouage Handpoke à {siteConfig.location.city}</p>
-              <h1 class="site-title hero-anim" style="--i: 1">Marah <span>Chenaïna</span></h1>
-              <a href="#contact" class="btn btn-primary hero-main-cta hero-anim" style="--i: 3">Réserver un tatouage handpoke</a>
-            </div>
-            <p class="hero-lead hero-anim" style="--i: 2">{siteConfig.heroLead}</p>
-            <div class="hero-links hero-anim" style="--i: 3">
-              <a href="#flashs" class="btn btn-ghost">Voir les Flashs disponibles</a>
-              <a href="#galerie" class="btn btn-ghost">Voir la Galerie</a>
-            </div>
-          </div>
-
-          <div class="hero-media">
-            <video
-              class="hero-video"
-              id="heroVideo"
-              width="720"
-              height="1280"
-              poster="/assets/poster-webp.webp"
-              autoplay
-              muted
-              loop
-              playsinline
-              aria-label="Les mains gantées de Marah tatouant un avant-bras à l'aiguille, point par point"
-            >
-              <source src="/assets/video-hero-mobile-webp.webm" type="video/webm" />
-              <source src="/assets/video-hero-mobile.mp4" type="video/mp4" />
-            </video>
-            <button class="hero-video-toggle" id="heroVideoToggle" type="button" aria-label="Mettre la vidéo en pause" hidden>
-              <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
-              <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" /></svg>
-            </button>
-          </div>
-          <script is:inline>
-            // Mouvement réduit : la vidéo ne démarre pas, seul le poster reste affiché
-            if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-              const v = document.getElementById('heroVideo');
-              v.removeAttribute('autoplay');
-              v.pause();
-            }
-          </script>
+  <!-- Hero : texte aéré à gauche, vidéo portrait à droite (desktop) ;
+       vidéo immersive avec le texte fondu dans le sable en bas (mobile) -->
+  <section class="hero" id="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-overlay">
+          <p class="hero-kicker hero-anim" style="--i: 0">Tatouage Handpoke à {siteConfig.location.city}</p>
+          <h1 class="site-title hero-anim" style="--i: 1">Marah <span>Chenaïna</span></h1>
+          <a href="#contact" class="btn btn-primary hero-main-cta hero-anim" style="--i: 3">Réserver un tatouage handpoke</a>
         </div>
-      </section>
-
-      <About />
-
-      <Gallery />
-
-      <Flashs />
-
-      <!-- Bandeau éditorial de transition -->
-      <div class="editorial-band">
-        <div class="editorial-band-inner">
-          <Image
-            src={bandeauImage}
-            alt="Vue de l'Atelier Noir à Rennes pendant une séance de tatouage handpoke"
-            widths={[640, 1040, 1600, bandeauImage.width]}
-            sizes="(max-width: 768px) 120vw, 1400px"
-            loading="lazy"
-          />
+        <p class="hero-lead hero-anim" style="--i: 2">{siteConfig.heroLead}</p>
+        <div class="hero-links hero-anim" style="--i: 3">
+          <a href="#flashs" class="btn btn-ghost">Voir les Flashs disponibles</a>
+          <a href="#galerie" class="btn btn-ghost">Voir la Galerie</a>
         </div>
       </div>
 
-      <!-- Dans l'atelier : photos encadrées -->
-      <section class="atelier" aria-labelledby="atelier-title">
-        <div class="container">
-          <div class="atelier-head" data-reveal>
-            <div>
-              <span class="eyebrow">Dans l'atelier</span>
-              <h2 id="atelier-title">L'{atelierNoir.name}</h2>
-            </div>
-            <div class="atelier-text">
-              <p>
-                Marah est tatoueuse résidente de l'{atelierNoir.name}, le salon du tatoueur du
-                même nom, au {siteConfig.location.address}. C'est dans ce lieu qu'elle vous
-                accueille, sur rendez-vous, pour chaque séance de tatouage handpoke.
-              </p>
-              <aside class="atelier-artist" aria-labelledby="atelier-artist-title">
-                <span class="eyebrow" id="atelier-artist-title">Le tatoueur de l'atelier</span>
-                <p>
-                  {atelierNoir.name} y signe ses tatouages {new Intl.ListFormat('fr', { type: 'conjunction' }).format(atelierNoir.styles).toLowerCase()} :
-                  un travail précis et graphique, à découvrir sur ses réseaux.
-                </p>
-                {(atelierNoir.instagramUrl || atelierNoir.googleUrl) && (
-                  <div class="atelier-links">
-                    {atelierNoir.instagramUrl && (
-                      <a href={atelierNoir.instagramUrl} target="_blank" rel="noopener noreferrer" class="link-underline">
-                        Son travail sur Instagram →
-                      </a>
-                    )}
-                    {atelierNoir.googleUrl && (
-                      <a href={atelierNoir.googleUrl} target="_blank" rel="noopener noreferrer" class="link-underline">
-                        Ses avis sur Google →
-                      </a>
-                    )}
-                  </div>
+      <div class="hero-media">
+        <video
+          class="hero-video"
+          id="heroVideo"
+          width="720"
+          height="1280"
+          poster="/assets/poster-webp.webp"
+          autoplay
+          muted
+          loop
+          playsinline
+          aria-label="Les mains gantées de Marah tatouant un avant-bras à l'aiguille, point par point"
+        >
+          <source src="/assets/video-hero-mobile-webp.webm" type="video/webm" />
+          <source src="/assets/video-hero-mobile.mp4" type="video/mp4" />
+        </video>
+        <button class="hero-video-toggle" id="heroVideoToggle" type="button" aria-label="Mettre la vidéo en pause" hidden>
+          <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
+          <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" /></svg>
+        </button>
+      </div>
+      <script is:inline>
+        // Mouvement réduit : la vidéo ne démarre pas, seul le poster reste affiché
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const v = document.getElementById('heroVideo');
+          v.removeAttribute('autoplay');
+          v.pause();
+        }
+      </script>
+    </div>
+  </section>
+
+  <About />
+
+  <Gallery />
+
+  <Flashs />
+
+  <!-- Bandeau éditorial de transition -->
+  <div class="editorial-band">
+    <div class="editorial-band-inner">
+      <Image
+        src={bandeauImage}
+        alt="Vue de l'Atelier Noir à Rennes pendant une séance de tatouage handpoke"
+        widths={[640, 1040, 1600, bandeauImage.width]}
+        sizes="(max-width: 768px) 120vw, 1400px"
+        loading="lazy"
+      />
+    </div>
+  </div>
+
+  <!-- Dans l'atelier : photos encadrées -->
+  <section class="atelier" aria-labelledby="atelier-title">
+    <div class="container">
+      <div class="atelier-head" data-reveal>
+        <div>
+          <span class="eyebrow">Dans l'atelier</span>
+          <h2 id="atelier-title">L'{atelierNoir.name}</h2>
+        </div>
+        <div class="atelier-text">
+          <p>
+            Marah est tatoueuse résidente de l'{atelierNoir.name}, le salon du tatoueur du
+            même nom, au {siteConfig.location.address}. C'est dans ce lieu qu'elle vous
+            accueille, sur rendez-vous, pour chaque séance de tatouage handpoke.
+          </p>
+          <aside class="atelier-artist" aria-labelledby="atelier-artist-title">
+            <span class="eyebrow" id="atelier-artist-title">Le tatoueur de l'atelier</span>
+            <p>
+              {atelierNoir.name} y signe ses tatouages {new Intl.ListFormat('fr', { type: 'conjunction' }).format(atelierNoir.styles).toLowerCase()} :
+              un travail précis et graphique, à découvrir sur ses réseaux.
+            </p>
+            {(atelierNoir.instagramUrl || atelierNoir.googleUrl) && (
+              <div class="atelier-links">
+                {atelierNoir.instagramUrl && (
+                  <a href={atelierNoir.instagramUrl} target="_blank" rel="noopener noreferrer" class="link-underline">
+                    Son travail sur Instagram →
+                  </a>
                 )}
-              </aside>
-            </div>
-          </div>
-          <div class="atelier-grid" data-reveal-group>
-            <figure class="frame" data-reveal style="--reveal-i: 0">
-              <div class="frame-inner">
-                <Image
-                  src={seanceImage}
-                  alt="Marah pendant une séance de tatouage handpoke dans son atelier"
-                  widths={[400, 700, 1000]}
-                  sizes="(max-width: 768px) 75vw, 33vw"
-                  loading="lazy"
-                />
+                {atelierNoir.googleUrl && (
+                  <a href={atelierNoir.googleUrl} target="_blank" rel="noopener noreferrer" class="link-underline">
+                    Ses avis sur Google →
+                  </a>
+                )}
               </div>
-            </figure>
-            <figure class="frame" data-reveal style="--reveal-i: 1">
-              <div class="frame-inner">
-                <Image
-                  src={brasImage}
-                  alt="Tatouage handpoke en cours de réalisation sur un bras"
-                  widths={[400, 700, 1000]}
-                  sizes="(max-width: 768px) 75vw, 33vw"
-                  loading="lazy"
-                />
-              </div>
-            </figure>
-            <figure class="frame" data-reveal style="--reveal-i: 2">
-              <div class="frame-inner">
-                <Image
-                  src={studioVueImage}
-                  alt="Vue de l'atelier de tatouage handpoke à Rennes"
-                  widths={[400, 700, 1000]}
-                  sizes="(max-width: 768px) 75vw, 33vw"
-                  loading="lazy"
-                />
-              </div>
-            </figure>
-          </div>
+            )}
+          </aside>
         </div>
-      </section>
+      </div>
+      <div class="atelier-grid" data-reveal-group>
+        <figure class="frame" data-reveal style="--reveal-i: 0">
+          <div class="frame-inner">
+            <Image
+              src={seanceImage}
+              alt="Marah pendant une séance de tatouage handpoke dans son atelier"
+              widths={[400, 700, 1000]}
+              sizes="(max-width: 768px) 75vw, 33vw"
+              loading="lazy"
+            />
+          </div>
+        </figure>
+        <figure class="frame" data-reveal style="--reveal-i: 1">
+          <div class="frame-inner">
+            <Image
+              src={brasImage}
+              alt="Tatouage handpoke en cours de réalisation sur un bras"
+              widths={[400, 700, 1000]}
+              sizes="(max-width: 768px) 75vw, 33vw"
+              loading="lazy"
+            />
+          </div>
+        </figure>
+        <figure class="frame" data-reveal style="--reveal-i: 2">
+          <div class="frame-inner">
+            <Image
+              src={studioVueImage}
+              alt="Vue de l'atelier de tatouage handpoke à Rennes"
+              widths={[400, 700, 1000]}
+              sizes="(max-width: 768px) 75vw, 33vw"
+              loading="lazy"
+            />
+          </div>
+        </figure>
+      </div>
+    </div>
+  </section>
 
-      <Reviews />
-      <Faq />
-      <ContactForm />
-    </main>
+  <Reviews />
+  <Faq />
+  <ContactForm />
+  <DrawingsTeaser />
+</BaseLayout>
 
-    <!-- Footer -->
-    <Footer />
+<script>
+  // Vidéo du hero : bouton pause/lecture (mouvement en boucle de plus de 5 s)
+  const heroVideo = document.getElementById('heroVideo') as HTMLVideoElement | null;
+  const heroVideoToggle = document.getElementById('heroVideoToggle');
+  if (heroVideo && heroVideoToggle) {
+    const syncToggle = () => {
+      const paused = heroVideo.paused;
+      heroVideoToggle.classList.toggle('is-paused', paused);
+      heroVideoToggle.setAttribute('aria-label', paused ? 'Lire la vidéo' : 'Mettre la vidéo en pause');
+    };
+    heroVideoToggle.hidden = false;
+    heroVideoToggle.addEventListener('click', () => {
+      if (heroVideo.paused) heroVideo.play();
+      else heroVideo.pause();
+    });
+    heroVideo.addEventListener('play', syncToggle);
+    heroVideo.addEventListener('pause', syncToggle);
+    syncToggle();
+  }
+</script>
 
-    <script>
-      // Le défilement doux vers les ancres est géré en CSS (scroll-behavior),
-      // qui respecte prefers-reduced-motion.
+<style>
+  /* ---------- Hero ----------
+     Desktop et tablette : texte aéré à gauche, vidéo portrait (9:16) à droite,
+     dimensionnée sur la hauteur d'écran pour que le haut de la section suivante
+     reste visible. La vidéo déborde sur la section suivante pour lier les deux. */
+  .hero {
+    --hero-overlap: 4rem;
+    --hero-video-w: clamp(260px, min(calc((100svh - var(--header-height) - 7rem) * 9 / 16), 40vw), 440px);
+    position: relative;
+    z-index: 1;
+    padding: calc(var(--header-height) + 2.5rem) 0 0;
+  }
 
-      // Apparitions au scroll : un seul observer, chaque élément n'est animé qu'une fois
-      if (document.documentElement.classList.contains('motion')) {
-        const revealObserver = new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries) {
-              if (!entry.isIntersecting) continue;
-              // Dans un groupe (bande à faire glisser sur mobile), tout apparaît
-              // ensemble : les éléments hors écran à droite ne restent pas cachés
-              const group = entry.target.closest('[data-reveal-group]');
-              const targets = group ? group.querySelectorAll('[data-reveal]') : [entry.target];
-              for (const target of targets) {
-                target.classList.add('is-visible');
-                revealObserver.unobserve(target);
-              }
-            }
-          },
-          // Déclenchement quand le haut de l'élément dépasse 80 % de la hauteur de
-          // l'écran : l'animation se joue sous les yeux, pas avant d'y arriver
-          { rootMargin: '0px 0px -20% 0px' }
-        );
-        document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
-      }
+  .hero-inner {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: center;
+  }
 
-      // Vidéo du hero : bouton pause/lecture (mouvement en boucle de plus de 5 s)
-      const heroVideo = document.getElementById('heroVideo') as HTMLVideoElement | null;
-      const heroVideoToggle = document.getElementById('heroVideoToggle');
-      if (heroVideo && heroVideoToggle) {
-        const syncToggle = () => {
-          const paused = heroVideo.paused;
-          heroVideoToggle.classList.toggle('is-paused', paused);
-          heroVideoToggle.setAttribute('aria-label', paused ? 'Lire la vidéo' : 'Mettre la vidéo en pause');
-        };
-        heroVideoToggle.hidden = false;
-        heroVideoToggle.addEventListener('click', () => {
-          if (heroVideo.paused) heroVideo.play();
-          else heroVideo.pause();
-        });
-        heroVideo.addEventListener('play', syncToggle);
-        heroVideo.addEventListener('pause', syncToggle);
-        syncToggle();
-      }
+  .hero-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 36rem;
+    padding-bottom: var(--hero-overlap);
+  }
 
-      // Header : fond plus opaque une fois la page scrollée
-      const siteHeader = document.getElementById('siteHeader');
-      function updateHeader() {
-        siteHeader?.classList.toggle('scrolled', window.scrollY > 24);
-      }
-      updateHeader();
-      window.addEventListener('scroll', updateHeader, { passive: true });
-    </script>
+  /* Le bloc qui se superpose à la vidéo sur mobile n'a pas de rôle en desktop */
+  .hero-overlay {
+    display: contents;
+  }
 
-    <style>
-      /* ---------- Header ---------- */
-      .site-header {
-        position: fixed;
-        inset: 0 0 auto 0;
-        z-index: 100;
-        height: var(--header-height);
-        background: var(--header-bg);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-bottom: 1px solid transparent;
-        transition: background-color 0.3s ease, border-color 0.3s ease;
-      }
+  .hero-kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-size: var(--fs-caps);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-caps);
+    color: var(--link);
+    margin-bottom: 1.25rem;
+  }
 
-      .site-header.scrolled {
-        background: var(--header-bg-scrolled);
-        border-bottom-color: var(--line);
-      }
+  .hero-kicker::before {
+    content: '';
+    width: 2.5rem;
+    height: 1px;
+    background: currentColor;
+  }
 
-      .header-inner {
-        max-width: var(--container-width);
-        height: 100%;
-        margin: 0 auto;
-        padding: 0 var(--spacing-md);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--spacing-md);
-      }
+  .site-title {
+    font-size: clamp(3.5rem, 6vw, 6rem);
+    line-height: 1;
+    margin-bottom: 1.75rem;
+  }
 
-      .brand {
-        display: flex;
-        flex-direction: column;
-        gap: 0.15rem;
-        color: var(--ink);
-        white-space: nowrap;
-        line-height: 1.1;
-      }
+  /* « Chenaïna » sur sa propre ligne, légèrement en retrait : écriture à la main */
+  .site-title span {
+    display: block;
+    padding-left: 0.55em;
+    font-style: italic;
+    color: var(--link);
+  }
 
-      .brand-name {
-        font-family: var(--f-display);
-        font-weight: var(--fw-display);
-        letter-spacing: var(--tracking-display);
-        font-size: 1.45rem;
-      }
+  /* En desktop, l'accroche passe avant les actions (ordre du DOM pensé pour mobile) */
+  .hero-lead {
+    order: 1;
+    max-width: 31rem;
+    font-size: 1.125rem;
+    color: var(--ink-soft);
+    margin-bottom: 2.25rem;
+  }
 
-      .brand-role {
-        font-size: var(--fs-small);
-        letter-spacing: 0.04em;
-        color: var(--ink-muted);
-      }
+  .hero-main-cta {
+    order: 2;
+    text-align: center;
+  }
 
-      .brand:hover {
-        color: var(--ink);
-      }
+  .hero-links {
+    order: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    margin-top: 1.5rem;
+  }
 
-      .main-nav {
-        display: flex;
-        gap: 2.25rem;
-      }
+  .hero-media {
+    position: relative;
+    width: var(--hero-video-w);
+    aspect-ratio: 9 / 16;
+    margin-bottom: calc(-1 * var(--hero-overlap));
+    overflow: hidden;
+    border-radius: var(--radius-img);
+    background: var(--ink);
+    box-shadow: var(--shadow-strong);
+  }
 
-      .main-nav a {
-        font-size: var(--fs-caps);
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: var(--tracking-caps);
-        color: var(--ink-soft);
-      }
+  .hero-video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-      .main-nav a:hover {
-        color: var(--link);
-      }
+  .hero-video-toggle {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--header-bg);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: var(--ink);
+    cursor: pointer;
+    opacity: 0.75;
+    transition: opacity var(--dur-fast) ease;
+  }
 
-      @media (hover: hover) and (pointer: fine) {
-        .main-nav a {
-          position: relative;
-        }
+  .hero-video-toggle:hover,
+  .hero-video-toggle:focus-visible {
+    opacity: 1;
+  }
 
-        .main-nav a::after {
-          content: '';
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: -5px;
-          height: 1px;
-          background: currentColor;
-          transform: scaleX(0);
-          transform-origin: left;
-          transition: transform var(--dur-fast) var(--ease-out);
-        }
+  .hero-video-toggle[hidden] {
+    display: none;
+  }
 
-        .main-nav a:hover::after {
-          transform: scaleX(1);
-        }
-      }
+  .hero-video-toggle svg {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
 
-      .header-cta {
-        font-size: var(--fs-caps);
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: var(--tracking-caps);
-        color: var(--ink);
-        border: 1px solid var(--link);
-        padding: 0.6rem 1.2rem;
-        border-radius: var(--radius-pill);
-        white-space: nowrap;
-        transition: background-color 0.3s ease, color 0.3s ease;
-      }
+  .hero-video-toggle .icon-pause {
+    fill: none;
+  }
 
-      .header-cta:hover {
-        background: var(--accent);
-        border-color: var(--accent);
-        color: var(--on-accent);
-      }
+  .hero-video-toggle .icon-play,
+  .hero-video-toggle.is-paused .icon-pause {
+    display: none;
+  }
 
-      /* ---------- Hero ----------
-         Desktop et tablette : texte aéré à gauche, vidéo portrait (9:16) à droite,
-         dimensionnée sur la hauteur d'écran pour que le haut de la section suivante
-         reste visible. La vidéo déborde sur la section suivante pour lier les deux. */
-      .hero {
-        --hero-overlap: 4rem;
-        --hero-video-w: clamp(260px, min(calc((100svh - var(--header-height) - 7rem) * 9 / 16), 40vw), 440px);
-        position: relative;
-        z-index: 1;
-        padding: calc(var(--header-height) + 2.5rem) 0 0;
-      }
+  .hero-video-toggle.is-paused .icon-play {
+    display: block;
+  }
 
-      .hero-inner {
-        max-width: var(--container-width);
-        margin: 0 auto;
-        padding: 0 var(--spacing-md);
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: clamp(2rem, 6vw, 6rem);
-        align-items: center;
-      }
+  /* Apparition douce au chargement, sans attendre le scroll : la vidéo reste
+     le seul mouvement permanent du hero */
+  .motion .hero-anim {
+    animation: reveal-up 0.9s var(--ease-reveal) backwards;
+    animation-delay: calc(var(--i, 0) * 90ms + 60ms);
+  }
 
-      .hero-text {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        max-width: 36rem;
-        padding-bottom: var(--hero-overlap);
-      }
+  /* Mobile : la vidéo verticale devient l'élément immersif, pleine largeur.
+     Le nom, la spécialité et l'action principale se posent en bas, sur un fondu
+     sable qui laisse visibles les mains et l'aiguille ; l'accroche et les liens
+     secondaires suivent sous la vidéo. */
+  @media screen and (max-width: 640px) {
+    .hero {
+      padding-top: var(--header-height);
+      padding-bottom: var(--spacing-md);
+    }
 
-      /* Le bloc qui se superpose à la vidéo sur mobile n'a pas de rôle en desktop */
-      .hero-overlay {
-        display: contents;
-      }
+    .hero-inner {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'stage'
+        'lead'
+        'links';
+      gap: 0;
+      padding: 0;
+    }
 
-      .hero-kicker {
-        display: flex;
-        align-items: center;
-        gap: 0.9rem;
-        font-size: var(--fs-caps);
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: var(--tracking-caps);
-        color: var(--link);
-        margin-bottom: 1.25rem;
-      }
+    .hero-text {
+      display: contents;
+    }
 
-      .hero-kicker::before {
-        content: '';
-        width: 2.5rem;
-        height: 1px;
-        background: currentColor;
-      }
+    .hero-overlay {
+      display: block;
+      grid-area: stage;
+      align-self: end;
+      z-index: 1;
+      /* Fondu en courbe en S (smoothstep) : l'opacité démarre et se stabilise sans
+         à-coup. Une cassure de pente se voit comme une ligne : la courbe se raccorde
+         donc en douceur au sable opaque du bas. --fade : hauteur du fondu,
+         --fade-pad : espace au-dessus du texte (le texte se pose vers 80 % du fondu). */
+      --fade: 8rem;
+      --fade-pad: 6rem;
+      padding: var(--fade-pad) 1.25rem 1.5rem;
+      text-align: center;
+      background: linear-gradient(
+        to bottom,
+        rgba(245, 238, 228, 0) 0,
+        rgba(245, 238, 228, 0.04) calc(var(--fade) * 0.125),
+        rgba(245, 238, 228, 0.14) calc(var(--fade) * 0.25),
+        rgba(245, 238, 228, 0.3) calc(var(--fade) * 0.375),
+        rgba(245, 238, 228, 0.46) calc(var(--fade) * 0.5),
+        rgba(245, 238, 228, 0.62) calc(var(--fade) * 0.625),
+        rgba(245, 238, 228, 0.78) calc(var(--fade) * 0.75),
+        rgba(245, 238, 228, 0.88) calc(var(--fade) * 0.875),
+        rgba(245, 238, 228, 0.92) var(--fade),
+        var(--bg) 100%
+      );
+    }
 
-      .site-title {
-        font-size: clamp(3.5rem, 6vw, 6rem);
-        line-height: 1;
-        margin-bottom: 1.75rem;
-      }
+    .hero-kicker {
+      justify-content: center;
+      margin-bottom: 0.75rem;
+    }
 
-      /* « Chenaïna » sur sa propre ligne, légèrement en retrait : écriture à la main */
-      .site-title span {
-        display: block;
-        padding-left: 0.55em;
-        font-style: italic;
-        color: var(--link);
-      }
+    .hero-kicker::before {
+      display: none;
+    }
 
-      /* En desktop, l'accroche passe avant les actions (ordre du DOM pensé pour mobile) */
-      .hero-lead {
-        order: 1;
-        max-width: 31rem;
-        font-size: 1.125rem;
-        color: var(--ink-soft);
-        margin-bottom: 2.25rem;
-      }
+    .site-title {
+      font-size: clamp(2.6rem, 12vw, 3.4rem);
+      margin-bottom: 1.25rem;
+    }
 
-      .hero-main-cta {
-        order: 2;
-        text-align: center;
-      }
+    .site-title span {
+      padding-left: 0;
+    }
 
-      .hero-links {
-        order: 3;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem 2rem;
-        margin-top: 1.5rem;
-      }
+    .hero-main-cta {
+      width: 100%;
+      max-width: 340px;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+    }
 
-      .hero-media {
-        position: relative;
-        width: var(--hero-video-w);
-        aspect-ratio: 9 / 16;
-        margin-bottom: calc(-1 * var(--hero-overlap));
-        overflow: hidden;
-        border-radius: var(--radius-img);
-        background: var(--ink);
-        box-shadow: var(--shadow-strong);
-      }
+    /* Hauteur : presque tout l'écran, en laissant juste deviner la suite de la page.
+       Plafond à 2 × la largeur : au pire un léger recadrage sur les côtés */
+    .hero-media {
+      grid-area: stage;
+      width: 100%;
+      height: min(calc(100svh - var(--header-height) - 1.25rem), calc(100vw * 2));
+      aspect-ratio: auto;
+      margin: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
 
-      .hero-video {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
+    .hero-video {
+      object-position: 50% 35%;
+    }
 
-      .hero-video-toggle {
-        position: absolute;
-        top: 0.85rem;
-        right: 0.85rem;
-        z-index: 2;
-        display: grid;
-        place-items: center;
-        width: 2.25rem;
-        height: 2.25rem;
-        padding: 0;
-        border: none;
-        border-radius: 50%;
-        background: var(--header-bg);
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
-        color: var(--ink);
-        cursor: pointer;
-        opacity: 0.75;
-        transition: opacity var(--dur-fast) ease;
-      }
+    .hero-lead {
+      grid-area: lead;
+      max-width: 30rem;
+      margin: 0.5rem auto 1.25rem;
+      padding: 0 1.25rem;
+      font-size: var(--fs-body);
+      text-align: center;
+    }
 
-      .hero-video-toggle:hover,
-      .hero-video-toggle:focus-visible {
-        opacity: 1;
-      }
+    .hero-links {
+      grid-area: links;
+      justify-content: center;
+      margin-top: 0;
+      padding: 0 1.25rem;
+    }
+  }
 
-      .hero-video-toggle[hidden] {
-        display: none;
-      }
+  /* Petits écrans peu hauts : bloc superposé plus compact pour garder l'aiguille visible */
+  @media screen and (max-width: 640px) and (max-height: 700px) {
+    .hero-overlay {
+      --fade: 6.5rem;
+      --fade-pad: 5rem;
+      padding-bottom: 1.25rem;
+    }
 
-      .hero-video-toggle svg {
-        width: 1rem;
-        height: 1rem;
-        fill: currentColor;
-        stroke: currentColor;
-        stroke-width: 2.2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
+    .site-title {
+      font-size: 2.4rem;
+      margin-bottom: 1rem;
+    }
 
-      .hero-video-toggle .icon-pause {
-        fill: none;
-      }
+    .hero-kicker {
+      margin-bottom: 0.5rem;
+    }
 
-      .hero-video-toggle .icon-play,
-      .hero-video-toggle.is-paused .icon-pause {
-        display: none;
-      }
+    .hero-main-cta {
+      padding-top: 0.85rem;
+      padding-bottom: 0.85rem;
+    }
+  }
 
-      .hero-video-toggle.is-paused .icon-play {
-        display: block;
-      }
+  /* ---------- Bandeau éditorial ---------- */
+  .editorial-band {
+    padding: 0 var(--spacing-md);
+    background: linear-gradient(to bottom, var(--bg-alt) 50%, var(--bg) 50%);
+  }
 
-      /* Apparition douce au chargement, sans attendre le scroll : la vidéo reste
-         le seul mouvement permanent du hero */
-      .motion .hero-anim {
-        animation: reveal-up 0.9s var(--ease-reveal) backwards;
-        animation-delay: calc(var(--i, 0) * 90ms + 60ms);
-      }
+  .editorial-band-inner {
+    position: relative;
+    max-width: 1040px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--radius-img);
+  }
 
-      /* Mobile : la vidéo verticale devient l'élément immersif, pleine largeur.
-         Le nom, la spécialité et l'action principale se posent en bas, sur un fondu
-         sable qui laisse visibles les mains et l'aiguille ; l'accroche et les liens
-         secondaires suivent sous la vidéo. */
-      @media screen and (max-width: 640px) {
-        .hero {
-          padding-top: var(--header-height);
-          padding-bottom: var(--spacing-md);
-        }
+  /* Plan large de l'atelier : on zoome sur Marah plutôt que de montrer toute la pièce */
+  .editorial-band img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 57% 62%;
+    transform-origin: 57% 62%;
+    scale: 1.35;
+    display: block;
+  }
 
-        .hero-inner {
-          grid-template-columns: 1fr;
-          grid-template-areas:
-            'stage'
-            'lead'
-            'links';
-          gap: 0;
-          padding: 0;
-        }
-
-        .hero-text {
-          display: contents;
-        }
-
-        .hero-overlay {
-          display: block;
-          grid-area: stage;
-          align-self: end;
-          z-index: 1;
-          padding: 3.75rem 1.25rem 1.5rem;
-          text-align: center;
-          background: linear-gradient(
-            to bottom,
-            rgba(245, 238, 228, 0) 0,
-            rgba(245, 238, 228, 0.8) 3.25rem,
-            var(--bg) 100%
-          );
-        }
-
-        .hero-kicker {
-          justify-content: center;
-          margin-bottom: 0.75rem;
-        }
-
-        .hero-kicker::before {
-          display: none;
-        }
-
-        .site-title {
-          font-size: clamp(2.6rem, 12vw, 3.4rem);
-          margin-bottom: 1.25rem;
-        }
-
-        .site-title span {
-          padding-left: 0;
-        }
-
-        .hero-main-cta {
-          width: 100%;
-          max-width: 340px;
-          padding-left: 1.25rem;
-          padding-right: 1.25rem;
-        }
-
-        /* Hauteur : presque tout l'écran, en laissant juste deviner la suite de la page.
-           Plafond à 2 × la largeur : au pire un léger recadrage sur les côtés */
-        .hero-media {
-          grid-area: stage;
-          width: 100%;
-          height: min(calc(100svh - var(--header-height) - 1.25rem), calc(100vw * 2));
-          aspect-ratio: auto;
-          margin: 0;
-          border-radius: 0;
-          box-shadow: none;
-        }
-
-        .hero-video {
-          object-position: 50% 35%;
-        }
-
-        .hero-lead {
-          grid-area: lead;
-          max-width: 30rem;
-          margin: 0.5rem auto 1.25rem;
-          padding: 0 1.25rem;
-          font-size: var(--fs-body);
-          text-align: center;
-        }
-
-        .hero-links {
-          grid-area: links;
-          justify-content: center;
-          margin-top: 0;
-          padding: 0 1.25rem;
-        }
-      }
-
-      /* Petits écrans peu hauts : bloc superposé plus compact pour garder l'aiguille visible */
-      @media screen and (max-width: 640px) and (max-height: 700px) {
-        .hero-overlay {
-          padding-top: 3.25rem;
-          padding-bottom: 1.25rem;
-        }
-
-        .site-title {
-          font-size: 2.4rem;
-          margin-bottom: 1rem;
-        }
-
-        .hero-kicker {
-          margin-bottom: 0.5rem;
-        }
-
-        .hero-main-cta {
-          padding-top: 0.85rem;
-          padding-bottom: 0.85rem;
-        }
-      }
-
-      /* ---------- Bandeau éditorial ---------- */
-      .editorial-band {
-        padding: 0 var(--spacing-md);
-        background: linear-gradient(to bottom, var(--bg-alt) 50%, var(--bg) 50%);
-      }
-
-      .editorial-band-inner {
-        position: relative;
-        max-width: 1040px;
-        margin: 0 auto;
-        aspect-ratio: 16 / 9;
-        overflow: hidden;
-        border-radius: var(--radius-img);
-      }
-
-      /* Plan large de l'atelier : on zoome sur Marah plutôt que de montrer toute la pièce */
+  /* Effet de profondeur : l'image glisse un peu moins vite que la page.
+     Scroll-driven animation (compositeur, zéro JS) : les navigateurs qui ne
+     la gèrent pas affichent simplement l'image fixe. Desktop uniquement. */
+  @supports (animation-timeline: view()) {
+    @media (min-width: 769px) and (prefers-reduced-motion: no-preference) {
       .editorial-band img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: 57% 62%;
-        transform-origin: 57% 62%;
-        scale: 1.35;
-        display: block;
+        height: 112%;
+        animation: band-drift linear both;
+        animation-timeline: view();
+        animation-range: cover;
       }
+    }
+  }
 
-      /* Effet de profondeur : l'image glisse un peu moins vite que la page.
-         Scroll-driven animation (compositeur, zéro JS) : les navigateurs qui ne
-         la gèrent pas affichent simplement l'image fixe. Desktop uniquement. */
-      @supports (animation-timeline: view()) {
-        @media (min-width: 769px) and (prefers-reduced-motion: no-preference) {
-          .editorial-band img {
-            height: 112%;
-            animation: band-drift linear both;
-            animation-timeline: view();
-            animation-range: cover;
-          }
-        }
+  @keyframes band-drift {
+    from {
+      transform: translate3d(0, -8%, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  /* ---------- Atelier ---------- */
+  .atelier {
+    padding-top: var(--spacing-lg);
+  }
+
+  .atelier-head {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: var(--spacing-md) var(--spacing-lg);
+    align-items: start;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .atelier-head h2 {
+    margin-bottom: 0;
+  }
+
+  /* Encart du tatoueur de l'atelier : séparé du texte sur Marah par un filet */
+  .atelier-artist {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .atelier-artist .eyebrow {
+    margin-bottom: 0.5rem;
+  }
+
+  .atelier-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    margin-top: 1.25rem;
+  }
+
+  .atelier-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .atelier-grid img {
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  /* Photo centrale décalée : casse l'alignement en rang d'oignons */
+  @media (min-width: 769px) {
+    .atelier-grid {
+      align-items: start;
+    }
+
+    .atelier-grid .frame:nth-child(2) {
+      margin-top: var(--spacing-lg);
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .atelier-grid .frame-inner:hover img {
+      transform: scale(1.03);
+    }
+  }
+
+  /* ---------- Responsive ---------- */
+  @media screen and (max-width: 768px) {
+    /* Mobile : même traitement qu'en desktop (coins arrondis, marges), sans voile */
+    .editorial-band {
+      padding: 0 1.25rem;
+    }
+
+    .editorial-band-inner {
+      aspect-ratio: 4 / 3;
+    }
+
+    .editorial-band img {
+      scale: 1.2;
+    }
+
+    .atelier-head {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    /* Atelier : défilement horizontal */
+    .atelier-grid {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 1rem;
+      margin: 0 -1.25rem;
+      padding: 0 1.25rem 0.5rem;
+      scrollbar-width: none;
+    }
+
+    .atelier-grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    .atelier-grid .frame {
+      flex: 0 0 72%;
+      scroll-snap-align: center;
+    }
+
+    /* La photo centrée prend légèrement le dessus pendant le glissement */
+    @supports (animation-timeline: view()) {
+      .atelier-grid .frame-inner {
+        animation: snap-focus linear both;
+        animation-timeline: view(inline);
       }
-
-      @keyframes band-drift {
-        from {
-          transform: translate3d(0, -8%, 0);
-        }
-        to {
-          transform: translate3d(0, 0, 0);
-        }
-      }
-
-      /* ---------- Atelier ---------- */
-      .atelier {
-        padding-top: var(--spacing-lg);
-      }
-
-      .atelier-head {
-        display: grid;
-        grid-template-columns: 1fr 1.2fr;
-        gap: var(--spacing-md) var(--spacing-lg);
-        align-items: start;
-        margin-bottom: var(--spacing-md);
-      }
-
-      .atelier-head h2 {
-        margin-bottom: 0;
-      }
-
-      /* Encart du tatoueur de l'atelier : séparé du texte sur Marah par un filet */
-      .atelier-artist {
-        margin-top: 1.5rem;
-        padding-top: 1.25rem;
-        border-top: 1px solid var(--line);
-      }
-
-      .atelier-artist .eyebrow {
-        margin-bottom: 0.5rem;
-      }
-
-      .atelier-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem 2rem;
-        margin-top: 1.25rem;
-      }
-
-      .atelier-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--spacing-md);
-      }
-
-      .atelier-grid img {
-        aspect-ratio: 4 / 5;
-        object-fit: cover;
-        transition: transform 0.6s var(--ease-out);
-      }
-
-      /* Photo centrale décalée : casse l'alignement en rang d'oignons */
-      @media (min-width: 769px) {
-        .atelier-grid {
-          align-items: start;
-        }
-
-        .atelier-grid .frame:nth-child(2) {
-          margin-top: var(--spacing-lg);
-        }
-      }
-
-      @media (hover: hover) and (pointer: fine) {
-        .atelier-grid .frame-inner:hover img {
-          transform: scale(1.03);
-        }
-      }
-
-      /* ---------- Responsive ---------- */
-      @media screen and (max-width: 1024px) {
-        .main-nav {
-          display: none;
-        }
-      }
-
-      @media screen and (max-width: 768px) {
-        .header-inner {
-          padding: 0 1.25rem;
-        }
-
-        .brand-name {
-          font-size: 1.2rem;
-        }
-
-        .brand-role {
-          letter-spacing: 0;
-        }
-
-        .header-cta {
-          padding: 0.5rem 0.9rem;
-        }
-
-        /* Petits téléphones (360 px) : le bouton Rendez-vous tient dans l'en-tête */
-        @media (max-width: 400px) {
-          .brand-role {
-            font-size: 0.75rem;
-          }
-
-          .header-cta {
-            padding: 0.45rem 0.75rem;
-            letter-spacing: 0.08em;
-          }
-        }
-
-        /* Mobile : même traitement qu'en desktop (coins arrondis, marges), sans voile */
-        .editorial-band {
-          padding: 0 1.25rem;
-        }
-
-        .editorial-band-inner {
-          aspect-ratio: 4 / 3;
-        }
-
-        .editorial-band img {
-          scale: 1.2;
-        }
-
-        .atelier-head {
-          grid-template-columns: 1fr;
-          gap: 1rem;
-        }
-
-        /* Atelier : défilement horizontal */
-        .atelier-grid {
-          display: flex;
-          overflow-x: auto;
-          scroll-snap-type: x mandatory;
-          gap: 1rem;
-          margin: 0 -1.25rem;
-          padding: 0 1.25rem 0.5rem;
-          scrollbar-width: none;
-        }
-
-        .atelier-grid::-webkit-scrollbar {
-          display: none;
-        }
-
-        .atelier-grid .frame {
-          flex: 0 0 72%;
-          scroll-snap-align: center;
-        }
-
-        /* La photo centrée prend légèrement le dessus pendant le glissement */
-        @supports (animation-timeline: view()) {
-          .atelier-grid .frame-inner {
-            animation: snap-focus linear both;
-            animation-timeline: view(inline);
-          }
-        }
-      }
-    </style>
-  </body>
-</html>
+    }
+  }
+</style>

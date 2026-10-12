@@ -2,11 +2,13 @@
    DESIGN SYSTEM - MARAH.POKES
    Tatouage Handpoke à Rennes
    Direction artistique « Sable chaud » : fond sable lumineux, accent terracotta,
-   titres Playfair Display, textes Figtree, formes arrondies.
+   nom en Shrikhand, titres Playfair Display, textes Lora, interface Figtree, formes arrondies.
    ============================================ */
 
-/* Polices chargées via <link> dans index.astro :
-   Playfair Display (titres, nom de marque), Figtree (textes, boutons, navigation, formulaires) */
+/* Polices chargées via <link> dans BaseLayout.astro :
+   Shrikhand ou Climate Crisis (nom « Marah Chenaïna » du hero, à l'essai),
+   Playfair Display (titres, nom de marque), Lora (paragraphes),
+   Figtree (boutons, navigation, surtitres, formulaires) */
 
 
 /* ============================================
@@ -87,7 +89,9 @@ html {
 
   /* Polices */
   --f-display: 'Playfair Display', Georgia, serif; /* titres, nom de marque */
-  --f-body: 'Figtree', system-ui, sans-serif;      /* textes, boutons, nav, formulaires */
+  --f-name: 'Shrikhand', Georgia, serif;           /* nom « Marah Chenaïna » du hero (à l'essai) */
+  --f-text: 'Lora', Georgia, serif;                /* paragraphes */
+  --f-body: 'Figtree', system-ui, sans-serif;      /* boutons, nav, surtitres, formulaires */
   --fw-display: 400;                               /* graisse des titres */
 
   /* Tailles de texte */
@@ -116,6 +120,11 @@ html {
   --container-width: 1200px;
   --container-narrow: 820px;
   --header-height: 72px;
+}
+
+/* Essai : Climate Crisis à la place de Shrikhand (?titre=climate dans l'adresse) */
+:root[data-titre='climate'] {
+  --f-name: 'Climate Crisis', Georgia, serif;
 }
 
 
@@ -188,6 +197,7 @@ h4 {
 }
 
 p {
+  font-family: var(--f-text);
   font-size: var(--fs-body);
   line-height: 1.7;
   margin-bottom: 1rem;

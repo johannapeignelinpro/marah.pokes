@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { siteConfig, schemaOrg } from '../config/seo';
 import About from '../components/About.astro';
+import Specialties from '../components/Specialties.astro';
 import Flashs from '../components/Flashs.astro';
 import Gallery from '../components/Gallery.astro';
 import Reviews from '../components/Reviews.astro';
@@ -53,8 +54,8 @@ const { atelierNoir } = siteConfig;
         </div>
         <p class="hero-lead hero-anim" style="--i: 2">{siteConfig.heroLead}</p>
         <div class="hero-links hero-anim" style="--i: 3">
-          <a href="#flashs" class="btn btn-ghost">Voir les Flashs disponibles</a>
           <a href="#galerie" class="btn btn-ghost">Voir la Galerie</a>
+          <a href="#flashs" class="btn btn-ghost">Voir les Flashs disponibles</a>
         </div>
       </div>
 
@@ -90,11 +91,15 @@ const { atelierNoir } = siteConfig;
     </div>
   </section>
 
-  <About />
-
+  <!-- Ordre pensé pour le parcours d'un futur client : le travail d'abord (galerie,
+       spécialités, flashs), puis la technique, l'artiste, l'atelier et les avis -->
   <Gallery />
 
+  <Specialties />
+
   <Flashs />
+
+  <About />
 
   <!-- Bandeau éditorial de transition -->
   <div class="editorial-band">
@@ -119,14 +124,14 @@ const { atelierNoir } = siteConfig;
         </div>
         <div class="atelier-text">
           <p>
-            Marah est tatoueuse résidente de l'{atelierNoir.name}, le salon du tatoueur du
-            même nom, au {siteConfig.location.address}. C'est dans ce lieu qu'elle vous
+            Marah est tatoueuse résidente à l'{atelierNoir.name}, le salon du tatoueur
+            {atelierNoir.owner} et de son associée {atelierNoir.partner}, au {siteConfig.location.address}. C'est dans ce lieu qu'elle vous
             accueille, sur rendez-vous, pour chaque séance de tatouage handpoke.
           </p>
           <aside class="atelier-artist" aria-labelledby="atelier-artist-title">
             <span class="eyebrow" id="atelier-artist-title">Le tatoueur de l'atelier</span>
             <p>
-              {atelierNoir.name} y signe ses tatouages {new Intl.ListFormat('fr', { type: 'conjunction' }).format(atelierNoir.styles).toLowerCase()} :
+              {atelierNoir.owner} y signe ses tatouages {new Intl.ListFormat('fr', { type: 'conjunction' }).format(atelierNoir.styles).toLowerCase()} :
               un travail précis et graphique, à découvrir sur ses réseaux.
             </p>
             {(atelierNoir.instagramUrl || atelierNoir.googleUrl) && (
@@ -251,6 +256,7 @@ const { atelierNoir } = siteConfig;
     display: flex;
     align-items: center;
     gap: 0.9rem;
+    font-family: var(--f-body);
     font-size: var(--fs-caps);
     font-weight: 500;
     text-transform: uppercase;
@@ -266,17 +272,25 @@ const { atelierNoir } = siteConfig;
     background: currentColor;
   }
 
+  /* Nom en police d'affiche (à l'essai) : --name-size s'ajuste à la largeur de la police */
   .site-title {
-    font-size: clamp(3.5rem, 6vw, 6rem);
-    line-height: 1;
+    --name-size: clamp(3.25rem, 5.5vw, 5.5rem);
+    font-family: var(--f-name);
+    font-size: var(--name-size);
+    letter-spacing: 0;
+    line-height: 1.05;
     margin-bottom: 1.75rem;
   }
 
-  /* « Chenaïna » sur sa propre ligne, légèrement en retrait : écriture à la main */
+  /* Climate Crisis est très large : taille réduite pour que « Chenaïna » tienne */
+  :global(:root[data-titre='climate']) .site-title {
+    --name-size: clamp(2.6rem, 4.4vw, 4.25rem);
+  }
+
+  /* « Chenaïna » sur sa propre ligne, légèrement en retrait, en terracotta */
   .site-title span {
     display: block;
     padding-left: 0.55em;
-    font-style: italic;
     color: var(--link);
   }
 
@@ -442,8 +456,12 @@ const { atelierNoir } = siteConfig;
     }
 
     .site-title {
-      font-size: clamp(2.6rem, 12vw, 3.4rem);
+      --name-size: clamp(2.5rem, 11vw, 3.25rem);
       margin-bottom: 1.25rem;
+    }
+
+    :global(:root[data-titre='climate']) .site-title {
+      --name-size: clamp(1.9rem, 8.5vw, 2.6rem);
     }
 
     .site-title span {
@@ -499,7 +517,7 @@ const { atelierNoir } = siteConfig;
     }
 
     .site-title {
-      font-size: 2.4rem;
+      --name-size: 2.3rem;
       margin-bottom: 1rem;
     }
 

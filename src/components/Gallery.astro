@@ -22,13 +22,13 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
 });
 ---
 
-<section id="galerie" class="gallery">
+<section id="galerie" class="gallery section-alt">
   <div class="container">
     <header class="gallery-head" data-reveal>
       <span class="eyebrow">Dernières créations</span>
       <h2>Galerie</h2>
       <p class="gallery-intro">
-        Découvrez une sélection de tatouages handpoke réalisés à Rennes. Chaque pièce est unique, faite avec soin et ne peut être reproduite qu’une seule fois.
+        Découvrez une sélection de tatouages handpoke réalisés à Rennes. Chaque pièce est unique, faite avec soin et ne peut être reproduite à l’identique.
       </p>
     </header>
   </div>
@@ -167,7 +167,7 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-alt);
+    background: var(--bg);
     color: var(--ink);
     font-size: var(--fs-caps);
     font-weight: 500;

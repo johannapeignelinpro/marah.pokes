@@ -1,0 +1,81 @@
+<!-- Section Spécialités -->
+<section id="specialites" class="specialties">
+  <div class="container">
+    <header class="section-head" data-reveal>
+      <h2>Spécialités</h2>
+      <div class="ornament" aria-hidden="true"><span></span></div>
+    </header>
+    <ul class="specialties-list">
+      <li class="specialty-item" data-reveal style="--reveal-i: 0">
+        <h3>Ornemental intuitif</h3>
+        <p>Tatouages de symboles abstraits et d’écritures imaginaires, pensés comme de petits talismans.</p>
+      </li>
+      <li class="specialty-item" data-reveal style="--reveal-i: 1">
+        <h3>Organique</h3>
+        <p>Tatouages inspirés de formes végétales et de mouvements naturels.</p>
+      </li>
+      <li class="specialty-item" data-reveal style="--reveal-i: 2">
+        <h3>Lignes et ombrages</h3>
+        <p>Tatouages d’élégantes lignes fines et de subtils ombrages.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .specialties-list {
+    counter-reset: specialty;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .specialty-item {
+    display: block;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line-strong);
+    position: relative;
+  }
+
+  /* Petit trait rouille en tête de colonne */
+  .specialty-item::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--link);
+  }
+
+  .specialty-item h3 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Grand numéro graphique au-dessus de chaque spécialité */
+  .specialty-item h3::before {
+    counter-increment: specialty;
+    content: counter(specialty, decimal-leading-zero);
+    display: block;
+    font-style: italic;
+    font-size: clamp(3rem, 5vw, 4.25rem);
+    line-height: 1;
+    color: var(--link);
+    opacity: 0.85;
+    margin-bottom: 0.75rem;
+  }
+
+  .specialty-item p {
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  @media screen and (max-width: 768px) {
+    .specialties-list {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-md);
+    }
+  }
+</style>

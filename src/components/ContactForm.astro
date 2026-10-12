@@ -38,6 +38,8 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
     >
       <!-- Identifiant du formulaire pour Netlify Forms (requis pour l'envoi en AJAX) -->
       <input type="hidden" name="form-name" value="demande-tatouage" />
+      <!-- Sujet du mail de notification Netlify, précisé à l'envoi (type de demande et nom) -->
+      <input type="hidden" name="subject" value="Nouvelle demande de tatouage" />
 
       <!-- Informations personnelles -->
       <!-- Honeypot anti-bot (champ invisible) -->
@@ -57,7 +59,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
           <input
             type="text"
             id="name"
-            name="name"
+            name="Nom et prénom"
             required
             maxlength="100"
             placeholder="Votre nom complet"
@@ -85,7 +87,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
           <input
             type="tel"
             id="phone"
-            name="phone"
+            name="Téléphone"
             maxlength="20"
             placeholder="06 12 34 56 78"
           />
@@ -97,7 +99,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
           <input
             type="text"
             id="instagram"
-            name="instagram"
+            name="Instagram"
             maxlength="50"
             placeholder="@votre_pseudo"
           />
@@ -112,8 +114,8 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
           <label class="radio-option">
             <input
               type="radio"
-              name="project-type"
-              value="flash"
+              name="Type de demande"
+              value="Flash"
               id="type-flash"
               required
             />
@@ -122,8 +124,8 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
           <label class="radio-option">
             <input
               type="radio"
-              name="project-type"
-              value="freehand"
+              name="Type de demande"
+              value="Projet perso"
               id="type-freehand"
               required
             />
@@ -144,7 +146,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
             <input
               type="file"
               id="flash-photo"
-              name="flash-photo"
+              name="Photo du flash"
               accept="image/*"
               class="file-input"
             />
@@ -161,36 +163,23 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
           <span class="error-message" id="error-flash-photo"></span>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="flash-body-part">Partie du corps *</label>
-            <input
-              type="text"
-              id="flash-body-part"
-              name="flash-body-part"
-              maxlength="100"
-              placeholder="Ex : poignet, cheville, épaule..."
-            />
-            <span class="error-message" id="error-flash-body-part"></span>
-          </div>
-          <div class="form-group">
-            <label for="flash-size">Taille (cm) *</label>
-            <input
-              type="text"
-              id="flash-size"
-              name="flash-size"
-              maxlength="50"
-              placeholder="Ex : 5 × 5 cm"
-            />
-            <span class="error-message" id="error-flash-size"></span>
-          </div>
+        <div class="form-group">
+          <label for="flash-body-part">Partie du corps *</label>
+          <input
+            type="text"
+            id="flash-body-part"
+            name="Partie du corps"
+            maxlength="100"
+            placeholder="Ex : poignet, cheville, épaule..."
+          />
+          <span class="error-message" id="error-flash-body-part"></span>
         </div>
 
         <div class="form-group">
           <label for="flash-notes">Demandes complémentaires <span class="optional">(optionnel)</span></label>
           <textarea
             id="flash-notes"
-            name="flash-notes"
+            name="Demandes complémentaires"
             maxlength="1000"
             placeholder="Modifications mineures souhaitées, ajouts, précisions..."
             rows="3"
@@ -201,8 +190,8 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
           <label for="flash-availability">Disponibilités *</label>
           <textarea
             id="flash-availability"
-            name="flash-availability"
-            placeholder="Indiquez vos disponibilités (jours, créneaux horaires...)"
+            name="Disponibilités"
+            placeholder="Vos mois de disponibilité dans les mois à venir, les jours à privilégier et vos horaires..."
             rows="3"
           ></textarea>
           <span class="error-message" id="error-flash-availability"></span>
@@ -215,29 +204,16 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
       <div id="section-projet-perso" class="form-section" style="display: none;">
         <h3 class="form-section-title">Votre projet</h3>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="perso-body-part">Partie du corps *</label>
-            <input
-              type="text"
-              id="perso-body-part"
-              name="perso-body-part"
-              maxlength="100"
-              placeholder="Ex : poignet, cheville, épaule..."
-            />
-            <span class="error-message" id="error-perso-body-part"></span>
-          </div>
-          <div class="form-group">
-            <label for="perso-size">Taille (cm) *</label>
-            <input
-              type="text"
-              id="perso-size"
-              name="perso-size"
-              maxlength="50"
-              placeholder="Ex : 5 × 5 cm"
-            />
-            <span class="error-message" id="error-perso-size"></span>
-          </div>
+        <div class="form-group">
+          <label for="perso-body-part">Partie du corps *</label>
+          <input
+            type="text"
+            id="perso-body-part"
+            name="Partie du corps"
+            maxlength="100"
+            placeholder="Ex : poignet, cheville, épaule..."
+          />
+          <span class="error-message" id="error-perso-body-part"></span>
         </div>
 
         <!-- Upload de photos inspiration -->
@@ -247,7 +223,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
             <input
               type="file"
               id="photos"
-              name="photos"
+              name="Photo d’inspiration 1"
               multiple
               accept="image/*"
               class="file-input"
@@ -263,10 +239,10 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
             <div id="file-list" class="file-list"></div>
             <!-- Champs techniques : un fichier par champ côté Netlify Forms. Les photos
                  suivantes (glisser-déposer compris) sont envoyées via ces champs. -->
-            <input type="file" name="photos-2" accept="image/*" hidden tabindex="-1" aria-hidden="true" />
-            <input type="file" name="photos-3" accept="image/*" hidden tabindex="-1" aria-hidden="true" />
-            <input type="file" name="photos-4" accept="image/*" hidden tabindex="-1" aria-hidden="true" />
-            <input type="file" name="photos-5" accept="image/*" hidden tabindex="-1" aria-hidden="true" />
+            <input type="file" name="Photo d’inspiration 2" accept="image/*" hidden tabindex="-1" aria-hidden="true" />
+            <input type="file" name="Photo d’inspiration 3" accept="image/*" hidden tabindex="-1" aria-hidden="true" />
+            <input type="file" name="Photo d’inspiration 4" accept="image/*" hidden tabindex="-1" aria-hidden="true" />
+            <input type="file" name="Photo d’inspiration 5" accept="image/*" hidden tabindex="-1" aria-hidden="true" />
           </div>
           <span class="error-message" id="error-photos"></span>
         </div>
@@ -276,7 +252,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
           <label for="project">Décrivez votre projet de tatouage *</label>
           <textarea
             id="project"
-            name="project"
+            name="Description du projet"
             maxlength="2000"
             placeholder=" Les petits détails font les grandes histoires, n’hésitez pas à être exhaustif.ve si vous le souhaitez. Donnez des infos sur l’emplacement, taille approximative souhaitée..."
           ></textarea>
@@ -287,12 +263,12 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
         <!-- Budget -->
         <div class="form-group">
           <label for="budget">Budget envisagé</label>
-          <select id="budget" name="budget">
+          <select id="budget" name="Budget">
             <option value="">Sélectionnez une fourchette</option>
-            <option value="100-200">100€ - 200€</option>
-            <option value="200-300">200€ - 300€</option>
-            <option value="300-400">300€ - 400€</option>
-            <option value="libre">Ton prix sera le mien</option>
+            <option value="100 € à 200 €">100€ - 200€</option>
+            <option value="200 € à 300 €">200€ - 300€</option>
+            <option value="300 € à 400 €">300€ - 400€</option>
+            <option value="Ton prix sera le mien">Ton prix sera le mien</option>
           </select>
         </div>
 
@@ -301,8 +277,8 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
           <label for="availability">Disponibilités</label>
           <textarea
             id="availability"
-            name="availability"
-            placeholder="Indiquez vos disponibilités (jours, créneaux horaires...)"
+            name="Disponibilités"
+            placeholder="Vos mois de disponibilité dans les mois à venir, les jours à privilégier et vos horaires..."
             rows="3"
           ></textarea>
         </div>
@@ -1075,10 +1051,8 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
         projectType: isFlash ? 'flash' : 'freehand',
         flashPhoto: Boolean(flashFile),
         flashBodyPart: value('flash-body-part'),
-        flashSize: value('flash-size'),
         flashAvailability: value('flash-availability'),
         persoBodyPart: value('perso-body-part'),
-        persoSize: value('perso-size'),
         project: projectTextarea?.value || '',
         budget: (document.getElementById('budget') as HTMLSelectElement)?.value,
         availability: (document.getElementById('availability') as HTMLTextAreaElement)?.value,
@@ -1113,18 +1087,36 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
       }
 
       // 5. Préparer l'envoi vers Netlify Forms
-      // FormData(form) reprend tous les champs nommés (dont form-name et bot-field) ;
-      // les photos d'inspiration sont remplacées par la sélection gérée en JS
-      // (glisser-déposer compris), à raison d'un fichier par champ.
-      // Seules les photos du type choisi sont envoyées (l'autre partie est masquée)
+      // Les noms des champs servent d'intitulés dans le mail de notification Netlify.
+      // FormData(form) reprend tous les champs nommés ; les champs de la partie masquée
+      // (l'autre type de demande) sont désactivés le temps de la lecture pour en être
+      // exclus, puis les champs restés vides sont retirés : le mail ne contient que
+      // ce que la personne a rempli.
+      const hiddenSection = isFlash ? sectionProjetPerso : sectionFlash;
+      const hiddenControls = [
+        ...(hiddenSection?.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('input, textarea, select') ?? []),
+      ];
+      hiddenControls.forEach((control) => (control.disabled = true));
       const payload = new FormData(form);
-      ['flash-photo', 'photos', 'photos-2', 'photos-3', 'photos-4', 'photos-5'].forEach(key => payload.delete(key));
+      hiddenControls.forEach((control) => (control.disabled = false));
+
+      for (const [key, entry] of [...payload.entries()]) {
+        if (key !== 'form-name' && typeof entry === 'string' && entry.trim() === '') payload.delete(key);
+      }
+      payload.set(
+        'subject',
+        `${isFlash ? 'Nouvelle demande Flash' : 'Nouveau projet perso'} : ${formData.name.trim()}`
+      );
+
+      // Les photos sont remplacées par la sélection gérée en JS (glisser-déposer
+      // compris), à raison d'un fichier par champ
+      ['Photo du flash', ...[1, 2, 3, 4, 5].map((n) => `Photo d’inspiration ${n}`)].forEach((key) => payload.delete(key));
       const filesToSend = isFlash ? (flashFile ? [flashFile] : []) : selectedFiles;
       if (isFlash && flashFile) {
-        payload.append('flash-photo', flashFile);
+        payload.append('Photo du flash', flashFile);
       } else if (!isFlash) {
         selectedFiles.forEach((file, index) => {
-          payload.append(index === 0 ? 'photos' : `photos-${index + 1}`, file);
+          payload.append(`Photo d’inspiration ${index + 1}`, file);
         });
       }
 

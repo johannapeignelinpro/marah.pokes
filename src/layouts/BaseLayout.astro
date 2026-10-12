@@ -64,21 +64,10 @@ const keywords = siteConfig.keywords.join(', ');
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Lora:ital,wght@0,400..600;1,400..600&family=Figtree:wght@400..600&family=Shrikhand&family=Climate+Crisis&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Lora:ital,wght@0,400..600;1,400..600&family=Figtree:wght@400..600&family=Climate+Crisis&display=swap"
     />
 
     <slot name="head" />
-
-    <!-- Essai des polices du nom (temporaire) : ?titre=climate affiche Climate Crisis
-         à la place de Shrikhand (?titre=shrikhand pour revenir), choix gardé pendant la visite -->
-    <script is:inline>
-      try {
-        const titre = new URLSearchParams(location.search).get('titre');
-        if (titre) sessionStorage.setItem('titre', titre);
-        const choix = sessionStorage.getItem('titre');
-        if (choix) document.documentElement.dataset.titre = choix;
-      } catch {}
-    </script>
 
     <!-- Apparitions au scroll : activées seulement si JS tourne et que le mouvement n'est pas réduit.
          Posé dans le <head> pour éviter tout clignotement du contenu. -->

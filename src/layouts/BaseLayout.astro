@@ -1,12 +1,13 @@
 ---
 // Squelette commun des pages publiques : <head> (SEO, partage, polices),
-// header fixe, footer et apparitions au scroll.
+// header fixe, footer, bouton « Revenir en haut » et apparitions au scroll.
 // Le slot « head » accueille les balises propres à une page (préchargements, JSON-LD…).
 import '../styles/global.css';
 import { SITE_NOINDEX } from 'astro:env/server';
 import { siteConfig } from '../config/seo';
 import SiteHeader from '../components/SiteHeader.astro';
 import Footer from '../components/Footer.astro';
+import BackToTop from '../components/BackToTop.astro';
 
 interface Props {
   title: string;
@@ -97,6 +98,7 @@ const keywords = siteConfig.keywords.join(', ');
       <slot />
     </main>
     <Footer />
+    <BackToTop />
 
     <script>
       // Le défilement doux vers les ancres est géré en CSS (scroll-behavior),

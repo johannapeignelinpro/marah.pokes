@@ -1,0 +1,90 @@
+---
+// Bouton « Revenir en haut », commun à toutes les pages.
+// Il apparaît une fois la page défilée d'environ un écran. Le défilement doux vient
+// du CSS (scroll-behavior), qui respecte prefers-reduced-motion.
+---
+
+<button type="button" class="back-to-top" id="backToTop" aria-label="Revenir en haut de la page" hidden>
+  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+    <path d="M12 19V5M5.5 11.5L12 5l6.5 6.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+</button>
+
+<script>
+  const backToTop = document.getElementById('backToTop');
+  if (backToTop) {
+    // Sans JS, le bouton reste masqué (hidden) : il ne servirait à rien
+    backToTop.hidden = false;
+
+    const update = () => backToTop.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.8);
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+
+    backToTop.addEventListener('click', (event) => {
+      window.scrollTo({ top: 0 });
+      // Le bouton disparaît en haut de page. Au clavier (detail = 0 : Entrée ou Espace),
+      // le focus repart du début de la page (nom du site) ; à la souris ou au doigt,
+      // on le relâche simplement, sans faire apparaître de cadre de focus.
+      if (event.detail === 0) {
+        document.querySelector<HTMLElement>('.brand')?.focus({ preventScroll: true });
+      } else {
+        backToTop.blur();
+      }
+    });
+  }
+</script>
+
+<style>
+  .back-to-top {
+    position: fixed;
+    right: max(1.25rem, env(safe-area-inset-right));
+    bottom: max(1.25rem, env(safe-area-inset-bottom));
+    z-index: 90;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: var(--header-bg-scrolled);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: var(--shadow-soft);
+    color: var(--ink);
+    cursor: pointer;
+    /* Masqué tant que la page n'a pas défilé : ni visible, ni atteignable au clavier */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.5rem);
+    transition: opacity var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out),
+      visibility 0s linear var(--dur-fast), background-color var(--dur-fast) ease, color var(--dur-fast) ease,
+      border-color var(--dur-fast) ease;
+  }
+
+  .back-to-top[hidden] {
+    display: none;
+  }
+
+  .back-to-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition-delay: 0s;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .back-to-top:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--on-accent);
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .back-to-top {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+  }
+</style>

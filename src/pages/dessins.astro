@@ -36,31 +36,78 @@ const drawings = (await getIllustrations()).map((drawing) => {
   };
 });
 
-const title = `Dessins | ${siteConfig.name}`;
-const description = `Dessins et illustrations originales de ${siteConfig.name}, artiste tatoueuse et illustratrice à ${siteConfig.location.city}.`;
+const title = `Dessins & illustrations | ${siteConfig.name}`;
+const description = `Découvrez les dessins et illustrations de ${siteConfig.name}, tatoueuse et illustratrice à ${siteConfig.location.city}. Un univers de lignes fines, de formes organiques et de motifs ornementaux.`;
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+/** Ligne discrète sous le titre : technique et année, seulement si renseignées */
+const detailsOf = (drawing: (typeof drawings)[number]) =>
+  [drawing.technique, drawing.year].filter(Boolean).join(', ');
+
+// Données structurées : la page comme galerie (CollectionPage) et chaque dessin
+// comme ImageObject, avec les seules informations saisies dans Sanity
+const creator = {
+  '@type': 'Person',
+  name: siteConfig.name,
+  url: siteConfig.url,
+  sameAs: Object.values(siteConfig.social).filter(Boolean),
+};
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Dessins & illustrations',
+  description,
+  url: pageUrl,
+  inLanguage: 'fr-FR',
+  isPartOf: { '@type': 'WebSite', name: siteConfig.name, url: siteConfig.url },
+  author: creator,
+  hasPart: drawings.map((drawing) => ({
+    '@type': 'ImageObject',
+    name: drawing.title || undefined,
+    description: drawing.description ?? drawing.alt,
+    contentUrl: drawing.full.src,
+    thumbnailUrl: drawing.thumb.src,
+    width: drawing.full.width,
+    height: drawing.full.height,
+    dateCreated: drawing.year ? String(drawing.year) : undefined,
+    creator,
+    creditText: siteConfig.name,
+    copyrightNotice: `© ${siteConfig.name}`,
+  })),
+};
 ---
 
 <BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <!-- « < » échappé : les textes saisis dans Sanity ne peuvent pas fermer la balise -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\u003c')} />
+  </Fragment>
+
   <section class="drawings" aria-labelledby="drawings-title">
     <div class="container">
       <header class="drawings-head" data-reveal>
-        <span class="eyebrow">Illustrations</span>
-        <h1 id="drawings-title">Dessins</h1>
+        <span class="eyebrow">Sur papier</span>
+        <h1 id="drawings-title">Dessins &amp; illustrations</h1>
         <p class="drawings-intro">
-          Dessins et illustrations originales de Marah. Cliquez sur une œuvre pour la voir en entier
-          et en apprécier les détails.
+          Le dessin est au cœur de ma pratique artistique. À travers les lignes fines, les points et
+          les formes organiques, j'explore un univers mêlant abstraction, ornementation et mouvement.
+          Cette galerie rassemble une sélection de mes dessins et illustrations, réalisés au fil de
+          mes inspirations.
         </p>
       </header>
 
       {drawings.length > 0 ? (
         <div class="drawings-grid" style={`--row-height-desktop: ${ROW_HEIGHT.desktop}px; --row-height-tablet: ${ROW_HEIGHT.tablet}px`}>
           {drawings.map((drawing, i) => (
-            <a
-              href={drawing.full.src}
-              class="drawing"
+            <figure
+              class="drawing-item"
               data-orientation={drawing.orientation}
               data-reveal="fade"
               style={`--ratio: ${drawing.ratio.toFixed(4)}; --reveal-i: ${i % 4}`}
+            >
+            <a
+              href={drawing.full.src}
+              class="drawing"
               data-lightbox="drawings-lightbox"
               data-srcset={drawing.full.srcset}
               data-sizes={drawing.fullSizes}
@@ -80,11 +127,28 @@ const description = `Dessins et illustrations originales de ${siteConfig.name}, 
                 decoding="async"
               />
             </a>
+            {/* Titre et informations dans le HTML, sans attendre l'ouverture en grand */}
+            {drawing.title && (
+              <figcaption class="drawing-caption">
+                <span class="drawing-title">{drawing.title}</span>
+                {detailsOf(drawing) && <span class="drawing-details">{detailsOf(drawing)}</span>}
+                {drawing.description && <span class="drawing-description">{drawing.description}</span>}
+              </figcaption>
+            )}
+            </figure>
           ))}
         </div>
       ) : (
         <p class="drawings-empty">Les dessins arrivent très bientôt.</p>
       )}
+
+      <div class="drawings-outro">
+        <p>
+          Mon travail sur papier nourrit aussi ma pratique du tatouage, où je retrouve ce même intérêt
+          pour les lignes, les motifs et les compositions organiques.
+        </p>
+        <a href="/#galerie" class="link-underline">Voir la galerie de tatouages →</a>
+      </div>
 
       <p class="drawings-note">
         Pour un projet de tatouage inspiré d'un dessin, rendez-vous dans la section{' '}
@@ -122,7 +186,7 @@ const description = `Dessins et illustrations originales de ${siteConfig.name}, 
     --row-height: var(--row-height-desktop);
     display: flex;
     flex-wrap: wrap;
-    gap: 1.25rem;
+    gap: 2rem 1.25rem;
     --reveal-step: 60ms;
   }
 
@@ -132,8 +196,14 @@ const description = `Dessins et illustrations originales de ${siteConfig.name}, 
     flex-grow: 1000000;
   }
 
-  .drawing {
+  /* La figure occupe la place dans la ligne ; la légende s'ajoute sous l'image
+     sans changer sa hauteur : les dessins d'une ligne restent alignés */
+  .drawing-item {
     flex: var(--ratio) 1 calc(var(--ratio) * var(--row-height));
+    min-width: 0;
+  }
+
+  .drawing {
     aspect-ratio: var(--ratio);
     display: block;
     overflow: hidden;
@@ -164,13 +234,52 @@ const description = `Dessins et illustrations originales de ${siteConfig.name}, 
     outline-offset: 4px;
   }
 
+  .drawing-caption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    margin-top: 0.75rem;
+    padding: 0 0.15rem;
+    line-height: 1.4;
+  }
+
+  .drawing-title {
+    font-family: var(--f-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--ink);
+  }
+
+  .drawing-details {
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+  }
+
+  .drawing-description {
+    margin-top: 0.2rem;
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
+  }
+
+  /* Lien vers les tatouages : discret, séparé de la galerie par un filet */
+  .drawings-outro {
+    max-width: 720px;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--line);
+  }
+
+  .drawings-outro p {
+    margin-bottom: 1rem;
+  }
+
   .drawings-empty {
     color: var(--ink-muted);
     font-style: italic;
   }
 
   .drawings-note {
-    margin-top: var(--spacing-lg);
+    margin-top: var(--spacing-md);
     color: var(--ink-muted);
   }
 
@@ -186,7 +295,7 @@ const description = `Dessins et illustrations originales de ${siteConfig.name}, 
   @media screen and (max-width: 1024px) {
     .drawings-grid {
       --row-height: var(--row-height-tablet);
-      gap: 1rem;
+      gap: 1.75rem 1rem;
     }
   }
 
@@ -202,7 +311,7 @@ const description = `Dessins et illustrations originales de ${siteConfig.name}, 
 
     .drawings-grid {
       flex-direction: column;
-      gap: 1.25rem;
+      gap: 1.75rem;
       --reveal-step: 40ms;
     }
 
@@ -210,12 +319,12 @@ const description = `Dessins et illustrations originales de ${siteConfig.name}, 
       content: none;
     }
 
-    .drawing {
+    .drawing-item {
       flex: none;
       width: 100%;
     }
 
-    .drawings-note {
+    .drawings-outro {
       margin-top: var(--spacing-md);
     }
   }

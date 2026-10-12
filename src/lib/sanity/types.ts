@@ -54,5 +54,8 @@ export interface Illustration {
   title: string | null;
   image: SanityImage | null;
   alt: string | null;
+  description: string | null;
+  technique: string | null;
+  year: number | null;
   orientation: IllustrationOrientation | null;
 }

@@ -54,6 +54,9 @@ export const illustrationsQuery = /* groq */ `
     title,
     "image": image${imageProjection},
     alt,
+    description,
+    technique,
+    year,
     orientation
   }
 `;

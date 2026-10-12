@@ -27,7 +27,6 @@ export interface FlashBoard {
   title: string | null;
   image: SanityImage | null;
   alt: string | null;
-  order: number | null;
 }
 
 export interface TattooImage {

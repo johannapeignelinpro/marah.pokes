@@ -10,26 +10,27 @@ const imageProjection = /* groq */ `{
   "dimensions": asset->metadata.dimensions
 }`;
 
-// Plaquettes de flashs visibles, triées par ordre croissant.
+// L'ordre d'affichage de chaque liste est choisi par glisser-déposer dans le
+// Studio (plugin @sanity/orderable-document-list), stocké dans `orderRank`.
+
+// Plaquettes de flashs visibles, dans l'ordre choisi dans le Studio.
 // internalNote n'est volontairement pas récupérée (usage interne uniquement).
 export const flashBoardsQuery = /* groq */ `
   *[_type == "flashBoard" && visible == true && !(_id in path("drafts.**"))]
-  | order(order asc) {
+  | order(orderRank asc, _createdAt asc) {
     _id,
     title,
     "image": image${imageProjection},
-    alt,
-    order
+    alt
   }
 `;
 
-// Réalisations tattoo, de la plus récente à la plus ancienne.
-// Les documents sans date passent en fin de liste (puis par date de création).
+// Réalisations tattoo, dans l'ordre choisi dans le Studio.
 // Dans le schéma, chaque élément de `images` est une image portant son propre
 // champ `alt` : on le remappe en { image, alt }.
 export const tattoosQuery = /* groq */ `
   *[_type == "tattoo" && !(_id in path("drafts.**"))]
-  | order(coalesce(date, "0000-01-01") desc, _createdAt desc) {
+  | order(orderRank asc, _createdAt desc) {
     _id,
     title,
     description,
@@ -44,12 +45,12 @@ export const tattoosQuery = /* groq */ `
   }
 `;
 
-// Dessins visibles, par ordre croissant ; sans ordre, en fin de liste par date d'ajout.
+// Dessins visibles, dans l'ordre choisi dans le Studio.
 // Les dimensions de l'asset (incluses dans imageProjection) servent à déduire
 // l'orientation et à réserver la place de chaque dessin sans recadrage.
 export const illustrationsQuery = /* groq */ `
   *[_type == "illustration" && visible == true && !(_id in path("drafts.**"))]
-  | order(coalesce(order, 999999) asc, _createdAt asc) {
+  | order(orderRank asc, _createdAt asc) {
     _id,
     title,
     "image": image${imageProjection},

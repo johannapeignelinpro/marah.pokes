@@ -167,20 +167,32 @@ J’aime que la séance soit un moment où l’on peut prendre notre temps, pour
     display: grid;
     grid-template-columns: minmax(0, 480px) 1fr;
     gap: var(--spacing-lg);
-    align-items: start;
+    /* Le portrait prend exactement la hauteur du texte : haut et bas alignés */
+    align-items: stretch;
     max-width: 1040px;
   }
 
+  /* La légende se place sous la photo, hors du calcul de hauteur */
+  .artist-media {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .artist-media .frame-inner {
+    flex: 1;
+  }
+
   .artist-media img {
-    aspect-ratio: 2 / 3;
+    height: 100%;
     object-fit: cover;
   }
 
-  /* Le portrait, plus haut que le texte, défile pendant que le texte reste en place */
-  .artist-text {
-    position: sticky;
-    top: calc(var(--header-height) + var(--spacing-lg));
-    padding-top: var(--spacing-md);
+  .artist-media figcaption {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
   }
 
   .artist-text h2 {
@@ -214,12 +226,8 @@ J’aime que la séance soit un moment où l’on peut prendre notre temps, pour
       gap: var(--spacing-md);
     }
 
-    .artist-text {
-      position: static;
-      padding-top: 0;
-    }
-
     .artist-media img {
+      height: auto;
       aspect-ratio: 3 / 4;
     }
 
@@ -227,6 +235,10 @@ J’aime que la séance soit un moment où l’on peut prendre notre temps, pour
       max-width: 340px;
       width: 100%;
       margin: 0 auto;
+    }
+
+    .artist-media figcaption {
+      position: static;
     }
   }
 </style>

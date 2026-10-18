@@ -18,7 +18,7 @@ const HERO_LEAD = 'Tatouages ornementaux déposés à la main dans un geste trad
 
 export const siteConfig = {
   name: 'Marah Chenaïna',
-  // Ancien nom de marque, conservé comme alias (Instagram @marah.pokes, fiche Google)
+  // Ancien nom de marque, conservé comme alias (ancien Instagram @marah.pokes, fiche Google)
   alternateName: 'Marah.Pokes',
   title: 'Marah Chenaïna — Tatouage Handpoke à Rennes',
   description: 'Marah Chenaïna, tatoueuse handpoke et illustratrice à Rennes. Tatouages fins, organiques et ornementaux réalisés à la main, dessins originaux au stylo. Sur rendez-vous.',
@@ -29,7 +29,7 @@ export const siteConfig = {
   slogan: 'Tatouages handpoke réalisés entièrement à la main, sans machine, point par point. Flashs, projets personnalisés et dessins originaux au stylo, sur rendez-vous à l\'Atelier Noir, en Bretagne (Ille-et-Vilaine).',
 
   // Contact
-  instagram: '@marah.pokes',
+  instagram: '@marahchenaina.pokes',
   email: 'marahchenaina@gmail.com',
 
   // Mentions légales (LCEN art. 6) : Marah exerce en micro-entreprise.
@@ -104,7 +104,7 @@ export const siteConfig = {
 
   // Social Media (à compléter)
   social: {
-    instagram: 'https://instagram.com/marah.pokes',
+    instagram: 'https://instagram.com/marahchenaina.pokes',
     // Compte dédié aux dessins (originaux, prints)
     instagramDessins: 'https://instagram.com/marahchenaina.art',
     // facebook: '', // TODO: Ajouter si existe

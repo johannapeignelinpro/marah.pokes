@@ -290,6 +290,18 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${enco
     color: var(--link);
   }
 
+  /* Desktop : droits réservés, liens légaux et crédit centrés */
+  @media screen and (min-width: 901px) {
+    .footer-bottom {
+      align-items: center;
+      text-align: center;
+    }
+
+    .footer-legal {
+      justify-content: center;
+    }
+  }
+
   @media screen and (max-width: 900px) {
     .footer-map {
       grid-template-columns: 1fr;

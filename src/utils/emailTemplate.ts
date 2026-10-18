@@ -121,7 +121,7 @@ Merci pour votre demande de tatouage !
 J'ai bien reçu votre message et je vais l'étudier avec attention.
 Je vous répondrai dès que possible, généralement sous 48-72h.
 
-En attendant, n'hésitez pas à consulter mes dernières créations sur Instagram : @marah.pokes
+En attendant, n'hésitez pas à consulter mes dernières créations sur Instagram : @marahchenaina.pokes
 
 
 ${separator}

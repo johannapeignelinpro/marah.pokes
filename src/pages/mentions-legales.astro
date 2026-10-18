@@ -6,8 +6,8 @@ import { siteConfig } from '../config/seo';
 
 const { legal, location, email } = siteConfig;
 
-if (!legal.siret) {
-  console.warn('[mentions légales] SIRET non renseigné dans src/config/seo.ts (siteConfig.legal.siret).');
+if (!legal.siren) {
+  console.warn('[mentions légales] SIREN non renseigné dans src/config/seo.ts (siteConfig.legal.siren).');
 }
 ---
 
@@ -21,7 +21,7 @@ if (!legal.siret) {
   <p>
     {legal.owner}<br />
     {legal.status}<br />
-    {legal.siret && <>SIRET : {legal.siret}<br /></>}
+    {legal.siren && <>SIREN : {legal.siren}<br /></>}
     {location.address}<br />
     Email : <a href={`mailto:${email}`}>{email}</a>
   </p>

@@ -33,11 +33,11 @@ export const siteConfig = {
   email: 'marahchenaina@gmail.com',
 
   // Mentions légales (LCEN art. 6) : Marah exerce en micro-entreprise.
-  // Tant que le SIRET est vide, la ligne n'est pas affichée et le build le signale.
+  // Tant que le SIREN est vide, la ligne n'est pas affichée et le build le signale.
   legal: {
     owner: 'Marah Chenaïna',
     status: 'Entrepreneuse individuelle (micro-entreprise)',
-    siret: '',
+    siren: '902 343 037',
     host: {
       name: 'Netlify, Inc.',
       address: '101 2nd Street, Suite 575, San Francisco, CA 94105, États-Unis',

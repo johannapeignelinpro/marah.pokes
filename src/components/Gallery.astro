@@ -23,6 +23,10 @@ const galleryImages = (await getTattoos()).map((tattoo) => {
 // reste pleine quel que soit le nombre de tattoos. Ligne déjà complète : elle prend
 // toute une ligne, en bandeau.
 const GRID_COLUMNS = { desktop: 5, mobile: 1 };
+
+// Mobile (une colonne) : seuls les premiers tattoos s'affichent, le bouton
+// « Voir tous les tatouages » déplie le reste. Desktop : tout est visible.
+const MOBILE_PREVIEW = 6;
 const moreSpan = (columns: number) => (columns - (galleryImages.length % columns)) % columns || columns;
 ---
 
@@ -38,12 +42,12 @@ const moreSpan = (columns: number) => (columns - (galleryImages.length % columns
   </div>
 
   {galleryImages.length > 0 && (
-    <div class="gallery-grid">
+    <div class="gallery-grid" id="gallery-grid">
       {
         galleryImages.map((image, i) => (
           <a
             href={image.full.src}
-            class="gallery-item"
+            class:list={['gallery-item', { 'gallery-item--extra': i >= MOBILE_PREVIEW }]}
             data-reveal="fade"
             style={`--reveal-i: ${i % 5}`}
             data-lightbox="gallery-lightbox"
@@ -77,6 +81,16 @@ const moreSpan = (columns: number) => (columns - (galleryImages.length % columns
       >
         <span>Voir plus →</span>
       </a>
+    </div>
+  )}
+
+  {/* Mobile : bouton qui déplie le reste de la galerie. Caché tant que le script
+      ne l'a pas activé : sans JavaScript, toute la galerie reste visible. */}
+  {galleryImages.length > MOBILE_PREVIEW && (
+    <div class="container gallery-expand" id="gallery-expand" hidden>
+      <button type="button" class="btn btn-ghost" aria-controls="gallery-grid" aria-expanded="false">
+        Voir tous les tatouages ({galleryImages.length})
+      </button>
     </div>
   )}
 
@@ -222,5 +236,46 @@ const moreSpan = (columns: number) => (columns - (galleryImages.length % columns
     .gallery-more {
       grid-column: span var(--more-span-mobile);
     }
+
+    /* Galerie repliée (classe posée par le script) : les premiers tattoos, puis le
+       bouton. La case Instagram revient avec le reste une fois la galerie dépliée. */
+    .gallery-grid.is-collapsed .gallery-item--extra,
+    .gallery-grid.is-collapsed .gallery-more {
+      display: none;
+    }
+
+    .gallery-expand:not([hidden]) {
+      display: flex;
+      justify-content: center;
+      margin-top: var(--spacing-md);
+    }
+  }
+
+  /* Le bouton ne sert qu'en une colonne : jamais affiché sur tablette et desktop */
+  @media screen and (min-width: 769px) {
+    .gallery-expand {
+      display: none;
+    }
   }
 </style>
+
+<script>
+  // Mobile : replie la galerie après les premiers tattoos et active le bouton
+  // « Voir tous les tatouages ». Sur desktop, la règle CSS ne s'applique pas.
+  const grid = document.getElementById('gallery-grid');
+  const expand = document.getElementById('gallery-expand');
+  const button = expand?.querySelector('button');
+
+  if (grid && expand && button) {
+    grid.classList.add('is-collapsed');
+    expand.hidden = false;
+
+    button.addEventListener('click', () => {
+      grid.classList.remove('is-collapsed');
+      button.setAttribute('aria-expanded', 'true');
+      expand.hidden = true;
+      // Le focus passe au premier tattoo dévoilé : la navigation clavier continue là
+      grid.querySelector<HTMLElement>('.gallery-item--extra')?.focus();
+    });
+  }
+</script>

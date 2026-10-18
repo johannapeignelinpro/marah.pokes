@@ -5,10 +5,18 @@
    nom en Shrikhand, titres Playfair Display, textes Lora, interface Figtree, formes arrondies.
    ============================================ */
 
-/* Polices chargées via <link> dans BaseLayout.astro :
+/* Polices hébergées sur le site (paquets Fontsource) : aucune requête vers Google,
+   donc aucune adresse IP de visiteur transmise (RGPD). Chaque alphabet est un fichier
+   à part (unicode-range) : le navigateur ne télécharge que le latin utile.
    Shrikhand (nom « Marah Chenaïna » du hero),
    Playfair Display (titres, nom de marque), Lora (paragraphes),
    Figtree (boutons, navigation, surtitres, formulaires) */
+@import '@fontsource/shrikhand/latin-400.css';
+@import '@fontsource-variable/playfair-display/wght.css';
+@import '@fontsource-variable/playfair-display/wght-italic.css';
+@import '@fontsource-variable/lora/wght.css';
+@import '@fontsource-variable/lora/wght-italic.css';
+@import '@fontsource-variable/figtree/wght.css';
 
 
 /* ============================================
@@ -88,10 +96,10 @@ html {
   --radius-img: 20px;   /* images, cartes */
 
   /* Polices */
-  --f-display: 'Playfair Display', Georgia, serif; /* titres, nom de marque */
-  --f-name: 'Shrikhand', Georgia, serif;           /* nom « Marah Chenaïna » du hero */
-  --f-text: 'Lora', Georgia, serif;                /* paragraphes */
-  --f-body: 'Figtree', system-ui, sans-serif;      /* boutons, nav, surtitres, formulaires */
+  --f-display: 'Playfair Display Variable', Georgia, serif; /* titres, nom de marque */
+  --f-name: 'Shrikhand', Georgia, serif;                    /* nom « Marah Chenaïna » du hero */
+  --f-text: 'Lora Variable', Georgia, serif;                /* paragraphes */
+  --f-body: 'Figtree Variable', system-ui, sans-serif;      /* boutons, nav, surtitres, formulaires */
   --fw-display: 400;                               /* graisse des titres */
 
   /* Tailles de texte */
@@ -362,6 +370,30 @@ a:hover {
    CONTENEURS & SECTIONS
    ============================================ */
 
+/* Lien « Aller au contenu » : hors écran, il apparaît en haut à gauche au premier Tab */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 1000;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--f-body);
+  font-size: var(--fs-small);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* Cible du lien d'évitement : focusable par script, sans contour */
+main:focus {
+  outline: none;
+}
+
 .container {
   max-width: var(--container-width);
   margin: 0 auto;
@@ -517,8 +549,19 @@ section {
   margin-bottom: var(--spacing-md);
 }
 
-label {
+/* Groupe de choix (boutons radio) : le fieldset ne dessine rien,
+   sa légende a l'apparence d'un label */
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+label,
+legend {
   display: block;
+  padding: 0;
   font-family: var(--f-body);
   font-size: var(--fs-small);
   font-weight: 500;

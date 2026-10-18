@@ -1,0 +1,57 @@
+---
+// Page introuvable : servie automatiquement par Netlify pour toute adresse inconnue.
+// Jamais indexée (et exclue d'office du sitemap par Astro).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config/seo';
+---
+
+<BaseLayout
+  title={`Page introuvable | ${siteConfig.name}`}
+  description="Cette page n'existe pas ou a été déplacée."
+  noindex
+>
+  <section class="not-found container-narrow">
+    <span class="eyebrow">Erreur 404</span>
+    <h1>Page <span>introuvable</span></h1>
+    <p>
+      Cette page n'existe pas ou a été déplacée. Les tatouages, les flashs et les dessins vous
+      attendent juste à côté.
+    </p>
+    <div class="not-found-actions">
+      <a href="/" class="btn btn-primary">Retour à l'accueil</a>
+      <a href="/dessins/" class="link-underline">Voir les dessins →</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: 70vh;
+    min-height: 70dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-top: calc(var(--header-height) + var(--spacing-lg));
+    padding-bottom: var(--spacing-lg);
+  }
+
+  h1 span {
+    font-style: italic;
+    color: var(--link);
+  }
+
+  .not-found p {
+    max-width: 32rem;
+    margin-bottom: 2.25rem;
+  }
+
+  .not-found-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem 2rem;
+  }
+</style>

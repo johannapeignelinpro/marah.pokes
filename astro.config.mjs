@@ -18,9 +18,8 @@ if (!PUBLIC_SANITY_PROJECT_ID) {
 }
 
 // URL de production : source unique, relue ailleurs via Astro.site / import.meta.env.SITE.
-// new URL() convertit le domaine accentué en punycode (https://xn--marah-chenana-zjb.fr),
-// la forme attendue par les robots dans le sitemap, le canonical et les balises OG.
-const SITE_URL = new URL('https://marah-chenaïna.fr').origin;
+// Domaine sans tréma : le même partout (sitemap, canonical, balises OG, JSON-LD).
+const SITE_URL = new URL('https://marahchenaina.fr').origin;
 
 // Outils internes (prévisualisation de l'email du formulaire) : routes servies
 // uniquement par `astro dev`, jamais générées au build ni présentes dans le sitemap.

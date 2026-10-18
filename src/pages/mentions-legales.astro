@@ -1,0 +1,54 @@
+---
+// Mentions légales obligatoires (LCEN, art. 6) : éditrice, publication, hébergeur.
+// Toutes les informations viennent de siteConfig (src/config/seo.ts).
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { siteConfig } from '../config/seo';
+
+const { legal, location, email } = siteConfig;
+
+if (!legal.siret) {
+  console.warn('[mentions légales] SIRET non renseigné dans src/config/seo.ts (siteConfig.legal.siret).');
+}
+---
+
+<LegalLayout
+  title={`Mentions légales | ${siteConfig.name}`}
+  description={`Mentions légales du site de ${siteConfig.name}, tatoueuse et illustratrice à ${location.city}.`}
+  heading="Mentions légales"
+  updated="18 octobre 2026"
+>
+  <h2>Éditrice du site</h2>
+  <p>
+    {legal.owner}<br />
+    {legal.status}<br />
+    {legal.siret && <>SIRET : {legal.siret}<br /></>}
+    {location.address}<br />
+    Email : <a href={`mailto:${email}`}>{email}</a>
+  </p>
+
+  <h2>Directrice de la publication</h2>
+  <p>{legal.owner}</p>
+
+  <h2>Hébergement</h2>
+  <p>
+    {legal.host.name}<br />
+    {legal.host.address}<br />
+    <a href={legal.host.url} target="_blank" rel="noopener noreferrer">{legal.host.url.replace('https://', '')}</a>
+  </p>
+
+  <h2>Propriété intellectuelle</h2>
+  <p>
+    Les dessins, tatouages, flashs, photos et textes présentés sur ce site sont la propriété de
+    {' '}{legal.owner}, sauf mention contraire. Toute reproduction, même partielle, sans
+    autorisation écrite préalable est interdite.
+  </p>
+
+  <h2>Données personnelles</h2>
+  <p>
+    Les informations envoyées par le formulaire de contact servent uniquement à répondre à votre
+    demande. Le détail est expliqué dans la <a href="/confidentialite/">politique de confidentialité</a>.
+  </p>
+
+  <h2>Conception du site</h2>
+  <p>Site créé par Johanna Peignelin.</p>
+</LegalLayout>

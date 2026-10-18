@@ -39,12 +39,12 @@ const drawings = (await getIllustrations()).map((drawing) => {
 // Contact dédié aux dessins (originaux, prints) : compte Instagram artistique distinct de @marah.pokes
 const DRAWINGS_INSTAGRAM = {
   handle: '@marahchenaina.art',
-  url: 'https://instagram.com/marahchenaina.art',
+  url: siteConfig.social.instagramDessins,
 };
-const DRAWINGS_EMAIL = 'marahchenaina@gmail.com';
+const DRAWINGS_EMAIL = siteConfig.email;
 
 const title = `Dessins au stylo | ${siteConfig.name}`;
-const description = `Découvrez les dessins au stylo de ${siteConfig.name}, tatoueuse à ${siteConfig.location.city}. Lignes et points répétés, un univers abstrait et organique où la lumière se révèle dans l'ombre.`;
+const description = `Découvrez les dessins au stylo de ${siteConfig.name}, tatoueuse et illustratrice à ${siteConfig.location.city}. Lignes et points répétés, un univers abstrait et organique où la lumière se révèle dans l'ombre.`;
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 
 /** Ligne discrète sous le titre : technique et année, seulement si renseignées (le format est à droite du titre) */
@@ -87,7 +87,7 @@ const jsonLd = {
 <BaseLayout title={title} description={description}>
   <Fragment slot="head">
     <!-- « < » échappé : les textes saisis dans Sanity ne peuvent pas fermer la balise -->
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\u003c')} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\\u003c')} />
   </Fragment>
 
   <section class="drawings" aria-labelledby="drawings-title">

@@ -8,10 +8,12 @@ const navLinks = [
   { href: '/#a-propos', label: 'Le handpoke' },
   { href: '/#artiste', label: "L'artiste" },
   { href: '/#avis', label: 'Avis' },
-  { href: '/dessins', label: 'Dessins' },
+  { href: '/dessins/', label: 'Dessins' },
 ];
 
-const currentPath = Astro.url.pathname.replace(/\/$/, '');
+// Comparaison sans slash final des deux côtés (« /dessins/ » = « /dessins »)
+const withoutSlash = (path: string) => path.replace(/\/$/, '');
+const currentPath = withoutSlash(Astro.url.pathname);
 ---
 
 <header class="site-header" id="siteHeader">
@@ -22,7 +24,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '');
     </a>
     <nav class="main-nav" id="mainNav" aria-label="Navigation principale">
       {navLinks.map(({ href, label }) => (
-        <a href={href} aria-current={href === currentPath ? 'page' : undefined}>{label}</a>
+        <a href={href} aria-current={withoutSlash(href) === currentPath ? 'page' : undefined}>{label}</a>
       ))}
       <!-- Mobile uniquement : remplace le bouton Rendez-vous de l'en-tête -->
       <a href="/#contact" class="btn btn-primary nav-cta">Prendre rendez-vous</a>

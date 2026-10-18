@@ -20,34 +20,39 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${enco
       </div>
 
       <div class="footer-section">
-        <h4>Navigation</h4>
+        <h2 class="footer-heading">Navigation</h2>
         <nav class="footer-nav">
           <a href="/#hero">Accueil</a>
           <a href="/#galerie">Galerie</a>
           <a href="/#flashs">Flashs disponibles</a>
           <a href="/#a-propos">À propos</a>
-          <a href="/dessins">Dessins</a>
+          <a href="/dessins/">Dessins</a>
           <a href="/#contact">Contact</a>
         </nav>
       </div>
 
       <div class="footer-section">
-        <h4>Suivez-moi</h4>
+        <h2 class="footer-heading">Suivez-moi</h2>
         <div class="social-links">
           <a
             href={siteConfig.social.instagram}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Instagram"
           >
-            Instagram
+            Instagram tatouages
           </a>
-          <!-- TODO: Ajouter d'autres réseaux sociaux si nécessaire -->
+          <a
+            href={siteConfig.social.instagramDessins}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Instagram dessins
+          </a>
         </div>
       </div>
 
       <div class="footer-section">
-        <h4>Infos pratiques</h4>
+        <h2 class="footer-heading">Infos pratiques</h2>
         <p>Sur rendez-vous uniquement</p>
         <p>{siteConfig.location.streetAddress}, {siteConfig.location.postalCode} {siteConfig.location.city}</p>
       </div>
@@ -55,7 +60,7 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${enco
 
     <div class="footer-map">
       <div class="footer-section footer-map-info">
-        <h4>Trouver l'atelier</h4>
+        <h2 class="footer-heading">Trouver l'atelier</h2>
         <p>{siteConfig.atelierNoir.name}</p>
         <p>{address}</p>
         <a href={directionsUrl} target="_blank" rel="noopener noreferrer" class="link-underline">
@@ -87,7 +92,11 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${enco
       <p>
         &copy; {currentYear} {siteConfig.name}. Tous droits réservés.
       </p>
-      <p class="footer-credits">Site créé par Johanna Peignelin Pro</p>
+      <nav class="footer-legal" aria-label="Informations légales">
+        <a href="/mentions-legales/">Mentions légales</a>
+        <a href="/confidentialite/">Confidentialité</a>
+      </nav>
+      <p class="footer-credits">Site créé par Johanna Peignelin</p>
     </div>
   </div>
 </footer>
@@ -137,10 +146,13 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${enco
     color: var(--link);
   }
 
-  .footer-section h4 {
+  /* Titres de colonnes : de vrais h2 (ordre des titres correct pour les lecteurs
+     d'écran), à l'apparence de petits surtitres */
+  .footer-heading {
     font-family: var(--f-body);
     font-weight: 500;
     font-size: var(--fs-caps);
+    line-height: 1.4;
     text-transform: uppercase;
     letter-spacing: var(--tracking-caps);
     color: var(--link);
@@ -260,6 +272,22 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${enco
 
   .footer-credits a {
     color: var(--ink-soft);
+  }
+
+  .footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.5rem;
+  }
+
+  .footer-legal a {
+    font-size: var(--fs-small);
+    letter-spacing: 0.02em;
+    color: var(--ink-soft);
+  }
+
+  .footer-legal a:hover {
+    color: var(--link);
   }
 
   @media screen and (max-width: 900px) {

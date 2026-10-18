@@ -12,9 +12,11 @@ import BackToTop from '../components/BackToTop.astro';
 interface Props {
   title: string;
   description: string;
+  /** Page à ne jamais indexer (404), quelle que soit la valeur de SITE_NOINDEX */
+  noindex?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, noindex = false } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 const keywords = siteConfig.keywords.join(', ');
 ---
@@ -32,7 +34,7 @@ const keywords = siteConfig.keywords.join(', ');
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
     <meta name="author" content={siteConfig.name} />
-    <meta name="robots" content={SITE_NOINDEX ? 'noindex, nofollow' : 'index, follow'} />
+    <meta name="robots" content={SITE_NOINDEX || noindex ? 'noindex, nofollow' : 'index, follow'} />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -59,14 +61,6 @@ const keywords = siteConfig.keywords.join(', ');
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-    <!-- Google Fonts - chargement optimisé via <link> (évite le blocage du @import CSS) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..600;1,400..600&family=Lora:ital,wght@0,400..600;1,400..600&family=Figtree:wght@400..600&family=Shrikhand&display=swap"
-    />
-
     <slot name="head" />
 
     <!-- Apparitions au scroll : activées seulement si JS tourne et que le mouvement n'est pas réduit.
@@ -82,8 +76,10 @@ const keywords = siteConfig.keywords.join(', ');
   </head>
 
   <body>
+    <!-- Lien d'évitement : premier élément atteint au clavier, visible seulement au focus -->
+    <a href="#contenu" class="skip-link">Aller au contenu</a>
     <SiteHeader />
-    <main>
+    <main id="contenu" tabindex="-1">
       <slot />
     </main>
     <Footer />

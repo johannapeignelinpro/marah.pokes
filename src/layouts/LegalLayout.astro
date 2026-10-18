@@ -1,0 +1,74 @@
+---
+// Pages d'information (mentions légales, confidentialité) : une colonne de texte
+// lisible sous le header, avec la date de mise à jour.
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  heading: string;
+  /** Date de dernière mise à jour, affichée sous le titre (ex. « 18 octobre 2026 ») */
+  updated: string;
+}
+
+const { title, description, heading, updated } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="legal container-narrow">
+    <header class="legal-head">
+      <span class="eyebrow">Informations</span>
+      <h1>{heading}</h1>
+      <p class="legal-updated">Dernière mise à jour : {updated}</p>
+    </header>
+    <slot />
+  </article>
+</BaseLayout>
+
+<style>
+  .legal {
+    padding-top: calc(var(--header-height) + var(--spacing-lg));
+    padding-bottom: var(--spacing-xl, var(--spacing-lg));
+  }
+
+  .legal-head {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .legal-updated {
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+  }
+
+  .legal :global(h2) {
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+    margin: var(--spacing-md) 0 0.75rem;
+  }
+
+  .legal :global(ul) {
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .legal :global(li) {
+    margin-bottom: 0.4rem;
+  }
+
+  .legal :global(p a),
+  .legal :global(li a) {
+    color: var(--link);
+    border-bottom: 1px solid currentColor;
+    overflow-wrap: anywhere;
+  }
+
+  .legal :global(p a:hover),
+  .legal :global(li a:hover) {
+    color: var(--ink);
+  }
+
+  @media screen and (max-width: 768px) {
+    .legal {
+      padding-top: calc(var(--header-height) + var(--spacing-md));
+    }
+  }
+</style>

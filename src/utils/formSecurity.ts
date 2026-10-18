@@ -317,11 +317,11 @@ export function validateFormData(data: FormData): ValidationResult {
   };
 
   if (data.projectType === 'flash') {
-    if (!data.flashPhoto) errors['flash-photo'] = 'Ajoute la photo du flash qui te plaît';
-    required(data.flashBodyPart, 'flash-body-part', 'Indique la partie du corps');
-    required(data.flashAvailability, 'flash-availability', 'Indique tes disponibilités');
+    if (!data.flashPhoto) errors['flash-photo'] = 'Ajoutez la photo du flash qui vous plaît';
+    required(data.flashBodyPart, 'flash-body-part', 'Indiquez la partie du corps');
+    required(data.flashAvailability, 'flash-availability', 'Indiquez vos disponibilités');
   } else {
-    required(data.persoBodyPart, 'perso-body-part', 'Indique la partie du corps');
+    required(data.persoBodyPart, 'perso-body-part', 'Indiquez la partie du corps');
 
     // 8. Description du projet (projet perso uniquement)
     const projectValidation = validateTextLength(data.project, 'Description du projet', 10, 2000);
@@ -341,7 +341,7 @@ export function validateFormData(data: FormData): ValidationResult {
   // 10. Budget (optionnel, mais doit être dans la liste si fourni)
   if (data.budget) {
     // Doit correspondre aux <option> du select #budget (ContactForm.astro)
-    const validBudgets = ['100 € à 200 €', '200 € à 300 €', '300 € à 400 €', 'Ton prix sera le mien'];
+    const validBudgets = ['100 € à 200 €', '200 € à 300 €', '300 € à 400 €', 'Votre prix sera le mien'];
     if (!validBudgets.includes(data.budget)) {
       errors.budget = 'Budget invalide';
     }

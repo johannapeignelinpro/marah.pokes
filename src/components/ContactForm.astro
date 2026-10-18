@@ -15,13 +15,13 @@ import motifImage from '../assets/images/editorial/marah-handpoke-motif-organiqu
 
       <div class="patience-message">
         <p>
-          J’accepte de discuter de tout projet pour l’adapter à mon univers. Si cela ne correspond pas, je vous guiderai vers un ou une autre artiste adapté.e.
+          J’accepte de discuter de tout projet pour l’adapter à mon univers. Si cela ne correspond pas, je vous guiderai vers un ou une autre artiste adapté·e.
         </p>
         <p>
           La sortie d'aiguille est de 100&nbsp;€, ensuite, le prix sera variable en fonction de la taille, de l'emplacement et bien sûr, de la difficulté du projet.
         </p>
         <p>
-Vos demandes seront traitées dès que possible. Je vous réponds au plus vite afin de discuter des détails de la conception et fixer votre rendez vous. Merci pour votre patience et votre compréhension.
+Vos demandes seront traitées dès que possible. Je vous réponds au plus vite afin de discuter des détails de la conception et fixer votre rendez-vous. Merci pour votre patience et votre compréhension.
         </p>
       </div>
     </div>
@@ -108,8 +108,8 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
       </div>
 
       <!-- Type de projet -->
-      <div class="form-group">
-        <label>Type de projet *</label>
+      <fieldset class="form-group">
+        <legend>Type de projet *</legend>
         <div class="project-type-options">
           <label class="radio-option">
             <input
@@ -129,10 +129,10 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
               id="type-freehand"
               required
             />
-            <span class="radio-label">Projet Perso</span>
+            <span class="radio-label">Projet perso</span>
           </label>
         </div>
-      </div>
+      </fieldset>
 
       <!-- ============================== -->
       <!-- SECTION FLASH (conditionnelle) -->
@@ -254,7 +254,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
             id="project"
             name="Description du projet"
             maxlength="2000"
-            placeholder=" Les petits détails font les grandes histoires, n’hésitez pas à être exhaustif.ve si vous le souhaitez. Donnez des infos sur l’emplacement, taille approximative souhaitée..."
+            placeholder="Les petits détails font les grandes histoires, n’hésitez pas à être exhaustif·ve si vous le souhaitez. Donnez des infos sur l’emplacement, taille approximative souhaitée..."
           ></textarea>
           <span class="error-message" id="error-project"></span>
           <div class="warning-message" id="warning-project" style="display: none;"></div>
@@ -265,10 +265,10 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
           <label for="budget">Budget envisagé</label>
           <select id="budget" name="Budget">
             <option value="">Sélectionnez une fourchette</option>
-            <option value="100 € à 200 €">100€ - 200€</option>
-            <option value="200 € à 300 €">200€ - 300€</option>
-            <option value="300 € à 400 €">300€ - 400€</option>
-            <option value="Ton prix sera le mien">Ton prix sera le mien</option>
+            <option value="100 € à 200 €">100&nbsp;€ à 200&nbsp;€</option>
+            <option value="200 € à 300 €">200&nbsp;€ à 300&nbsp;€</option>
+            <option value="300 € à 400 €">300&nbsp;€ à 400&nbsp;€</option>
+            <option value="Votre prix sera le mien">Votre prix sera le mien</option>
           </select>
         </div>
 
@@ -293,10 +293,11 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
       <!-- Retour d'envoi (succès / erreur) -->
       <p class="form-status" id="form-status" role="status" aria-live="polite" hidden></p>
 
-      <!-- Badge de sécurité -->
-      <div class="security-badge">
-        Formulaire sécurisé - Vos données sont protégées
-      </div>
+      <!-- Information RGPD au moment de la collecte -->
+      <p class="security-badge">
+        Vos informations servent uniquement à répondre à votre demande.
+        <a href="/confidentialite/">En savoir plus sur vos données</a>
+      </p>
 
       <p class="form-note">
         * Champs obligatoires
@@ -465,20 +466,23 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
     display: none;
   }
 
-  /* Security badge */
+  /* Information sur les données, avec lien vers la politique de confidentialité */
   .security-badge {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
     margin-top: var(--spacing-md);
+    margin-bottom: 0;
     font-size: var(--fs-small);
+    text-align: center;
     color: var(--ink-muted);
   }
 
-  .security-badge::before {
-    content: '🔒';
-    font-size: 0.9rem;
+  .security-badge a {
+    color: var(--link);
+    border-bottom: 1px solid currentColor;
+    white-space: nowrap;
+  }
+
+  .security-badge a:hover {
+    color: var(--ink);
   }
 
   /* File upload area */
@@ -486,8 +490,21 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
     position: relative;
   }
 
+  /* Champ fichier masqué visuellement mais toujours atteignable au clavier
+     (Tab puis Entrée ou Espace) : la zone en pointillés sert de bouton visible */
   .file-input {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .file-input:focus-visible + .file-label {
+    border-color: var(--link);
+    outline: 2px solid var(--link);
+    outline-offset: 3px;
   }
 
   .file-label {
@@ -688,9 +705,9 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
   const MAX_SUBMISSION_SIZE = 8 * 1024 * 1024;
 
   const SUCCESS_MESSAGE =
-    'Merci, ta demande a bien été envoyée. Marah reviendra vers toi dès que possible.';
+    'Merci, votre demande a bien été envoyée. Marah reviendra vers vous dès que possible.';
   const ERROR_MESSAGE =
-    "Oups, l'envoi n'a pas fonctionné. Vérifie ta connexion et réessaie, ou contacte Marah directement sur Instagram @marah.pokes.";
+    "Oups, l'envoi n'a pas fonctionné. Vérifiez votre connexion et réessayez, ou contactez Marah directement sur Instagram @marah.pokes.";
 
   function showStatus(type: 'success' | 'error', message: string) {
     if (!formStatus) return;
@@ -710,12 +727,19 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
   // =======================
   // AFFICHAGE DES ERREURS
   // =======================
+  // Le message d'erreur est relié à son champ (aria-describedby) : un lecteur
+  // d'écran l'annonce en arrivant sur le champ, signalé comme invalide.
   function showError(fieldId: string, message: string) {
     const errorElement = document.getElementById(`error-${fieldId}`);
-    const formGroup = document.getElementById(fieldId)?.closest('.form-group');
+    const field = document.getElementById(fieldId);
+    const formGroup = field?.closest('.form-group');
 
     if (errorElement) {
       errorElement.textContent = message;
+    }
+    if (field) {
+      field.setAttribute('aria-invalid', 'true');
+      if (errorElement) field.setAttribute('aria-describedby', errorElement.id);
     }
     if (formGroup) {
       formGroup.classList.add('has-error');
@@ -724,11 +748,13 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
 
   function clearError(fieldId: string) {
     const errorElement = document.getElementById(`error-${fieldId}`);
-    const formGroup = document.getElementById(fieldId)?.closest('.form-group');
+    const field = document.getElementById(fieldId);
+    const formGroup = field?.closest('.form-group');
 
     if (errorElement) {
       errorElement.textContent = '';
     }
+    field?.removeAttribute('aria-invalid');
     if (formGroup) {
       formGroup.classList.remove('has-error');
     }
@@ -737,6 +763,8 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
   function clearAllErrors() {
     const errorMessages = document.querySelectorAll('.error-message');
     errorMessages.forEach(el => el.textContent = '');
+
+    document.querySelectorAll('#contact-form [aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
 
     const formGroups = document.querySelectorAll('.form-group.has-error');
     formGroups.forEach(el => el.classList.remove('has-error'));
@@ -868,7 +896,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
 
     const room = MAX_PHOTOS - selectedFiles.length;
     if (room <= 0) {
-      showError('photos', `${MAX_PHOTOS} photos maximum : retire une photo pour en ajouter une autre.`);
+      showError('photos', `${MAX_PHOTOS} photos maximum : retirez une photo pour en ajouter une autre.`);
       return;
     }
 
@@ -1068,10 +1096,11 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
           showError(field, message);
         });
 
-        // Scroll vers la première erreur
+        // Scroll vers la première erreur, et focus sur son champ (clavier, lecteur d'écran)
         const firstError = document.querySelector('.form-group.has-error');
         if (firstError) {
           firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstError.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus({ preventScroll: true });
         }
 
         return;
@@ -1124,7 +1153,7 @@ Vos demandes seront traitées dès que possible. Je vous réponds au plus vite a
       if (totalSize > MAX_SUBMISSION_SIZE) {
         showStatus(
           'error',
-          'Tes photos sont trop lourdes pour être envoyées ensemble (8 Mo maximum au total). Retire une photo ou réduis leur taille, puis réessaie.'
+          'Vos photos sont trop lourdes pour être envoyées ensemble (8 Mo maximum au total). Retirez une photo ou réduisez leur taille, puis réessayez.'
         );
         return;
       }

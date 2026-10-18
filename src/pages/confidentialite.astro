@@ -1,0 +1,72 @@
+---
+// Politique de confidentialité (RGPD, art. 13) : ce que le site collecte, pourquoi,
+// chez qui, combien de temps, et comment exercer ses droits.
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { siteConfig } from '../config/seo';
+
+const { legal, location, email } = siteConfig;
+---
+
+<LegalLayout
+  title={`Politique de confidentialité | ${siteConfig.name}`}
+  description={`Comment ${siteConfig.name} utilise et protège les informations envoyées par le formulaire de contact.`}
+  heading="Politique de confidentialité"
+  updated="18 octobre 2026"
+>
+  <p>
+    Ce site ne dépose aucun cookie et n'utilise aucun outil de mesure d'audience. Les seules
+    données personnelles collectées sont celles que vous envoyez par le formulaire de contact.
+  </p>
+
+  <h2>Responsable du traitement</h2>
+  <p>
+    {legal.owner}, {legal.status.toLowerCase()}, {location.address}.<br />
+    Contact : <a href={`mailto:${email}`}>{email}</a>
+  </p>
+
+  <h2>Données collectées</h2>
+  <p>Par le formulaire de demande de tatouage :</p>
+  <ul>
+    <li>nom et prénom, adresse email (obligatoires) ;</li>
+    <li>téléphone et profil Instagram (facultatifs) ;</li>
+    <li>description du projet, emplacement, budget, disponibilités ;</li>
+    <li>photos envoyées (flash choisi, inspirations).</li>
+  </ul>
+
+  <h2>Pourquoi ces données</h2>
+  <p>
+    Elles servent uniquement à étudier votre demande, vous répondre et organiser votre
+    rendez-vous. Ce traitement repose sur les mesures précontractuelles prises à votre
+    demande (article 6.1.b du RGPD). Vos données ne sont ni vendues, ni utilisées à des fins
+    publicitaires.
+  </p>
+
+  <h2>Qui y a accès</h2>
+  <p>
+    Seule {legal.owner} lit vos demandes. Le formulaire est géré par l'hébergeur du site,
+    {' '}{legal.host.name} (États-Unis), qui stocke les envois pour le compte de {legal.owner}.
+    Ce transfert hors de l'Union européenne est encadré par le Data Privacy Framework
+    UE–États-Unis et les clauses contractuelles types de la Commission européenne.
+  </p>
+
+  <h2>Combien de temps</h2>
+  <p>
+    Les demandes sont conservées le temps de les traiter, puis au plus 3 ans après le dernier
+    échange. Les demandes sans suite sont supprimées plus tôt.
+  </p>
+
+  <h2>Carte Google Maps</h2>
+  <p>
+    La carte en bas de page n'est chargée que si vous cliquez sur « Afficher la carte ». Google
+    peut alors recevoir votre adresse IP et déposer des cookies, selon ses propres règles de
+    confidentialité.
+  </p>
+
+  <h2>Vos droits</h2>
+  <p>
+    Vous pouvez à tout moment demander l'accès à vos données, leur correction, leur suppression,
+    ou vous opposer à leur utilisation, en écrivant à <a href={`mailto:${email}`}>{email}</a>.
+    Si vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à
+    la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">cnil.fr</a>).
+  </p>
+</LegalLayout>

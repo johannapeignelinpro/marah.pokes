@@ -21,15 +21,29 @@ export const siteConfig = {
   // Ancien nom de marque, conservé comme alias (Instagram @marah.pokes, fiche Google)
   alternateName: 'Marah.Pokes',
   title: 'Marah Chenaïna — Tatouage Handpoke à Rennes',
-  description: 'Tatouages handpoke réalisés à la main à Rennes par Marah Chenaïna. Pièces fines, organiques et ornementales, uniquement sur rendez-vous.',
+  description: 'Marah Chenaïna, tatoueuse handpoke et illustratrice à Rennes. Tatouages fins, organiques et ornementaux réalisés à la main, dessins originaux au stylo. Sur rendez-vous.',
   // Phrase d'accroche du hero (le nom, la technique et la ville sont déjà dans le titre)
   heroLead: HERO_LEAD,
   // Footer : présentation courte, sans reprendre l'accroche du hero
   role: 'Artiste tatoueuse et illustratrice à Rennes',
-  slogan: 'Tatouages handpoke réalisés entièrement à la main, sans machine, point par point. Flashs, projets personnalisés et dessins originaux à l\'encre, sur rendez-vous à l\'Atelier Noir, en Bretagne (Ille-et-Vilaine).',
+  slogan: 'Tatouages handpoke réalisés entièrement à la main, sans machine, point par point. Flashs, projets personnalisés et dessins originaux au stylo, sur rendez-vous à l\'Atelier Noir, en Bretagne (Ille-et-Vilaine).',
 
   // Contact
   instagram: '@marah.pokes',
+  email: 'marahchenaina@gmail.com',
+
+  // Mentions légales (LCEN art. 6) : Marah exerce en micro-entreprise.
+  // Tant que le SIRET est vide, la ligne n'est pas affichée et le build le signale.
+  legal: {
+    owner: 'Marah Chenaïna',
+    status: 'Entrepreneuse individuelle (micro-entreprise)',
+    siret: '',
+    host: {
+      name: 'Netlify, Inc.',
+      address: '101 2nd Street, Suite 575, San Francisco, CA 94105, États-Unis',
+      url: 'https://www.netlify.com',
+    },
+  },
 
   // Localisation
   location: {
@@ -91,6 +105,8 @@ export const siteConfig = {
   // Social Media (à compléter)
   social: {
     instagram: 'https://instagram.com/marah.pokes',
+    // Compte dédié aux dessins (originaux, prints)
+    instagramDessins: 'https://instagram.com/marahchenaina.art',
     // facebook: '', // TODO: Ajouter si existe
     // tiktok: '', // TODO: Ajouter si existe
   },
@@ -123,7 +139,7 @@ export const schemaOrg = {
     addressLocality: siteConfig.location.city,
     addressRegion: siteConfig.location.region,
     postalCode: siteConfig.location.postalCode,
-    addressCountry: siteConfig.location.country
+    addressCountry: 'FR'
   },
 
   // Coordonnées GPS

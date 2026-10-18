@@ -22,7 +22,7 @@ const galleryImages = (await getTattoos()).map((tattoo) => {
 // La case « Voir plus » occupe les cases restantes de la dernière ligne : la mosaïque
 // reste pleine quel que soit le nombre de tattoos. Ligne déjà complète : elle prend
 // toute une ligne, en bandeau.
-const GRID_COLUMNS = { desktop: 5, mobile: 2 };
+const GRID_COLUMNS = { desktop: 5, mobile: 1 };
 const moreSpan = (columns: number) => (columns - (galleryImages.length % columns)) % columns || columns;
 ---
 
@@ -56,7 +56,7 @@ const moreSpan = (columns: number) => (columns - (galleryImages.length % columns
             <img
               src={image.thumb.src}
               srcset={image.thumb.srcset}
-              sizes="(max-width: 768px) 50vw, 20vw"
+              sizes="(max-width: 768px) 100vw, 20vw"
               width={image.thumb.size}
               height={image.thumb.size}
               alt={image.alt}
@@ -212,10 +212,10 @@ const moreSpan = (columns: number) => (columns - (galleryImages.length % columns
     color: var(--ink);
   }
 
-  /* Mobile : 2 colonnes, décalage des apparitions plus court */
+  /* Mobile : une colonne, photos en pleine largeur, décalage des apparitions plus court */
   @media screen and (max-width: 768px) {
     .gallery-grid {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr;
       --reveal-step: 40ms;
     }
 

@@ -71,8 +71,8 @@ const keywords = siteConfig.keywords.join(', ');
       }
     </script>
 
-    <!-- Canonical URL -->
-    <link rel="canonical" href={canonicalUrl} />
+    <!-- Canonical URL (sauf page non indexable comme la 404, servie à n'importe quelle adresse) -->
+    {!noindex && <link rel="canonical" href={canonicalUrl} />}
   </head>
 
   <body>

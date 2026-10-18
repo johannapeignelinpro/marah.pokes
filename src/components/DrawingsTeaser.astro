@@ -1,7 +1,6 @@
 ---
-// Accueil : encart vers la page Dessins (Marah illustratrice), avec son dernier dessin en petit
+// Accueil : encart vers la page Dessins (dessins au stylo de Marah), avec son dernier dessin en petit
 import { Image } from 'astro:assets';
-import { siteConfig } from '../config/seo';
 import dessinImage from '../assets/images/editorial/dessin-encre-lignes-organiques-marah-chenaina-rennes.jpg';
 ---
 
@@ -11,7 +10,7 @@ import dessinImage from '../assets/images/editorial/dessin-encre-lignes-organiqu
       <div class="frame-inner">
         <Image
           src={dessinImage}
-          alt="Dessin à l'encre de Marah Chenaïna : lignes fines ondulantes formant des tourbillons organiques"
+          alt="Dessin au stylo de Marah Chenaïna : lignes fines ondulantes formant des tourbillons organiques"
           widths={[300, 450, 600, 800]}
           sizes="(max-width: 768px) 60vw, 300px"
           quality={85}
@@ -20,12 +19,13 @@ import dessinImage from '../assets/images/editorial/dessin-encre-lignes-organiqu
       </div>
     </figure>
     <div class="drawings-teaser-text" data-reveal style="--reveal-i: 1">
-      <span class="eyebrow">Illustratrice à {siteConfig.location.city}</span>
-      <h2 id="drawings-teaser-title">Dessins et illustrations à l'encre</h2>
+      <span class="eyebrow">Au stylo, sur papier</span>
+      <h2 id="drawings-teaser-title">Dessins au stylo</h2>
       <p>
         Les lignes que l'on retrouve dans ses tatouages naissent d'abord sur le papier.
-        Illustratrice à {siteConfig.location.city}, Marah dessine à l'encre des compositions
-        organiques et ornementales : courbes fluides, traits fins répétés, jeux de pleins et de vides.
+        Au stylo fin, Marah explore le mouvement par la répétition de lignes et de points :
+        des compositions abstraites et organiques, nées d'une longue patience, où la lumière
+        se révèle dans l'ombre.
       </p>
       <a href="/dessins" class="btn btn-ghost">Découvrir ses dessins</a>
     </div>

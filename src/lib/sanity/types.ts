@@ -55,6 +55,7 @@ export interface Illustration {
   alt: string | null;
   description: string | null;
   technique: string | null;
+  format: string | null;
   year: number | null;
   orientation: IllustrationOrientation | null;
 }

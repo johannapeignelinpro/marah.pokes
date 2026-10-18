@@ -81,6 +81,7 @@ export interface DisplayIllustration extends DisplayImage {
   /** Informations facultatives saisies dans le Studio : null si absentes, jamais inventées */
   description: string | null;
   technique: string | null;
+  format: string | null;
   year: number | null;
   /** Ratio largeur / hauteur affiché (crop Studio compris) : pilote la mise en page. */
   ratio: number;
@@ -112,6 +113,7 @@ export async function getIllustrations(): Promise<DisplayIllustration[]> {
       alt: illustration.alt?.trim() || illustration.title?.trim() || ILLUSTRATION_ALT_FALLBACK,
       description: illustration.description?.trim() || null,
       technique: illustration.technique?.trim() || null,
+      format: illustration.format?.trim() || null,
       year: illustration.year ?? null,
       ratio,
       orientation: illustration.orientation ?? orientationFromRatio(ratio),

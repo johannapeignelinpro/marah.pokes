@@ -36,11 +36,18 @@ const drawings = (await getIllustrations()).map((drawing) => {
   };
 });
 
-const title = `Dessins & illustrations | ${siteConfig.name}`;
-const description = `Découvrez les dessins et illustrations de ${siteConfig.name}, tatoueuse et illustratrice à ${siteConfig.location.city}. Un univers de lignes fines, de formes organiques et de motifs ornementaux.`;
+// Contact dédié aux dessins (originaux, prints) : compte Instagram artistique distinct de @marah.pokes
+const DRAWINGS_INSTAGRAM = {
+  handle: '@marahchenaina.art',
+  url: 'https://instagram.com/marahchenaina.art',
+};
+const DRAWINGS_EMAIL = 'marahchenaina@gmail.com';
+
+const title = `Dessins au stylo | ${siteConfig.name}`;
+const description = `Découvrez les dessins au stylo de ${siteConfig.name}, tatoueuse à ${siteConfig.location.city}. Lignes et points répétés, un univers abstrait et organique où la lumière se révèle dans l'ombre.`;
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 
-/** Ligne discrète sous le titre : technique et année, seulement si renseignées */
+/** Ligne discrète sous le titre : technique et année, seulement si renseignées (le format est à droite du titre) */
 const detailsOf = (drawing: (typeof drawings)[number]) =>
   [drawing.technique, drawing.year].filter(Boolean).join(', ');
 
@@ -55,7 +62,7 @@ const creator = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
-  name: 'Dessins & illustrations',
+  name: 'Dessins',
   description,
   url: pageUrl,
   inLanguage: 'fr-FR',
@@ -86,13 +93,16 @@ const jsonLd = {
   <section class="drawings" aria-labelledby="drawings-title">
     <div class="container">
       <header class="drawings-head" data-reveal>
-        <span class="eyebrow">Sur papier</span>
-        <h1 id="drawings-title">Dessins &amp; illustrations</h1>
+        <span class="eyebrow">Au stylo, sur papier</span>
+        <h1 id="drawings-title">Dessins</h1>
         <p class="drawings-intro">
-          Le dessin est au cœur de ma pratique artistique. À travers les lignes fines, les points et
-          les formes organiques, j'explore un univers mêlant abstraction, ornementation et mouvement.
-          Cette galerie rassemble une sélection de mes dessins et illustrations, réalisés au fil de
-          mes inspirations.
+          Le dessin est au cœur de ma pratique artistique, c'est ce qui m'a poussée à devenir
+          tatoueuse. Toujours à travers la répétition de lignes et de points, j'explore le mouvement
+          dans un univers abstrait et organique. Fruit d'une patience profonde, chaque dessin devient
+          une méditation visuelle où la lumière se révèle dans l'ombre.
+        </p>
+        <p class="drawings-tools">
+          Tous les dessins sont réalisés avec des stylos Sakura Pigma Micron fineliners 005 et 02.
         </p>
       </header>
 
@@ -113,7 +123,7 @@ const jsonLd = {
               data-sizes={drawing.fullSizes}
               data-width={drawing.full.width}
               data-height={drawing.full.height}
-              data-title={drawing.title}
+              data-title={[drawing.title, drawing.format].filter(Boolean).join(' · ')}
               aria-haspopup="dialog"
             >
               <img
@@ -128,9 +138,13 @@ const jsonLd = {
               />
             </a>
             {/* Titre et informations dans le HTML, sans attendre l'ouverture en grand */}
-            {drawing.title && (
+            {(drawing.title || drawing.format) && (
               <figcaption class="drawing-caption">
-                <span class="drawing-title">{drawing.title}</span>
+                {/* Format à droite du titre, comme sur un cartel d'exposition */}
+                <span class="drawing-caption-head">
+                  {drawing.title && <span class="drawing-title">{drawing.title}</span>}
+                  {drawing.format && <span class="drawing-format">{drawing.format}</span>}
+                </span>
                 {detailsOf(drawing) && <span class="drawing-details">{detailsOf(drawing)}</span>}
                 {drawing.description && <span class="drawing-description">{drawing.description}</span>}
               </figcaption>
@@ -143,20 +157,14 @@ const jsonLd = {
       )}
 
       <div class="drawings-outro">
-        <p>
-          Mon travail sur papier nourrit aussi ma pratique du tatouage, où je retrouve ce même intérêt
-          pour les lignes, les motifs et les compositions organiques.
+        <p class="drawings-note">
+          Si une œuvre originale, un print ou toute autre demande de projet vous intéresse, vous pouvez
+          me contacter sur Instagram{' '}
+          <a href={DRAWINGS_INSTAGRAM.url} target="_blank" rel="noopener noreferrer">{DRAWINGS_INSTAGRAM.handle}</a>{' '}
+          ou par mail à <a href={`mailto:${DRAWINGS_EMAIL}`}>{DRAWINGS_EMAIL}</a>.
         </p>
         <a href="/#galerie" class="link-underline">Voir la galerie de tatouages →</a>
       </div>
-
-      <p class="drawings-note">
-        Pour un projet de tatouage inspiré d'un dessin, rendez-vous dans la section{' '}
-        <a href="/#contact">Contact</a> ou sur{' '}
-        <a href={siteConfig.social.instagram} target="_blank" rel="noopener noreferrer">
-          Instagram {siteConfig.instagram}
-        </a>
-      </p>
     </div>
   </section>
 
@@ -177,6 +185,13 @@ const jsonLd = {
 
   .drawings-intro {
     color: var(--ink-soft);
+  }
+
+  .drawings-tools {
+    font-size: var(--fs-small);
+    font-style: italic;
+    color: var(--ink-muted);
+    margin-bottom: 0;
   }
 
   /* Lignes justifiées : la largeur de base de chaque dessin vaut ratio × hauteur de
@@ -250,6 +265,25 @@ const jsonLd = {
     color: var(--ink);
   }
 
+  /* Titre à gauche, format calé sur le bord droit du dessin. Un titre long
+     passe à la ligne, le format reste entier sur la première ligne. */
+  .drawing-caption-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .drawing-format {
+    flex-shrink: 0;
+    margin-left: auto;
+    font-family: var(--f-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    color: var(--ink-muted);
+  }
+
   .drawing-details {
     font-size: var(--fs-small);
     color: var(--ink-muted);
@@ -279,8 +313,7 @@ const jsonLd = {
   }
 
   .drawings-note {
-    margin-top: var(--spacing-md);
-    color: var(--ink-muted);
+    color: var(--ink-soft);
   }
 
   .drawings-note a {
@@ -324,10 +357,26 @@ const jsonLd = {
       width: 100%;
     }
 
-    /* Un dessin par ligne : légende centrée sous l'œuvre */
+    /* Un dessin par ligne : légende centrée sous l'œuvre, format juste à droite
+       du titre, séparé par un point discret */
     .drawing-caption {
       align-items: center;
       text-align: center;
+    }
+
+    .drawing-caption-head {
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0 0.5rem;
+    }
+
+    .drawing-format {
+      margin-left: 0;
+    }
+
+    .drawing-title + .drawing-format::before {
+      content: '·';
+      margin-right: 0.5rem;
     }
 
     .drawings-outro {

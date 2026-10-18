@@ -57,6 +57,7 @@ export const illustrationsQuery = /* groq */ `
     alt,
     description,
     technique,
+    format,
     year,
     orientation
   }

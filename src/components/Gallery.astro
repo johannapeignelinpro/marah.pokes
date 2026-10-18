@@ -1,7 +1,7 @@
 ---
 // Galerie de tatouages - réalisations gérées dans Sanity (tattoo, du plus récent au plus ancien)
 // Une vignette par tattoo : la première photo sert d'image principale.
-// Mosaïque bord à bord : 9 réalisations max + une case « Voir plus » vers Instagram.
+// Mosaïque bord à bord : toutes les réalisations publiées + une case « Voir plus » vers Instagram.
 // Chaque vignette ouvre la photo entière (non recadrée) dans la lightbox partagée. Sans JS,
 // le lien ouvre simplement l'image.
 import { getTattoos } from '../lib/sanity/api';
@@ -9,9 +9,7 @@ import { squareImage, naturalImage } from '../lib/sanity/image';
 import { siteConfig } from '../config/seo';
 import Lightbox from './Lightbox.astro';
 
-const MAX_IMAGES = 9;
-
-const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => {
+const galleryImages = (await getTattoos()).map((tattoo) => {
   const cover = tattoo.images[0];
   return {
     alt: cover.alt,
@@ -20,6 +18,12 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
     full: naturalImage(cover.image, { widths: [800, 1200, 1600, 2000], quality: 85 }),
   };
 });
+
+// La case « Voir plus » occupe les cases restantes de la dernière ligne : la mosaïque
+// reste pleine quel que soit le nombre de tattoos. Ligne déjà complète : elle prend
+// toute une ligne, en bandeau.
+const GRID_COLUMNS = { desktop: 5, mobile: 2 };
+const moreSpan = (columns: number) => (columns - (galleryImages.length % columns)) % columns || columns;
 ---
 
 <section id="galerie" class="gallery section-alt">
@@ -69,7 +73,7 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
         rel="noopener noreferrer"
         class="gallery-more"
         data-reveal="fade"
-        style={`--reveal-i: ${galleryImages.length % 5}`}
+        style={`--reveal-i: ${galleryImages.length % 5}; --more-span: ${moreSpan(GRID_COLUMNS.desktop)}; --more-span-mobile: ${moreSpan(GRID_COLUMNS.mobile)}`}
       >
         <span>Voir plus →</span>
       </a>
@@ -162,8 +166,12 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
     outline-offset: -4px;
   }
 
-  /* Case « Voir plus » */
+  /* Case « Voir plus » : s'étire sur les cases libres de la dernière ligne et prend
+     la hauteur de la ligne (bandeau de hauteur minimale si elle est seule) */
   .gallery-more {
+    grid-column: span var(--more-span);
+    aspect-ratio: auto;
+    min-height: 5.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -209,6 +217,10 @@ const galleryImages = (await getTattoos()).slice(0, MAX_IMAGES).map((tattoo) => 
     .gallery-grid {
       grid-template-columns: repeat(2, 1fr);
       --reveal-step: 40ms;
+    }
+
+    .gallery-more {
+      grid-column: span var(--more-span-mobile);
     }
   }
 </style>

@@ -46,6 +46,8 @@ const DRAWINGS_EMAIL = siteConfig.email;
 const title = `Dessins au stylo | ${siteConfig.name}`;
 const description = `Découvrez les dessins au stylo de ${siteConfig.name}, tatoueuse et illustratrice à ${siteConfig.location.city}. Lignes et points répétés, un univers abstrait et organique où la lumière se révèle dans l'ombre.`;
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const licenseUrl = new URL('/mentions-legales/#propriete-intellectuelle', Astro.site).href;
+const acquireLicenseUrl = `${pageUrl}#contact-dessins`;
 
 /** Ligne discrète sous le titre : technique et année, seulement si renseignées (le format est à droite du titre) */
 const detailsOf = (drawing: (typeof drawings)[number]) =>
@@ -80,6 +82,10 @@ const jsonLd = {
     creator,
     creditText: siteConfig.name,
     copyrightNotice: `© ${siteConfig.name}`,
+    // Tous droits réservés : la licence renvoie aux mentions légales, l'achat d'un
+    // original ou d'un print passe par le bloc contact de cette page
+    license: licenseUrl,
+    acquireLicensePage: acquireLicenseUrl,
   })),
 };
 ---
@@ -93,7 +99,7 @@ const jsonLd = {
   <section class="drawings" aria-labelledby="drawings-title">
     <div class="container">
       <header class="drawings-head" data-reveal>
-        <span class="eyebrow">Au stylo, sur papier</span>
+        <span class="eyebrow">Au stylo fin, sur papier</span>
         <h1 id="drawings-title">Dessins</h1>
         <p class="drawings-intro">
           Le dessin est au cœur de ma pratique artistique, c'est ce qui m'a poussée à devenir
@@ -156,7 +162,7 @@ const jsonLd = {
         <p class="drawings-empty">Les dessins arrivent très bientôt.</p>
       )}
 
-      <div class="drawings-outro">
+      <div class="drawings-outro" id="contact-dessins">
         <p class="drawings-note">
           Si une œuvre originale, un print ou toute autre demande de projet vous intéresse, vous pouvez
           me contacter sur Instagram{' '}
